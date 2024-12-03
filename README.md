@@ -12,35 +12,29 @@
     <!-- Header Section -->
     <section id="home">
         <header>
-        <div class="container">
-         <div class="horizontal">
-            <div class="column">
-            
-                <h1>Hack 4 Humanity</h1>
-                <p>Innovating for a Better Tomorrow</p>
+            <div class="container">
+                <div class="horizontal">
+                    <div class="column">
+                        <h1>Hack 4 Humanity</h1>
+                        <p>Innovating for a Better Tomorrow</p>
+                    </div>
+                    <div class="column">
+                        <img class="titleimg" src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/145/089/datas/medium_square.png" style="float: right;">
+                    </div>
+                </div>
             </div>
-            
-            <div class="column">
-                <img class="titleimg" src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/145/089/datas/medium_square.png" style="float: right;">
-            </div>
-         
-         </div>
-        
-        </div>
-
-            
         </header>
         <subheader>
             <div class="container">
-            <div>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/813/highres/wolfram.png" height = 30px></a>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/038/014/highres/nlaS6d9pul-1000.png" height = 30px></a>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/657/highres/xyz.jpg" height = 30px></a>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/656/highres/1password.jpg" height = 30px></a>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/663/highres/WeCareBD.png" height = 30px></a>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/661/highres/aops.png.jpg" height = 30px></a>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/662/highres/balsamiq-1690452164916-2x.jpg" height = 30px></a>
-                <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/664/highres/desmos.jpg" height = 30px></a>
+                <div>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/813/highres/wolfram.png" height="30px"></a>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/038/014/highres/nlaS6d9pul-1000.png" height="30px"></a>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/657/highres/xyz.jpg" height="30px"></a>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/656/highres/1password.jpg" height="30px"></a>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/663/highres/WeCareBD.png" height="30px"></a>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/661/highres/aops.png.jpg" height="30px"></a>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/662/highres/balsamiq-1690452164916-2x.jpg" height="30px"></a>
+                    <a><img src="https://s3.amazonaws.com/challengepost/sponsors/logos/000/037/664/highres/desmos.jpg" height="30px"></a>
                 </div>
             </div>
         </subheader>
@@ -51,12 +45,12 @@
         <div class="container">
             <ul>
                 <p>
-                <li><img src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/145/089/datas/medium_square.png" alt="Image from URL" style="float: right;" width = 30px height = 30px /></li>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#organizers">Organizers</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#comp">Compete</a></li>
+                    <li><img src="https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/003/145/089/datas/medium_square.png" alt="Image from URL" style="float: right;" width="30px" height="30px"></li>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#organizers">Organizers</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#comp">Compete</a></li>
                 </p>
             </ul>
         </div>
@@ -79,25 +73,25 @@
                         <img src="https://via.placeholder.com/200" alt="Samaksh Bhargav" class="organizer-img">
                         <h3>Samaksh Bhargav</h3>
                         <p>Samaksh is an innovator at heart, with a passion for social good and tech development. He leads the team with vision and dedication.</p>
-                        <a><img src="https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png" width = 50px height = 50px></a>
-                        <a><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" width = 50px height = 50px></a>
-                        <a><img src="https://static.vecteezy.com/system/resources/previews/022/613/021/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png" width = 50px height = 50px></a>
+                        <a><img src="https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png" width="50px" height="50px"></a>
+                        <a><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" width="50px" height="50px"></a>
+                        <a><img src="https://static.vecteezy.com/system/resources/previews/022/613/021/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png" width="50px" height="50px"></a>
                     </div>
                     <div class="organizer-card">
                         <img src="https://via.placeholder.com/200" alt="Siddharth Mirchandani" class="organizer-img">
                         <h3>Siddharth Mirchandani</h3>
                         <p>Siddharth brings expertise in entrepreneurship and project management, driving Hack 4 Humanity’s initiatives towards success.</p>
-                        <a><img src="https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png" width = 50px height = 50px></a>
-                        <a><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" width = 50px height = 50px></a>
-                        <a><img src="https://static.vecteezy.com/system/resources/previews/022/613/021/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png" width = 50px height = 50px></a>
+                        <a><img src="https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png" width="50px" height="50px"></a>
+                        <a><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" width="50px" height="50px"></a>
+                        <a><img src="https://static.vecteezy.com/system/resources/previews/022/613/021/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png" width="50px" height="50px"></a>
                     </div>
                     <div class="organizer-card">
                         <img src="https://via.placeholder.com/200" alt="Panaov Sonkar" class="organizer-img">
                         <h3>Panaov Sonkar</h3>
                         <p>Panaov is a tech enthusiast and problem solver, with a passion for creating scalable solutions for the world’s most pressing issues.</p>
-                        <a><img src="https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png" width = 50px height = 50px></a>
-                        <a><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" width = 50px height = 50px></a>
-                        <a><img src="https://static.vecteezy.com/system/resources/previews/022/613/021/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png" width = 50px height = 50px></a>
+                        <a><img src="https://blog.logomyway.com/wp-content/uploads/2020/12/discord-mascot.png" width="50px" height="50px"></a>
+                        <a><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" width="50px" height="50px"></a>
+                        <a><img src="https://static.vecteezy.com/system/resources/previews/022/613/021/non_2x/google-mail-gmail-icon-logo-symbol-free-png.png" width="50px" height="50px"></a>
                     </div>
                 </div>
             </div>
