@@ -1,0 +1,247 @@
+* {
+    font-family: "Outfit", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+  
+  body {
+    font-family: "Outfit";
+    background-color: white;
+    color: rgba(100, 80, 230, 1);
+    margin: 0;
+    padding: 0;
+  }
+  
+  h4 {
+    background-color: white;
+    color: rgba(100, 80, 230, 1);
+    width: 150px;
+    border-radius: 100px;
+    margin: 5px auto; /* Right-align */
+    padding: 10px;
+    
+  }
+  
+  header {
+    background: linear-gradient(135deg, rgba(100, 80, 230, 1), rgba(140, 50, 256, 0.8)), center/cover no-repeat;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .menu-container {
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+    height: 30px; /* Initial height */
+    transition: height 0.3s ease-in-out;
+    text-align: center;
+    font-size: 16px;
+    line-height: 50px; /* Align text vertically for "More chatbots here!" */
+    color: rgba(100, 80, 230, 1);
+    cursor: pointer;
+    line-height: normal; /* Allow text to align naturally */
+    padding-top: 10px;
+    box-shadow: rgba(149, 157, 165, 0.25) 0px 0px 24px;
+  }
+  
+  .menu-container:hover {
+    height: 80px; /* Reduced expanded height */
+    line-height: normal; /* Allow text to align naturally */
+  }
+  
+  .menu-container:hover .menu {
+    display: flex; /* Show menu on hover */
+    justify-content: center; /* Center menu items */
+  }
+  
+  .menu {
+    display: none;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px; /* Reduced padding for compact menu */
+    white-space: nowrap;
+    align-items: center; /* Center items vertically */
+  }
+  
+  .menu-item {
+    background-color: white;
+    color: rgb(40, 40, 40);
+    padding: 5px 15px; /* Reduced padding for compact appearance */
+    border: 1px solid rgb(240, 240, 240); /* Light grey border */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px; /* Slightly smaller font for compactness */
+    transition: background-color 0.3s, transform 0.3s;
+    display: inline-flex; /* Ensure items stay inline */
+    align-items: center; /* Vertically center text */
+    justify-content: center; /* Horizontally center text */
+    height: 30px; /* Set a fixed height for uniformity */
+  }
+  
+  
+  .menu-item:hover {
+    background-color: rgb(240, 240, 240);
+    transform: scale(1.1); /* Slightly enlarge on hover */
+  }
+  
+  
+  .chat-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+  
+  .chatbot {
+    margin-top: 2.5%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%; /* Fixed width, adjust as needed */
+    box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    display: none; /* Hidden by default */
+    margin-bottom: 5%;
+  }
+  
+  .chatbot.active {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .chatbot h2 {
+    margin: 0 0 10px;
+    text-align: center;
+    color: rgba(100, 80, 230, 1);
+  }
+  
+  .chat-window {
+    height: 200px;
+    overflow-y: auto;
+    border: 0px;
+    background-color: white;
+    margin: 10px 0;
+    padding: 10px;
+  }
+  
+  .horizontal {
+    display: flex;
+    gap: 10px;
+    width: 100%; /* Take full width of the chatbot */
+  }
+  
+  input[type="text"] {
+    flex: 1; /* Input field takes up available space */
+    padding: 10px;
+    background-color: rgb(240, 240, 240);
+    border: 0px;
+    border-radius: 5px;
+    outline: none;
+    color: rgb(40, 40, 40);
+  }
+  
+  button {
+    flex-shrink: 0; /* Prevent shrinking of the button */
+    background: linear-gradient(135deg, rgba(100, 80, 230, 1), rgba(140, 50, 256, 0.8)), center/cover no-repeat;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+  }
+  
+  button:hover {
+    background-color: rgba(90, 70, 220, 1);
+  }
+  
+  /* Chat window messages */
+  .user-message {
+    display: inline-block; /* Dynamically adjust width based on content */
+    background-color: rgba(100, 80, 230, 0.1);
+    color: rgba(100, 80, 230, 1);
+    border-radius: 20px 20px 20px 10px;
+    padding: 8px 12px;
+    max-width: 70%;
+    margin: 5px 0 5px auto; /* Right-align */
+    text-align: justify;
+    font-size: 11px;
+  }
+  
+  .bot-message {
+    color: rgb(40, 40, 40);
+    margin: 5px auto 5px 0; /* Left-align */
+    margin-top: 10px;
+    text-align: justify;
+    font-size: 11px;
+  }
+  
+  .popup-container {
+    position: absolute; /* Position it relative to the chat region */
+    top: 0;
+    left: 0;
+    width: 100%; /* Full width of the parent container */
+    height: 100%; /* Full height of the parent container */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 10; /* Ensure it appears on top of other elements */
+    visibility: hidden; /* Initially hidden */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease-in-out;
+  }
+  
+  .popup-container.active {
+    visibility: visible; /* Make it visible */
+    opacity: 1;
+  }
+  
+  .popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 80%; /* Adjust width as needed */
+    max-width: 400px; /* Prevent it from becoming too large */
+    border: 2px solid rgb(240, 240, 240);
+  }
+  
+  .popup-content h3 {
+    margin: 0 0 10px;
+  }
+  
+  .popup-content p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    color: rgb(40, 40, 40);
+  }
+  
+  .popup-content button {
+    background: linear-gradient(135deg, rgba(100, 80, 230, 1), rgba(140, 50, 256, 0.8)), center/cover no-repeat;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .popup-content button:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+  }
+  
+  #green{
+    background: linear-gradient(135deg, rgba(40, 150, 100, 1), rgba(20, 200, 140, 0.8)), center/cover no-repeat;
+  }
+  
+  #blue{
+    background: linear-gradient(135deg, rgba(40, 40, 256, 1), rgba(80, 80, 256, 0.8)), center/cover no-repeat;
+  }
+  
