@@ -1,61 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TimelessAI</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>TimelessAI</h1>
-    <h4>with NordVPN</h4>
-  </header>
-  <div class="menu-container">
-    More chatbots here!
-    <div class="menu">
-      <div class="menu-item" onclick="showChatbot(1)">Chatbot 1</div>
-      <div class="menu-item" onclick="showChatbot(2)">Chatbot 2</div>
-      <div class="menu-item" onclick="showChatbot(3)">Chatbot 3</div>
-    </div>
-  </div>
-  <div class="popup-container" id="popup"> <div class="popup-content"> <h3>Special Offer!</h3> <p>Get 20% off on your next purchase. Use code <strong>CHAT20</strong>.</p>
-  <a href="https://nordvpn.com/nord-site/"><button id="blue">NordVPN</button></a>
-  <a href="https://nordpass.com/"><button id="green">NordPass</button></a>
-  <button onclick="closePopup()">Close</button>
-  </div> </div>
-  
-  <div class="chat-container">
-    <div class="chatbot" id="chatbot1">
-      <h2>Chatbot 1</h2>
-      <div class="chat-window" id="chat-window-1"></div>
-      <div class="horizontal">
-        <input type="text" placeholder="Type a message..." id="input-1"> <button onclick="sendMessage(1)">Send</button>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimelessAI</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+
+    <header>
+      <h1>TimelessAI</h1>
+      <h4>with NordVPN</h4>
+    </header>
+
+    <!-- Left Sidebar for Previous Chats -->
+    <div class="left-sidebar" id="left-sidebar">
+      <!-- Button to toggle sidebar -->
+      <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="chat-list" id="chat-list">
+        <!-- Previous chat entries will appear here dynamically -->
       </div>
-      
     </div>
-    <div class="chatbot" id="chatbot2">
-      <h2>Chatbot 2</h2>
-      <div class="chat-window" id="chat-window-2"></div>
-      <div class="horizontal">
-        <input type="text" placeholder="Type a message..." id="input-2"        >
-        <button onclick="sendMessage(2)">Send</button>
+
+    <div class="chat-region" id="chat-region">
+      <!-- Menu for switching chatbots -->
+      <div class="menu-container">
+        More chatbots here!
+        <div class="menu">
+          <!-- Click these to switch chatbots -->
+          <div class="menu-item" onclick="showChatbot('gandhi')">Gandhi</div>
+          <div class="menu-item" onclick="showChatbot('voltaire')">Voltaire</div>
+          <div class="menu-item" onclick="showChatbot('einstein')">Einstein</div>
+        </div>
       </div>
 
-    </div>
-    <div class="chatbot" id="chatbot3">
-      <h2>Chatbot 3</h2>
-      <div class="chat-window" id="chat-window-3"></div>
-      <div class="horizontal">
-        <input type="text" placeholder="Type a message..." id="input-3">
-        <button onclick="sendMessage(3)">Send</button>
+      <!-- Popup (unchanged from your original code) -->
+      <div class="popup-container" id="popup">
+        <div class="popup-content">
+          <h3>Special Offer!</h3>
+          <p>Get 20% off on your next purchase. Use code <strong>CHAT20</strong>.</p>
+          <a href="https://nordvpn.com/nord-site/"><button id="blue">NordVPN</button></a>
+          <a href="https://nordpass.com/"><button id="green">NordPass</button></a>
+          <button onclick="closePopup()">Close</button>
+        </div>
       </div>
 
+      <div class="left-sidebar" id="left-sidebar">
+        <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+      </div>
+
+
+      <!-- Main chat container -->
+      <div class="chat-container">
+        <!-- Chatbot Gandhi -->
+        <div class="chatbot" id="gandhi">
+
+          <button class="show-sidebar" id="show-sidebar" onclick="toggleSidebar()">☰</button>
+          <h2>Mahatma Gandhi</h2>
+          <div class="chat-window" id="chat-window-gandhi">
+            <!-- Initial info for Gandhi -->
+            <div class="bot-info">
+              <img src="https://files.oaiusercontent.com/file-6yGyzwVqC3cRJgJkuj9CV8?se=2025-01-24T04%3A34%3A39Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D1f624f1d-b922-417a-bb87-244efca3eb58.webp&sig=G9U1uFraM/akeEoQMZQM50MrQJKEcMrJs4Kfen%2BjIeg%3D" alt="Gandhi" />
+              <p>Known for nonviolent resistance, Gandhi inspires peace and compassion.</p>
+            </div>
+          </div>
+          <div class="horizontal">
+            <input type="text" placeholder="Type a message..." id="input-gandhi">
+            <button onclick="sendMessage('gandhi')">Send</button>
+          </div>
+        </div>
+
+        <!-- Chatbot Voltaire -->
+        <div class="chatbot" id="voltaire">
+
+          <button class="show-sidebar" id="show-sidebar" onclick="toggleSidebar()">☰</button>
+          <h2>Voltaire</h2>
+          <div class="chat-window" id="chat-window-voltaire">
+            <!-- Initial info for Voltaire -->
+            <div class="bot-info">
+              <img src="https://files.oaiusercontent.com/file-GwtnhUKKAwre3VWricaYC2?se=2025-01-24T04%3A35%3A13Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Df8f55df9-1d2b-4723-90d3-247e35aa206c.webp&sig=mKAlyiPAbdVCygsJN2/r9s8MytGq0UWdNgDQ6y%2B6Rfo%3D" alt="Voltaire" />
+              <p>A French Enlightenment writer, Voltaire is renowned for wit and freedom advocacy.</p>
+            </div>
+          </div>
+          <div class="horizontal">
+            <input type="text" placeholder="Type a message..." id="input-voltaire">
+            <button onclick="sendMessage('voltaire')">Send</button>
+          </div>
+        </div>
+
+        <!-- Chatbot Einstein -->
+        <div class="chatbot" id="einstein">
+
+          <button class="show-sidebar" id="show-sidebar" onclick="toggleSidebar()">☰</button>
+          <h2>Albert Einstein</h2>
+          <div class="chat-window" id="chat-window-einstein">
+            <!-- Initial info for Einstein -->
+            <div class="bot-info">
+              <img src="https://files.oaiusercontent.com/file-9UV9zwGsAhkpzedw8F3JQs?se=2025-01-24T04%3A34%3A13Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D281d8116-6f0a-4585-a798-15ff57059c37.webp&sig=m/%2BntOnRHGuMQicrwgAnP2%2BLP9gTiBQonzvBvf/Mwc0%3D" alt="Einstein" />
+              <p>A theoretical physicist whose work on relativity changed the course of science.</p>
+            </div>
+          </div>
+          <div class="horizontal">
+            <input type="text" placeholder="Type a message..." id="input-einstein">
+            <button onclick="sendMessage('einstein')">Send</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <script src="main.js"></script>
-</body>
+
+    <!-- Left Sidebar -->
+    <div class="left-sidebar" id="left-sidebar">
+      <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="chat-list" id="chat-list">
+        <!-- Previous chat entries will be dynamically added here -->
+      </div>
+    </div>
+
+
+
+    <!-- Script -->
+    <script src="script.js"></script>
+  </body>
 </html>
