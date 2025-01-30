@@ -4,6 +4,88 @@
   font-style: normal;
 }
 
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 1000;
+  padding: 20px 0;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: background-color 0.3s ease;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+nav ul li img {
+  margin-left: 1vh;
+  margin-right: 1vh;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #5e17eb;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  padding: 2px 5px;
+  margin-left: 1vh;
+  margin-right: 1vh;
+  font-weight: 1000;
+}
+
+nav ul li a:hover {
+  background-color: #5e17eb;
+  color: white;
+  transform: translateY(-3px); /* Subtle hover effect */
+}nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 1000;
+  padding: 20px 0;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: background-color 0.3s ease;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+nav ul li img {
+  margin-left: 1vh;
+  margin-right: 1vh;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #5e17eb;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  padding: 2px 5px;
+  margin-left: 1vh;
+  margin-right: 1vh;
+  font-weight: 1000;
+}
+
+nav ul li a:hover {
+  background-color: #5e17eb;
+  color: white;
+  transform: translateY(-3px); /* Subtle hover effect */
+}
+
 body {
   font-family: "Outfit";
   background-color: white;
@@ -19,14 +101,60 @@ h4 {
   border-radius: 100px;
   margin: 5px auto; /* Right-align */
   padding: 10px;
-
 }
 
 header {
-  background: linear-gradient(135deg, rgba(100, 80, 230, 1), rgba(140, 50, 256, 0.8)), center/cover no-repeat;
+  padding-bottom: 3vh;
+  background: white;
+  color: rgba(0, 40, 20, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content from the top */
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding-top: 25vh; /* Increase padding-top to push content further down */
+  line-height: 1;
+  transition: background 0.3s ease-in-out;
+}
+
+subheader {
+  background: white;
   color: white;
-  padding: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Align content from the top */
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  transition: background 0.3s ease-in-out;
+  margin: auto;
+  gap: 10px;
+  box-shadow: rgba(100, 150, 200, 0.2) 0px 7px 29px 0px;
+}
+
+subheader div {
+  justify-content: center; /* Align content from the top */
+  align-items: center;
+  gap: 10px;
+}
+
+subheader img {
+  transition: transform 0.3s;
+  margin-bottom: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+subheader img:hover {
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+header img {
+  width: 50vh;
+  border-radius: 2vh;
+  box-shadow: rgba(94, 23, 235, 0.4) 0px 50px 100px;
+  margin-top: 10vh;
 }
 
 .menu-container {
@@ -72,19 +200,19 @@ header {
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px; /* Slightly smaller font for compactness */
-  transition: background-color 0.3s, transform 0.3s;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
   display: inline-flex; /* Ensure items stay inline */
   align-items: center; /* Vertically center text */
   justify-content: center; /* Horizontally center text */
   height: 30px; /* Set a fixed height for uniformity */
 }
 
-
 .menu-item:hover {
   background-color: rgb(240, 240, 240);
   transform: scale(1.1); /* Slightly enlarge on hover */
 }
-
 
 .chat-container {
   display: flex;
@@ -101,7 +229,9 @@ header {
   box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
   display: none; /* Hidden by default */
   margin-bottom: 5%;
 }
@@ -194,7 +324,9 @@ button:hover {
   z-index: 10; /* Ensure it appears on top of other elements */
   visibility: hidden; /* Initially hidden */
   opacity: 0;
-  transition: visibility 0s, opacity 0.3s ease-in-out;
+  transition:
+    visibility 0s,
+    opacity 0.3s ease-in-out;
 }
 
 .popup-container.active {
@@ -223,7 +355,9 @@ button:hover {
 }
 
 .popup-content button {
-  background: linear-gradient(135deg, rgba(100, 80, 230, 1), rgba(140, 50, 256, 0.8)), center/cover no-repeat;
+  background:
+    linear-gradient(135deg, rgba(100, 80, 230, 1), rgba(140, 50, 256, 0.8)),
+    center/cover no-repeat;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -236,18 +370,22 @@ button:hover {
   transform: scale(1.1); /* Slightly enlarge on hover */
 }
 
-#green{
-  background: linear-gradient(135deg, rgba(40, 150, 100, 1), rgba(20, 200, 140, 0.8)), center/cover no-repeat;
+#green {
+  background:
+    linear-gradient(135deg, rgba(40, 150, 100, 1), rgba(20, 200, 140, 0.8)),
+    center/cover no-repeat;
 }
 
-#blue{
-  background: linear-gradient(135deg, rgba(40, 40, 256, 1), rgba(80, 80, 256, 0.8)), center/cover no-repeat;
+#blue {
+  background:
+    linear-gradient(135deg, rgba(40, 40, 256, 1), rgba(80, 80, 256, 0.8)),
+    center/cover no-repeat;
 }
 
 /* Sidebar Styles */
 .left-sidebar {
   width: 250px;
-  background-color: rgba(240, 240, 240, 1);
+  background-color: white;
   position: fixed;
   top: 0;
   left: 0;
@@ -260,6 +398,7 @@ button:hover {
   overflow-y: auto;
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 0px 24px;
 }
 
 .left-sidebar.active {
@@ -346,4 +485,178 @@ button:hover {
   float: left;
   vertical-align: top;
   margin-right: -1000px;
+}
+
+/* Add these styles to your existing CSS */
+
+/* Gamified Learning Section */
+.gamified-learning {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.game-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.game-options button {
+  background-color: rgba(100, 80, 230, 1);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.game-options button:hover {
+  background-color: rgba(80, 60, 210, 1);
+}
+
+/* Collaborative Features Section */
+.collaborative-features {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.collab-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.collab-options button {
+  background-color: rgba(40, 150, 100, 1);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.collab-options button:hover {
+  background-color: rgba(20, 130, 80, 1);
+}
+
+/* Educational Tools Section */
+.educational-tools {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.tool-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.tool-options button {
+  background-color: rgba(256, 100, 80, 1);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tool-options button:hover {
+  background-color: rgba(230, 80, 60, 1);
+}
+
+/* Advanced AI Features Section */
+.advanced-ai {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.ai-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ai-options button {
+  background-color: rgba(40, 40, 256, 1);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.ai-options button:hover {
+  background-color: rgba(20, 20, 230, 1);
+}
+
+/* Add to CSS */
+/* Right Sidebar */
+.right-sidebar {
+  width: 250px;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  padding: 10px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 0px 24px;
+}
+
+.right-sidebar.active {
+  transform: translateX(0);
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(100, 80, 230, 1);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.left-toggle {
+  left: 10px;
+  top: 30px;
+}
+
+.right-toggle {
+  right: 10px;
+  top: 30px;
+}
+
+.sidebar-content {
+  display: none;
+  padding: 20px;
+}
+
+.sidebar-content.active {
+  display: block;
+}
+
+.sidebar-screen {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
