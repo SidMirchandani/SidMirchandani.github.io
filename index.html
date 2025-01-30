@@ -10,58 +10,82 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-
-    <header>
-      <h1>TimelessAI</h1>
-      <h4>with NordVPN</h4>
-    </header>
+    <!-- Header -->
+    <section id="home">
+      <header>
+        <img src="https://i.postimg.cc/tTjS3dRB/Code-JAMS-1.png">
+      </header>
+      <subheader>
+        <div>
+          <a href="https://nordvpn.com/"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjryC__w5W7qqVkw8wmLh914my0tHoUNaeA&s" height = 30px></a>
+          <a href="https://nordpass.com/"><img src="https://bestreviews.net/wp-content/uploads/2024/06/nordpass-logo.svg" height = 30px></a>
+        </div>
+      </subheader>
+    </section>
+    
+    <nav>
+      <div class="container">
+        <ul>
+          <li>
+            <img src="https://i.postimg.cc/SQPh8sYH/Timeless.png" alt="Logo" style="float: right;" height="50px" />
+          </li>
+        </ul>
+      </div>
+      
+    </nav>
 
     <!-- Left Sidebar for Previous Chats -->
     <div class="left-sidebar" id="left-sidebar">
-      <!-- Button to toggle sidebar -->
       <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
       <div class="chat-list" id="chat-list">
         <!-- Previous chat entries will appear here dynamically -->
       </div>
     </div>
 
+    <!-- Right Sidebar for Everyday Tools -->
+    <div class="right-sidebar" id="right-sidebar">
+      <h2>Everyday Tools</h2>
+      <div class="sidebar-section">
+        <h3>Personalized Task Planner</h3>
+        <button onclick="toggleWidget('task-planner-widget')">Plan Your Day</button>
+      </div>
+      <div class="sidebar-section">
+        <h3>Habit Tracker</h3>
+        <button onclick="toggleWidget('habit-tracker-widget')">Track Habits</button>
+      </div>
+      <div class="sidebar-section">
+        <h3>Real-Time News Feed</h3>
+        <button onclick="toggleWidget('news-feed-widget')">View News</button>
+      </div>
+      <div class="sidebar-section">
+        <h3>Mental Well-Being</h3>
+        <button onclick="toggleWidget('breathing-exercise-widget')">Breathing Exercise</button>
+        <button onclick="toggleWidget('journal-widget')">Daily Journal</button>
+      </div>
+      <div class="sidebar-section">
+        <h3>Weather Updates</h3>
+        <button onclick="toggleWidget('weather-widget')">Check Weather</button>
+      </div>
+      <div class="sidebar-section">
+        <h3>AI Study Assistant</h3>
+        <button onclick="toggleWidget('study-assistant-widget')">Study with AI</button>
+      </div>
+      <div class="sidebar-section">
+        <h3>Math Trainer</h3>
+        <button onclick="toggleWidget('math-trainer-widget')">Practice Math</button>
+      </div>
+      <div class="sidebar-section">
+        <h3>PSAT English Trainer</h3>
+        <button onclick="toggleWidget('psat-english-widget')">Train for PSAT English</button>
+      </div>
+    </div>
+
+    <!-- Main Chat Region -->
     <div class="chat-region" id="chat-region">
-      <!-- Menu for switching chatbots -->
-      <div class="menu-container">
-        More chatbots here!
-        <div class="menu">
-          <!-- Click these to switch chatbots -->
-          <div class="menu-item" onclick="showChatbot('gandhi')">Gandhi</div>
-          <div class="menu-item" onclick="showChatbot('voltaire')">Voltaire</div>
-          <div class="menu-item" onclick="showChatbot('einstein')">Einstein</div>
-        </div>
-      </div>
-
-      <!-- Popup (unchanged from your original code) -->
-      <div class="popup-container" id="popup">
-        <div class="popup-content">
-          <h3>Special Offer!</h3>
-          <p>Get 20% off on your next purchase. Use code <strong>CHAT20</strong>.</p>
-          <a href="https://nordvpn.com/nord-site/"><button id="blue">NordVPN</button></a>
-          <a href="https://nordpass.com/"><button id="green">NordPass</button></a>
-          <button onclick="closePopup()">Close</button>
-        </div>
-      </div>
-<!-- 
-      <div class="left-sidebar" id="left-sidebar">
-        <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
-      </div> -->
-
-
-      <!-- Main chat container -->
       <div class="chat-container">
-        <!-- Chatbot Gandhi -->
-        <div class="chatbot" id="gandhi">
-
-<!--           <button class="show-sidebar" id="show-sidebar" onclick="toggleSidebar()">☰</button> -->
+        <div class="chatbot active" id="gandhi">
           <h2>Mahatma Gandhi</h2>
           <div class="chat-window" id="chat-window-gandhi">
-            <!-- Initial info for Gandhi -->
             <div class="bot-info">
               <img src="https://i.postimg.cc/cLQ9hV5x/image.png" alt="Gandhi" />
               <p>Known for nonviolent resistance, Gandhi inspires peace and compassion.</p>
@@ -72,56 +96,144 @@
             <button onclick="sendMessage('gandhi')">Send</button>
           </div>
         </div>
-
-        <!-- Chatbot Voltaire -->
-        <div class="chatbot" id="voltaire">
-
-          <button class="show-sidebar" id="show-sidebar" onclick="toggleSidebar()">☰</button>
-          <h2>Voltaire</h2>
-          <div class="chat-window" id="chat-window-voltaire">
-            <!-- Initial info for Voltaire -->
-            <div class="bot-info">
-              <img src="https://i.postimg.cc/g0sMF3W1/image.png" alt="Voltaire" />
-              <p>A French Enlightenment writer, Voltaire is renowned for wit and freedom advocacy.</p>
-            </div>
-          </div>
-          <div class="horizontal">
-            <input type="text" placeholder="Type a message..." id="input-voltaire">
-            <button onclick="sendMessage('voltaire')">Send</button>
-          </div>
-        </div>
-
-        <!-- Chatbot Einstein -->
-        <div class="chatbot" id="einstein">
-
-          <button class="show-sidebar" id="show-sidebar" onclick="toggleSidebar()">☰</button>
-          <h2>Albert Einstein</h2>
-          <div class="chat-window" id="chat-window-einstein">
-            <!-- Initial info for Einstein -->
-            <div class="bot-info">
-              <img src="https://i.postimg.cc/Hs8PcJw7/image.png" alt="Einstein" />
-              <p>A theoretical physicist whose work on relativity changed the course of science.</p>
-            </div>
-          </div>
-          <div class="horizontal">
-            <input type="text" placeholder="Type a message..." id="input-einstein">
-            <button onclick="sendMessage('einstein')">Send</button>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- Left Sidebar
-    <div class="left-sidebar" id="left-sidebar">
-      <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
-      <div class="chat-list" id="chat-list">
-        Previous chat entries will be dynamically added here
+    <!-- Widgets Section -->
+    <div class="widgets-section" id="widgets-section">
+      <!-- Task Planner Widget -->
+      <div class="widget hidden" id="task-planner-widget">
+        <h3>Task Planner <button class="close-btn" onclick="closeWidget('task-planner-widget')">X</button></h3>
+        <p>Plan your daily tasks here.</p>
       </div>
-    </div> -->
 
+      <!-- Habit Tracker Widget -->
+      <div class="widget hidden" id="habit-tracker-widget">
+        <h3>Habit Tracker <button class="close-btn" onclick="closeWidget('habit-tracker-widget')">X</button></h3>
+        <p>Track your habits and stay consistent!</p>
+      </div>
 
+      <!-- News Feed Widget -->
+      <div class="widget hidden" id="news-feed-widget">
+        <h3>Real-Time News Feed <button class="close-btn" onclick="closeWidget('news-feed-widget')">X</button></h3>
+        <p>Loading live news...</p>
+      </div>
 
-    <!-- Script -->
-    <script src="script.js"></script>
+      <!-- Breathing Exercise Widget -->
+      <div class="widget hidden" id="breathing-exercise-widget">
+        <h3>Breathing Exercise <button class="close-btn" onclick="closeWidget('breathing-exercise-widget')">X</button></h3>
+        <p>Follow a guided breathing exercise to relax.</p>
+      </div>
+
+      <!-- Journal Widget -->
+      <div class="widget hidden" id="journal-widget">
+        <h3>Daily Journal <button class="close-btn" onclick="closeWidget('journal-widget')">X</button></h3>
+        <p>Today's journal prompt: What are you grateful for?</p>
+      </div>
+
+      <!-- Weather Widget -->
+      <div class="widget hidden" id="weather-widget">
+        <h3>Weather Updates <button class="close-btn" onclick="closeWidget('weather-widget')">X</button></h3>
+        <p>Current weather: Sunny, 25°C.</p>
+      </div>
+
+      <!-- Study Assistant Widget -->
+      <div class="widget hidden" id="study-assistant-widget">
+        <h3>AI Study Assistant <button class="close-btn" onclick="closeWidget('study-assistant-widget')">X</button></h3>
+        <p>Get help with your studies using AI tools.</p>
+      </div>
+
+      <!-- Math Trainer Widget -->
+      <div class="widget hidden" id="math-trainer-widget">
+        <h3>Math Trainer <button class="close-btn" onclick="closeWidget('math-trainer-widget')">X</button></h3>
+        <p>Practice math problems and improve your skills.</p>
+      </div>
+
+      <!-- PSAT English Trainer Widget -->
+      <div class="widget hidden" id="psat-english-widget">
+        <h3>PSAT English Trainer <button class="close-btn" onclick="closeWidget('psat-english-widget')">X</button></h3>
+        <p>Enhance your PSAT English skills with practice tests and tips.</p>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      function toggleWidget(widgetId) {
+        const widget = document.getElementById(widgetId);
+        widget.classList.toggle("hidden");
+      }
+
+      function closeWidget(widgetId) {
+        const widget = document.getElementById(widgetId);
+        widget.classList.add("hidden");
+      }
+    </script>
+
+    <!-- Styles -->
+    <style>
+      * {
+        font-family: "Outfit", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+      .right-sidebar {
+        width: 250px;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+      }
+      .right-sidebar.active {
+        transform: translateX(0);
+      }
+      button {
+        background-color: #6450e6;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #5439d9;
+      }
+      .widgets-section {
+        margin-top: 20px;
+        padding: 10px;
+      }
+      .widget {
+        background: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: block;
+      }
+      .widget.hidden {
+        display: none;
+      }
+      .close-btn {
+        float: right;
+        color: red;
+        background: none;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
   </body>
 </html>
