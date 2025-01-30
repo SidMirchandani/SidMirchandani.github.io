@@ -86,6 +86,10 @@ nav ul li a:hover {
   transform: translateY(-3px); /* Subtle hover effect */
 }
 
+.subtitle{
+  margin-top: 10px;
+}
+
 body {
   font-family: "Outfit";
   background-color: white;
