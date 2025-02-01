@@ -385,7 +385,7 @@ header img {
 .prizes-container {
   margin-top: 20px;
   margin-bottom: 20px;
-  max-height: 500px;  /* Adjust max-height as needed */
+  max-height: 200px;  /* Adjust max-height as needed */
   overflow-y: auto;   /* Enable vertical scrolling when content exceeds max height */
   padding-right: 10px; /* Optional: ensures content doesn't get hidden behind the scrollbar */
 }
