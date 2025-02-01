@@ -132,6 +132,7 @@ header img {
   padding: 20px;
   border-radius: 10px;
   box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
+  margin-bottom: 30px;
 }
 .widget-display {
   flex: 1;
