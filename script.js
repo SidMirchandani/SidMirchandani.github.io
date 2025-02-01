@@ -551,28 +551,28 @@ function learnOnlineWidget() {
   const courses = [
     {
       title: "ReadJAMS",
-      description: "Join live reading sessions and engaging discussions.",
+      description: "An online library for JAMS.",
       buttonText: "Join ReadJAMS!",
       buttonUrl: "https://readjams.vercel.app", // Replace with the desired URL when available
       imageUrl: "https://i.ibb.co/61pC5Px/Read-JAMS.png"
     },
     {
       title: "MathJAMS",
-      description: "Participate in interactive math sessions and challenges.",
+      description: "An online math trainer for JAMS.",
       buttonText: "Join MathJAMS!",
       buttonUrl: "https://mathjams.vercel.app", // Replace with the desired URL when available
       imageUrl: "https://i.postimg.cc/2jv9GmfM/Read-JAMS-1.png"
     },
     {
-      title: "ReadJAMS",
-      description: "An online library for JAMS",
-      buttonText: "Join ReadJAMS!",
-      buttonUrl: "https://readjams.vercel.app/", // Replace with the desired URL when available
-      imageUrl: "https://i.ibb.co/61pC5Px/Read-JAMS.png"
+      title: "CodeJAMS",
+      description: "An online code trainer for JAMS.",
+      buttonText: "Join CodeJAMS!",
+      buttonUrl: "https://codejams.vercel.app/", // Replace with the desired URL when available
+      imageUrl: "https://i.postimg.cc/cCV9cxx1/Code-JAMS.png"
     },
     {
       title: "MathDash",
-      description: "Boost your math skills with dynamic problem-solving.",
+      description: "An online math trainer for all!",
       buttonText: "Join MathDash!",
       buttonUrl: "https://playmathdash.vercel.app", // Replace with the desired URL when available
       imageUrl: "https://i.postimg.cc/B6H7jhyX/MATH.png"
