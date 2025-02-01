@@ -329,12 +329,5 @@ header img {
   font-size: 12px;
 }
 .bot-message {
-  background-color: #e0e0e0;
-  color: #333;
-  border-radius: 20px 20px 10px 20px;
-  padding: 8px 12px;
-  margin: 5px 0;
-  max-width: 70%;
   font-size: 12px;
-  opacity: 0;
 }
