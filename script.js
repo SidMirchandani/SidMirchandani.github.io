@@ -5,13 +5,14 @@ const points = {
   language: 0
 };
 
-// Returns points as "⭐ X"
+// Returns points as "⭐ X" (for example, "⭐ 1")
 function getPointsString(num) {
   return `⭐ ${num}`;
 }
 
 /* ---------------------- */
-/* Bio Trainer Widget: Proper MCQs (10 sample questions) */
+/* Bio Trainer Widget: Proper MCQs */
+/* (10 sample questions are provided; add more as needed) */
 const bioMCQs = [
   {
     question: "What is commonly known as the powerhouse of the cell?",
@@ -66,8 +67,9 @@ const bioMCQs = [
 ];
 
 /* ---------------------- */
-/* Language Learning Assistant Widget: Open-Ended Translation Questions */
-/* (10 sample questions per language) */
+/* Language Learning Assistant Widget */
+/* Open-Ended Translation Questions */
+/* (10 sample questions per language are provided; expand as needed) */
 const languageQuestions = {
   spanish: [
     { question: "Translate 'Hello, how are you?' into Spanish.", answer: "hola, ¿cómo estás?" },
@@ -132,12 +134,6 @@ function loadWidget(widgetType) {
   const widgetDisplay = document.getElementById("widget-display");
   let content = "";
   switch(widgetType) {
-    case "freeprizes":
-      content = freePrizesWidget();
-      break;
-    case "productivity":
-      content = productivityWidget();
-      break;
     case "math":
       content = mathWidget();
       break;
@@ -150,11 +146,26 @@ function loadWidget(widgetType) {
     case "mental":
       content = mentalWidget();
       break;
+    case "forum":
+      content = forumWidget();
+      break;
+    case "jobs":
+      content = jobsWidget();
+      break;
     case "quote":
       content = quoteWidget();
       break;
     case "language":
       content = languageWidget();
+      break;
+    case "environment":
+      content = environmentWidget();
+      break;
+    case "volunteer":
+      content = volunteerWidget();
+      break;
+    case "library": // New case for the library widget
+      content = libraryWidget();
       break;
     default:
       content = `<p>Widget not found.</p>`;
@@ -165,43 +176,6 @@ function loadWidget(widgetType) {
     widgetDisplay.style.transition = "opacity 0.5s ease-in-out";
     widgetDisplay.style.opacity = 1;
   }, 50);
-}
-
-/* ---------------------- */
-/* Free Prizes Widget (New) */
-/* ---------------------- */
-const freePrizes = [
-  "Free Coffee Voucher",
-  "Discount Coupon for an Online Store",
-  "Free Ebook Download",
-  "Free Trial Subscription",
-  "Gift Card for a Local Restaurant"
-];
-
-function freePrizesWidget() {
-  const prize = freePrizes[Math.floor(Math.random() * freePrizes.length)];
-  return `<h3>Free Prizes</h3>
-          <p>Congratulations! You've won:</p>
-          <h2 style="text-align: center; margin-top: 20px; color: #e6ac00;">${prize}</h2>
-          <button onclick="alert('You have claimed: ${prize}!')">Claim Prize</button>`;
-}
-
-/* ---------------------- */
-/* Productivity Tips Widget (New) */
-/* ---------------------- */
-const productivityTips = [
-  "Make a prioritized to-do list every morning.",
-  "Use the Pomodoro Technique: 25 minutes of work, then a 5-minute break.",
-  "Set clear, achievable goals for each day.",
-  "Eliminate distractions by silencing non-essential notifications.",
-  "Review your progress at the end of each day."
-];
-
-function productivityWidget() {
-  const tip = productivityTips[Math.floor(Math.random() * productivityTips.length)];
-  return `<h3>Productivity Tips</h3>
-          <p style="margin-top: 20px;">${tip}</p>
-          <button onclick="loadWidget('productivity')">Show Another Tip</button>`;
 }
 
 /* ---------------------- */
@@ -263,8 +237,8 @@ function bioWidget() {
   const q = bioMCQs[Math.floor(Math.random() * bioMCQs.length)];
   window.currentBioAnswer = q.answer.toLowerCase();
   let optionsHtml = q.options.map(option =>
-    `<label><input type="radio" name="bio-option" value="${option.toLowerCase()}"> ${option}</label><br>`
-  ).join("");
+                                  `<label><input type="radio" name="bio-option" value="${option.toLowerCase()}"> ${option}</label><br>`
+                                 ).join("");
   return `<h3>Bio Trainer</h3>
           <p>${q.question}</p>
           ${optionsHtml}
@@ -310,6 +284,40 @@ function brailleWidget() {
           <p id="braille-output"></p>`;
 }
 
+function libraryWidget() {
+  // Create an array with 21 PDF link objects
+  const libraryPDFs = [
+    { title: "Romeo & Juliet", url: "https://www.gutenberg.org/cache/epub/1513/pg1513-images.html" },
+    { title: "The Complete Works of William Shakespeare", url: "https://www.gutenberg.org/cache/epub/100/pg100-images.html" },
+    { title: "Hamlet", url: "https://www.gutenberg.org/cache/epub/27761/pg27761-images.html" },
+    { title: "Macbeth", url: "https://www.gutenberg.org/cache/epub/1533/pg1533-images.html" },
+    { title: "A Midsommer Nights Dream", url: "https://www.gutenberg.org/cache/epub/1514/pg1514-images.html" },
+    { title: "The Tempest", url: "https://www.gutenberg.org/cache/epub/23042/pg23042-images.html" },
+    { title: "The Taming of the Shrew", url: "https://www.gutenberg.org/cache/epub/1508/pg1508-images.html" },
+    { title: "Othello, the Moor of Venice", url: "https://www.gutenberg.org/cache/epub/1531/pg1531-images.html" },
+    { title: "The Merchant of Venice", url: "https://www.gutenberg.org/cache/epub/1515/pg1515-images.html" }
+  ];
+
+  // Build a responsive grid of PDF "cards"
+  let linksHtml = `<div class="library-container"><div class="pdf-grid">`;
+  libraryPDFs.forEach(pdf => {
+    linksHtml += `
+      <div class="pdf-item">
+        <div class="pdf-icon">📄</div>
+        <div class="pdf-title">
+          <a href="${pdf.url}" target="_blank">${pdf.title}</a>
+        </div>
+      </div>`;
+  });
+  linksHtml += `</div></div>`;
+
+  return `<h3>Library</h3>
+          <p>Select a PDF to read:</p>
+          ${linksHtml}`;
+}
+
+
+
 function translateBraille() {
   const text = document.getElementById("braille-input").value.toLowerCase();
   let translated = "";
@@ -337,6 +345,43 @@ function mentalWidget() {
 }
 
 /* ---------------------- */
+/* Community Forum Widget */
+/* ---------------------- */
+let forumPosts = [];
+
+function forumWidget() {
+  let postsHtml = forumPosts.map(post => `<p>• ${post}</p>`).join("");
+  return `<h3>Community Forum</h3>
+          <p>Share your thoughts:</p>
+          <textarea id="forum-input" class="widget-input" placeholder="Type your post..."></textarea>
+          <button onclick="submitForumPost()">Post</button>
+          <div id="forum-posts">${postsHtml || "<p>No posts yet.</p>"}</div>`;
+}
+
+function submitForumPost() {
+  const text = document.getElementById("forum-input").value.trim();
+  if (text) {
+    forumPosts.push(text);
+    loadWidget("forum");
+  }
+}
+
+/* ---------------------- */
+/* Job Board Widget */
+/* ---------------------- */
+const jobListings = [
+  "Software Engineer at TechCorp",
+  "Graphic Designer at Creative Studio",
+  "Data Analyst at DataWorks"
+];
+
+function jobsWidget() {
+  let jobsHtml = jobListings.map(job => `<li>${job} <button onclick="alert('Applied for: ${job}')">Apply</button></li>`).join("");
+  return `<h3>Job Board</h3>
+          <ul>${jobsHtml}</ul>`;
+}
+
+/* ---------------------- */
 /* Random Quote Generator Widget */
 /* ---------------------- */
 const quotes = [
@@ -355,6 +400,7 @@ function quoteWidget() {
 
 /* ---------------------- */
 /* Language Learning Assistant Widget */
+/* (Open-ended translation questions; proper questions provided) */
 /* ---------------------- */
 function languageWidget() {
   if (!window.currentLanguage) window.currentLanguage = "spanish";
@@ -393,27 +439,56 @@ function checkLanguageAnswer() {
 }
 
 /* ---------------------- */
+/* Environmental Tracker Widget */
+/* ---------------------- */
+function environmentWidget() {
+  const aqi = Math.floor(Math.random() * 100) + 1;
+  const temp = Math.floor(Math.random() * 15) + 15;
+  const humidity = Math.floor(Math.random() * 50) + 30;
+  return `<h3>Environmental Tracker</h3>
+          <p>Air Quality Index: ${aqi}</p>
+          <p>Temperature: ${temp}°C</p>
+          <p>Humidity: ${humidity}%</p>
+          <button onclick="loadWidget('environment')">Refresh Data</button>`;
+}
+
+/* ---------------------- */
+/* Volunteer Opportunities Widget */
+/* ---------------------- */
+const volunteerOpportunities = [
+  "Community Clean-Up on Saturday",
+  "Food Bank Volunteer Needed",
+  "Tutoring for Underprivileged Children"
+];
+
+function volunteerWidget() {
+  let oppsHtml = volunteerOpportunities.map(opp => `<p>• ${opp} <button onclick="alert('Sign up for: ${opp}')">Sign Up</button></p>`).join("");
+  return `<h3>Volunteer Opportunities</h3>
+          ${oppsHtml}`;
+}
+
+/* ---------------------- */
 /* Chat Functionality */
 /* ---------------------- */
 function sendMessage() {
   const inputField = document.getElementById("chat-input");
   const message = inputField.value.trim();
   if (!message) return;
-  
+
   const chatWindow = document.getElementById("chat-window");
   const userMsgDiv = document.createElement("div");
   userMsgDiv.className = "user-message";
   userMsgDiv.textContent = message;
   chatWindow.appendChild(userMsgDiv);
-  
+
   inputField.value = "";
   chatWindow.scrollTop = chatWindow.scrollHeight;
-  
+
   const botMsgDiv = document.createElement("div");
   botMsgDiv.className = "bot-message";
   chatWindow.appendChild(botMsgDiv);
   chatWindow.scrollTop = chatWindow.scrollHeight;
-  
+
   const botResponse = "Simulated response to: " + message;
   setTimeout(() => {
     typeText(botMsgDiv, botResponse, 50);
