@@ -167,6 +167,9 @@ function loadWidget(widgetType) {
     case "library": // New case for the library widget
       content = libraryWidget();
       break;
+    case "freeprizes": // Add this case for free prizes widget
+      content = freePrizesWidget();
+      break;
     default:
       content = `<p>Widget not found.</p>`;
   }
@@ -181,6 +184,100 @@ function loadWidget(widgetType) {
 /* ---------------------- */
 /* Math Trainer Widget */
 /* ---------------------- */
+
+function freePrizesWidget() {
+  // Array of prize objects with properties for title, description, and (if applicable) button details.
+  const prizes = [
+    { 
+      title: "Free E-Book", 
+      description: "Get a free e-book from Project Gutenberg." 
+      // The URL will be generated dynamically when clicked.
+    },
+    { 
+      title: "NordVPN Subscription", 
+      description: "Subscribe to NordVPN for secure and private browsing.", 
+      buttonUrl: "https://nordvpn.com",
+      buttonText: "Visit NordVPN"
+    },
+    { 
+      title: "NordPass", 
+      description: "Experience secure password management with NordPass.", 
+      buttonUrl: "https://nordpass.com",
+      buttonText: "Visit NordPass"
+    },
+    { 
+      title: ".xyz Domain Coupon", 
+      description: "Use coupon TAI25 at gen.xyz for a discount on .xyz domains.", 
+      buttonUrl: "https://gen.xyz",
+      buttonText: "Claim Coupon",
+      coupon: "TAI25"
+    }
+  ];
+
+  // Build a responsive grid of prize cards.
+  let prizesHtml = `<div class="prizes-container"><div class="prizes-grid">`;
+  prizes.forEach(prize => {
+    let prizeCard = "";
+    if (prize.title === "Free E-Book") {
+      // Use a button that calls openRandomGutenberg() on click.
+      prizeCard = `
+        <div class="prize-item">
+          <div class="prize-icon">📚</div>
+          <div class="prize-details">
+            <h4>${prize.title}</h4>
+            <p>${prize.description}</p>
+            <button onclick="openRandomGutenberg()" class="prize-button">Read Now</button>
+          </div>
+        </div>
+      `;
+    } else if (prize.buttonUrl) {
+      // Determine an appropriate icon based on the prize title.
+      let icon = "🎁";
+      if (prize.title === "NordVPN Subscription") {
+        icon = "🛡️";
+      } else if (prize.title === "NordPass") {
+        icon = "🔐";
+      } else if (prize.title === ".xyz Domain Coupon") {
+        icon = "🌐";
+      }
+      prizeCard = `
+        <div class="prize-item">
+          <div class="prize-icon">${icon}</div>
+          <div class="prize-details">
+            <h4>${prize.title}</h4>
+            <p>${prize.description}</p>
+            <button onclick="window.open('${prize.buttonUrl}', '_blank')" class="prize-button">${prize.buttonText}</button>
+          </div>
+        </div>
+      `;
+    } else {
+      // Default rendering for any prize without a button URL.
+      prizeCard = `
+        <div class="prize-item">
+          <div class="prize-icon">🎁</div>
+          <div class="prize-details">
+            <h4>${prize.title}</h4>
+            <p>${prize.description}</p>
+          </div>
+        </div>
+      `;
+    }
+    prizesHtml += prizeCard;
+  });
+  prizesHtml += `</div></div>`;
+
+  return `<h3>Free Prizes</h3>
+          <p>Check out these exclusive free prizes:</p>
+          ${prizesHtml}`;
+}
+
+// This function generates a new random Gutenberg URL on each click.
+function openRandomGutenberg() {
+  const randomNumber = Math.floor(Math.random() * 75000) + 1;
+  const ebookUrl = `https://www.gutenberg.org/cache/epub/${randomNumber}/pg${randomNumber}-images.html`;
+  window.open(ebookUrl, '_blank');
+}
+
 function mathWidget() {
   if (!window.currentMathSubject) window.currentMathSubject = "arithmetic";
   let subjectSelector = `<select id="math-subject" onchange="changeMathSubject()">
