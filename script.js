@@ -170,6 +170,9 @@ function loadWidget(widgetType) {
     case "freeprizes": // Add this case for free prizes widget
       content = freePrizesWidget();
       break;
+    case "learnonline": // New Learn Online widget case
+      content = learnOnlineWidget();
+      break;
     default:
       content = `<p>Widget not found.</p>`;
   }
@@ -186,96 +189,31 @@ function loadWidget(widgetType) {
 /* ---------------------- */
 
 function freePrizesWidget() {
-  // Array of prize objects with properties for title, description, and (if applicable) button details.
+  // An array of free prize objects (update with your own content as needed)
   const prizes = [
-    { 
-      title: "Free E-Book", 
-      description: "Get a free e-book from Project Gutenberg." 
-      // The URL will be generated dynamically when clicked.
-    },
-    { 
-      title: "NordVPN Subscription", 
-      description: "Subscribe to NordVPN for secure and private browsing.", 
-      buttonUrl: "https://nordvpn.com",
-      buttonText: "Visit NordVPN"
-    },
-    { 
-      title: "NordPass", 
-      description: "Experience secure password management with NordPass.", 
-      buttonUrl: "https://nordpass.com",
-      buttonText: "Visit NordPass"
-    },
-    { 
-      title: ".xyz Domain Coupon", 
-      description: "Use coupon TAI25 at gen.xyz for a discount on .xyz domains.", 
-      buttonUrl: "https://gen.xyz",
-      buttonText: "Claim Coupon",
-      coupon: "TAI25"
-    }
+    { title: "Free E-Book", description: "Get a free e-book on web development." },
+    { title: "Discount Coupon", description: "Receive a 20% discount coupon on our services." },
+    { title: "Free Trial Subscription", description: "Enjoy a 30-day free trial of premium features." }
   ];
 
-  // Build a responsive grid of prize cards.
+  // Build a responsive grid of prize cards
   let prizesHtml = `<div class="prizes-container"><div class="prizes-grid">`;
   prizes.forEach(prize => {
-    let prizeCard = "";
-    if (prize.title === "Free E-Book") {
-      // Use a button that calls openRandomGutenberg() on click.
-      prizeCard = `
-        <div class="prize-item">
-          <div class="prize-icon">📚</div>
-          <div class="prize-details">
-            <h4>${prize.title}</h4>
-            <p>${prize.description}</p>
-            <button onclick="openRandomGutenberg()" class="prize-button">Read Now</button>
-          </div>
+    prizesHtml += `
+      <div class="prize-item">
+        <div class="prize-icon">🎁</div>
+        <div class="prize-details">
+          <h4>${prize.title}</h4>
+          <p>${prize.description}</p>
         </div>
-      `;
-    } else if (prize.buttonUrl) {
-      // Determine an appropriate icon based on the prize title.
-      let icon = "🎁";
-      if (prize.title === "NordVPN Subscription") {
-        icon = "🛡️";
-      } else if (prize.title === "NordPass") {
-        icon = "🔐";
-      } else if (prize.title === ".xyz Domain Coupon") {
-        icon = "🌐";
-      }
-      prizeCard = `
-        <div class="prize-item">
-          <div class="prize-icon">${icon}</div>
-          <div class="prize-details">
-            <h4>${prize.title}</h4>
-            <p>${prize.description}</p>
-            <button onclick="window.open('${prize.buttonUrl}', '_blank')" class="prize-button">${prize.buttonText}</button>
-          </div>
-        </div>
-      `;
-    } else {
-      // Default rendering for any prize without a button URL.
-      prizeCard = `
-        <div class="prize-item">
-          <div class="prize-icon">🎁</div>
-          <div class="prize-details">
-            <h4>${prize.title}</h4>
-            <p>${prize.description}</p>
-          </div>
-        </div>
-      `;
-    }
-    prizesHtml += prizeCard;
+      </div>
+    `;
   });
   prizesHtml += `</div></div>`;
 
   return `<h3>Free Prizes</h3>
           <p>Check out these exclusive free prizes:</p>
           ${prizesHtml}`;
-}
-
-// This function generates a new random Gutenberg URL on each click.
-function openRandomGutenberg() {
-  const randomNumber = Math.floor(Math.random() * 75000) + 1;
-  const ebookUrl = `https://www.gutenberg.org/cache/epub/${randomNumber}/pg${randomNumber}-images.html`;
-  window.open(ebookUrl, '_blank');
 }
 
 function mathWidget() {
@@ -607,3 +545,64 @@ function typeText(element, text, speed = 50, callback) {
   }
   type();
 }
+
+function learnOnlineWidget() {
+  // Define an array with three online items using the specified names, images, and buttons.
+  const courses = [
+    {
+      title: "ReadJAMS",
+      description: "Join live reading sessions and engaging discussions.",
+      buttonText: "Join ReadJAMS!",
+      buttonUrl: "https://readjams.vercel.app", // Replace with the desired URL when available
+      imageUrl: "https://i.ibb.co/61pC5Px/Read-JAMS.png"
+    },
+    {
+      title: "MathJAMS",
+      description: "Participate in interactive math sessions and challenges.",
+      buttonText: "Join MathJAMS!",
+      buttonUrl: "https://mathjams.vercel.app", // Replace with the desired URL when available
+      imageUrl: "https://i.postimg.cc/2jv9GmfM/Read-JAMS-1.png"
+    },
+    {
+      title: "ReadJAMS",
+      description: "An online library for JAMS",
+      buttonText: "Join ReadJAMS!",
+      buttonUrl: "https://readjams.vercel.app/", // Replace with the desired URL when available
+      imageUrl: "https://i.ibb.co/61pC5Px/Read-JAMS.png"
+    },
+    {
+      title: "MathDash",
+      description: "Boost your math skills with dynamic problem-solving.",
+      buttonText: "Join MathDash!",
+      buttonUrl: "https://playmathdash.vercel.app", // Replace with the desired URL when available
+      imageUrl: "https://i.postimg.cc/B6H7jhyX/MATH.png"
+    }
+  ];
+
+  // Build a responsive grid of course cards.
+  let coursesHtml = `<div class="learnonline-container"><div class="learnonline-grid">`;
+  courses.forEach(course => {
+    // For MathDash, add an extra class for custom styling.
+    let buttonClass = "learnonline-button";
+    if (course.title === "MathDash") {
+      buttonClass += " mathdash-button";
+    }
+    coursesHtml += `
+      <div class="learnonline-item">
+        <div class="learnonline-image-wrapper">
+          <img src="${course.imageUrl}" alt="${course.title}" class="learnonline-image">
+        </div>
+        <div class="learnonline-details">
+          <p>${course.description}</p>
+          <button onclick="window.open('${course.buttonUrl}', '_blank')" class="${buttonClass}">${course.buttonText}</button>
+        </div>
+      </div>
+    `;
+  });
+  coursesHtml += `</div></div>`;
+
+  return `<h3>Learn Online!</h3>
+          <p>Explore our online communities and sessions:</p>
+          ${coursesHtml}`;
+}
+
