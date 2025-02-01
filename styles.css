@@ -1,9 +1,16 @@
+/* Global Styles */
 * {
-  font-family: "Outfit", serif;
-  font-optical-sizing: auto;
-  font-style: normal;
+  font-family: "Outfit", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: #f9f9f9;
+  color: #333;
 }
 
+/* NAVIGATION, HEADER & SUBHEADER (with margins) */
 nav {
   position: fixed;
   top: 0;
@@ -13,9 +20,7 @@ nav {
   z-index: 1000;
   padding: 20px 0;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  transition: background-color 0.3s ease;
 }
-
 nav ul {
   list-style: none;
   display: flex;
@@ -23,12 +28,10 @@ nav ul {
   align-items: center;
   padding: 0;
 }
-
 nav ul li img {
   margin-left: 1vh;
   margin-right: 1vh;
 }
-
 nav ul li a {
   text-decoration: none;
   color: #5e17eb;
@@ -39,95 +42,31 @@ nav ul li a {
   margin-right: 1vh;
   font-weight: 1000;
 }
-
 nav ul li a:hover {
   background-color: #5e17eb;
   color: white;
-  transform: translateY(-3px); /* Subtle hover effect */
-}nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: white;
-  z-index: 1000;
-  padding: 20px 0;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  transition: background-color 0.3s ease;
+  transform: translateY(-3px);
 }
-
-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-
-nav ul li img {
-  margin-left: 1vh;
-  margin-right: 1vh;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: #5e17eb;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  padding: 2px 5px;
-  margin-left: 1vh;
-  margin-right: 1vh;
-  font-weight: 1000;
-}
-
-nav ul li a:hover {
-  background-color: #5e17eb;
-  color: white;
-  transform: translateY(-3px); /* Subtle hover effect */
-}
-
-.subtitle{
-  margin-top: 10px;
-}
-
-body {
-  font-family: "Outfit";
-  background-color: white;
-  color: rgba(100, 80, 230, 1);
-  margin: 0;
-  padding: 0;
-}
-
-h4 {
-  background-color: white;
-  color: rgba(100, 80, 230, 1);
-  width: 150px;
-  border-radius: 100px;
-  margin: 5px auto; /* Right-align */
-  padding: 10px;
-}
-
 header {
   padding-bottom: 3vh;
   background: white;
   color: rgba(0, 40, 20, 1);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align content from the top */
+  justify-content: flex-start;
   align-items: center;
   position: relative;
   z-index: 1;
-  padding-top: 25vh; /* Increase padding-top to push content further down */
+  padding-top: 25vh;
   line-height: 1;
   transition: background 0.3s ease-in-out;
 }
-
 subheader {
   background: white;
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Align content from the top */
+  justify-content: center;
   align-items: center;
   padding-top: 10px;
   padding-bottom: 20px;
@@ -136,24 +75,19 @@ subheader {
   gap: 10px;
   box-shadow: rgba(100, 150, 200, 0.2) 0px 7px 29px 0px;
 }
-
 subheader div {
-  justify-content: center; /* Align content from the top */
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 10px;
 }
-
 subheader img {
   transition: transform 0.3s;
-  margin-bottom: 20px;
-  margin-right: 10px;
-  margin-left: 10px;
+  margin: 0 10px 20px;
 }
-
 subheader img:hover {
-  transform: scale(1.1); /* Slightly enlarge on hover */
+  transform: scale(1.1);
 }
-
 header img {
   width: 50vh;
   border-radius: 2vh;
@@ -161,506 +95,245 @@ header img {
   margin-top: 10vh;
 }
 
-.menu-container {
-  position: relative;
-  overflow: hidden;
-  background-color: white;
-  height: 30px; /* Initial height */
-  transition: height 0.3s ease-in-out;
-  text-align: center;
-  font-size: 16px;
-  line-height: 50px; /* Align text vertically for "More chatbots here!" */
-  color: rgba(100, 80, 230, 1);
-  cursor: pointer;
-  line-height: normal; /* Allow text to align naturally */
-  padding-top: 10px;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 0px 24px;
-}
-
-.menu-container:hover {
-  height: 80px; /* Reduced expanded height */
-  line-height: normal; /* Allow text to align naturally */
-}
-
-.menu-container:hover .menu {
-  display: flex; /* Show menu on hover */
-  justify-content: center; /* Center menu items */
-}
-
-.menu {
-  display: none;
-  overflow-x: auto;
-  gap: 10px;
-  padding: 10px; /* Reduced padding for compact menu */
-  white-space: nowrap;
-  align-items: center; /* Center items vertically */
-}
-
-.menu-item {
-  background-color: white;
-  color: rgb(40, 40, 40);
-  padding: 5px 15px; /* Reduced padding for compact appearance */
-  border: 1px solid rgb(240, 240, 240); /* Light grey border */
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px; /* Slightly smaller font for compactness */
-  transition:
-    background-color 0.3s,
-    transform 0.3s;
-  display: inline-flex; /* Ensure items stay inline */
-  align-items: center; /* Vertically center text */
-  justify-content: center; /* Horizontally center text */
-  height: 30px; /* Set a fixed height for uniformity */
-}
-
-.menu-item:hover {
-  background-color: rgb(240, 240, 240);
-  transform: scale(1.1); /* Slightly enlarge on hover */
-}
-
-.chat-container {
+/* Main Container: Adds extra margins below the header/subheader */
+.main-container {
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+  transition: all 0.3s ease;
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  gap: 20px;
 }
 
-.chatbot {
-  margin-top: 2.5%;
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  width: 90%; /* Fixed width, adjust as needed */
-  box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
-  opacity: 0;
-  transform: scale(0.95);
-  transition:
-    opacity 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
-  display: none; /* Hidden by default */
-  margin-bottom: 5%;
-}
-
-.chatbot.active {
-  display: block;
-  opacity: 1;
-  transform: scale(1);
-}
-
-.chatbot h2 {
-  margin: 0 0 10px;
-  text-align: center;
-  color: rgba(100, 80, 230, 1);
-  margin-left: -2%;
-}
-
-.chat-window {
-  height: 200px;
-  overflow-y: auto;
-  border: 0px;
-  background-color: white;
-  margin: 10px 0;
-  padding: 10px;
-}
-
-.horizontal {
-  display: flex;
-  gap: 10px;
-  width: 100%; /* Take full width of the chatbot */
-}
-
-input[type="text"] {
-  flex: 1; /* Input field takes up available space */
-  padding: 10px;
-  background-color: rgb(240, 240, 240);
-  border: 0px;
-  border-radius: 5px;
-  outline: none;
-  color: rgb(40, 40, 40);
-}
-
-button {
-  flex-shrink: 0; /* Prevent shrinking of the button */
-  background-color: rgba(100, 80, 230, 1);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-align: center;
-}
-
-button:hover {
-  background-color: rgba(100, 80, 230, 1);
-}
-
-/* Chat window messages */
-.user-message {
-  display: inline-block; /* Dynamically adjust width based on content */
-  background-color: rgba(100, 80, 230, 0.1);
-  color: rgba(100, 80, 230, 1);
-  border-radius: 20px 20px 20px 10px;
-  padding: 8px 12px;
-  max-width: 70%;
-  margin-top: 7.5px;
-  margin-bottom: -2.5px;
-  text-align: justify;
-  font-size: 11px;
-}
-
-.bot-message {
-  color: rgb(40, 40, 40);
-  margin: 5px auto 5px 0; /* Left-align */
-  margin-top: 10px;
-  text-align: justify;
-  font-size: 11px;
-}
-
-.popup-container {
-  position: absolute; /* Position it relative to the chat region */
-  top: 0;
-  left: 0;
-  width: 100%; /* Full width of the parent container */
-  height: 100%; /* Full height of the parent container */
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  z-index: 10; /* Ensure it appears on top of other elements */
-  visibility: hidden; /* Initially hidden */
-  opacity: 0;
-  transition:
-    visibility 0s,
-    opacity 0.3s ease-in-out;
-}
-
-.popup-container.active {
-  visibility: visible; /* Make it visible */
-  opacity: 1;
-}
-
-.popup-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  width: 80%; /* Adjust width as needed */
-  max-width: 400px; /* Prevent it from becoming too large */
-}
-
-.popup-content h3 {
-  margin: 0 0 10px;
-}
-
-.popup-content p {
-  margin: 0 0 20px;
-  font-size: 14px;
-  color: rgb(40, 40, 40);
-}
-
-.popup-content button {
-  background:
-    linear-gradient(135deg, rgba(100, 80, 230, 1), rgba(140, 50, 256, 0.8)),
-    center/cover no-repeat;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-
-.popup-content button:hover {
-  transform: scale(1.1); /* Slightly enlarge on hover */
-}
-
-#green {
-  background:
-    linear-gradient(135deg, rgba(40, 150, 100, 1), rgba(20, 200, 140, 0.8)),
-    center/cover no-repeat;
-}
-
-#blue {
-  background:
-    linear-gradient(135deg, rgba(40, 40, 256, 1), rgba(80, 80, 256, 0.8)),
-    center/cover no-repeat;
-}
-
-/* Sidebar Styles */
-.left-sidebar {
-  width: 250px;
-  background-color: white;
+/* Toggle Button for Widget Sidebar */
+.toggle-widget-sidebar {
   position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 10;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 0px 24px;
-}
-
-.left-sidebar.active {
-  transform: translateX(0);
-}
-
-.toggle-sidebar {
-  background-color: rgba(100, 80, 230, 1);
+  top: 100px;
+  right: 20px;
+  background-color: #5e17eb;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+  z-index: 1100;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+.toggle-widget-sidebar:hover {
+  background-color: #4b13c7;
 }
 
-.chat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.chat-list .chat-entry {
+/* Layout: Chat Region and Widget Display Area */
+.chat-region {
+  flex: 2;
   background-color: white;
-  border: 1px solid rgba(200, 200, 200, 1);
-  padding: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
+}
+.widget-display {
+  flex: 1;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
+  min-height: 300px;
+  margin-bottom: 30px;
+}
+
+/* Spacing for widget display elements */
+.widget-display h3,
+.widget-display p,
+.widget-display input,
+.widget-display textarea,
+.widget-display button,
+.widget-display select {
+  margin-bottom: 15px;
+}
+
+/* Additional styling for the Braille output and points stars */
+#braille-output {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.75em;
+  color: goldenrod;
+  font-weight: bold;
+}
+.points-stars {
+  color: gold;
+  font-size: 1.5em;
+  vertical-align: middle;
+}
+
+/* Style for the Math dropdown */
+#math-subject {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.chat-list .chat-entry img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.chat-entry .title {
   font-size: 14px;
-}
-
-/* Bot Info */
-.bot-info {
-  gap: 10px;
-  align-items: center;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.bot-info img {
-  width: 20%;
-  height: 20%;
-  max-width: 150px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid rgb(240, 240, 240); /* Light grey border */
-  border-radius: 50%;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 0px 24px;
+/* Mobile adjustments */
+@media (max-width: 800px) {
+  .main-container {
+    flex-direction: column;
+  }
+  .chat-region, .widget-display {
+    width: 100%;
+  }
+  .widget-display {
+    margin-top: 20px;
+  }
 }
 
-.bot-info p {
-  width: 50%;
-  border-radius: 50%;
-  text-align: center;
-  margin-left: 25%;
-  font-size: 12px;
-}
-
-/* Adjustments for chatbot alignment */
-.chat-interface {
+/* Chat Interface Styles */
+.chat-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
-.chat-region {
+.chatbot {
   width: 100%;
-  transition: margin-left 0.3s;
-}
-
-.chat-region.sidebar-hidden {
-  margin-left: 0;
-}
-
-.show-sidebar {
-  float: left;
-  vertical-align: top;
-  margin-right: -1000px;
-}
-
-/* Add these styles to your existing CSS */
-
-/* Gamified Learning Section */
-.gamified-learning {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.game-options {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.game-options button {
-  background-color: rgba(100, 80, 230, 1);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.game-options button:hover {
-  background-color: rgba(80, 60, 210, 1);
-}
-
-/* Collaborative Features Section */
-.collaborative-features {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.collab-options {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.collab-options button {
-  background-color: rgba(40, 150, 100, 1);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.collab-options button:hover {
-  background-color: rgba(20, 130, 80, 1);
-}
-
-/* Educational Tools Section */
-.educational-tools {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.tool-options {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.tool-options button {
-  background-color: rgba(256, 100, 80, 1);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.tool-options button:hover {
-  background-color: rgba(230, 80, 60, 1);
-}
-
-/* Advanced AI Features Section */
-.advanced-ai {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.ai-options {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.ai-options button {
-  background-color: rgba(40, 40, 256, 1);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.ai-options button:hover {
-  background-color: rgba(20, 20, 230, 1);
-}
-
-/* Add to CSS */
-/* Right Sidebar */
-.right-sidebar {
-  width: 250px;
   background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
+}
+.chatbot h2 {
+  margin: 0 0 10px;
+  text-align: center;
+  color: #5e17eb;
+}
+.chat-window {
+  height: 200px;
+  overflow-y: auto;
+  background-color: #f3f3f3;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+.horizontal {
+  display: flex;
+  gap: 10px;
+}
+.horizontal input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+}
+.horizontal button {
+  background-color: #5e17eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Widget Sidebar */
+.widget-sidebar {
   position: fixed;
   top: 0;
   right: 0;
-  bottom: 0;
-  z-index: 10;
-  padding: 10px;
+  width: 250px;
+  height: 100%;
+  background-color: white;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
-  overflow-y: auto;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 0px 24px;
+  z-index: 1200;
 }
-
-.right-sidebar.active {
+.widget-sidebar.visible {
   transform: translateX(0);
 }
+.widget-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.widget-sidebar h2 {
+  margin: 0;
+  color: #5e17eb;
+}
+.minimize-widget-sidebar {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #5e17eb;
+}
+.widget-list {
+  list-style: none;
+  padding: 0;
+}
+.widget-list li {
+  background-color: #fafafa;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  text-align: center;
+}
+.widget-list li:hover {
+  background-color: #f0f0f0;
+}
 
-.sidebar-toggle {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  background: rgba(100, 80, 230, 1);
+/* Styling for widget display inputs and buttons */
+.widget-display textarea,
+.widget-display input.widget-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.widget-display button {
+  background-color: #5e17eb;
   color: white;
   border: none;
-  border-radius: 50%;
+  padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+  margin-top: 10px;
+}
+.widget-display button:hover {
+  background-color: #4b13c7;
 }
 
-.left-toggle {
-  left: 10px;
-  top: 30px;
+/* Optional: Styles for user and bot messages in the chat window */
+.user-message {
+  display: inline-block;
+  background-color: rgba(94, 23, 235, 0.1);
+  color: #5e17eb;
+  border-radius: 20px 20px 20px 10px;
+  padding: 8px 12px;
+  margin: 5px 0;
+  max-width: 70%;
+  font-size: 12px;
 }
-
-.right-toggle {
-  right: 10px;
-  top: 30px;
-}
-
-.sidebar-content {
-  display: none;
-  padding: 20px;
-}
-
-.sidebar-content.active {
-  display: block;
-}
-
-.sidebar-screen {
-  background: white;
-  border-radius: 10px;
-  padding: 15px;
-  margin: 10px 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.bot-message {
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 20px 20px 10px 20px;
+  padding: 8px 12px;
+  margin: 5px 0;
+  max-width: 70%;
+  font-size: 12px;
+  opacity: 0;
 }
