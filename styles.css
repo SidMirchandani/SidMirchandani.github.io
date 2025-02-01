@@ -432,7 +432,7 @@ header img {
 .learnonline-container {
   margin-top: 20px;
   margin-bottom: 20px;
-  max-height: 500px;  /* Adjust max-height as needed */
+  max-height: 300px;  /* Adjust max-height as needed */
   overflow-y: auto;   /* Enable vertical scrolling if content exceeds max height */
   padding-right: 10px; /* Provides space for the scrollbar */
 }
