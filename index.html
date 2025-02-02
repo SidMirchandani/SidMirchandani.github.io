@@ -1,35 +1,50 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Google Fonts and Meta Data -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TimelessAI</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
     <!-- External CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
     <!-- Socket.io (if needed) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.3/socket.io.js"></script>
-    <link rel="icon" href=
-          "https://i.postimg.cc/tTjS3dRB/Code-JAMS-1.png"
-          type="image/x-icon" />
+    <link
+      rel="icon"
+      href="https://i.postimg.cc/tTjS3dRB/Code-JAMS-1.png"
+      type="image/x-icon"
+    />
   </head>
   <body>
     <!-- Header Section -->
     <section id="home">
       <header>
-        <img src="https://i.postimg.cc/tTjS3dRB/Code-JAMS-1.png" alt="Header Image">
+        <img
+          src="https://i.postimg.cc/tTjS3dRB/Code-JAMS-1.png"
+          alt="Header Image"
+        />
       </header>
       <subheader>
         <div>
           <a href="https://nordvpn.com/">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjryC__w5W7qqVkw8wmLh914my0tHoUNaeA&s" height="30px" alt="NordVPN">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjryC__w5W7qqVkw8wmLh914my0tHoUNaeA&s"
+              height="30px"
+              alt="NordVPN"
+            />
           </a>
           <a href="https://nordpass.com/">
-            <img src="https://bestreviews.net/wp-content/uploads/2024/06/nordpass-logo.svg" height="30px" alt="NordPass">
+            <img
+              src="https://bestreviews.net/wp-content/uploads/2024/06/nordpass-logo.svg"
+              height="30px"
+              alt="NordPass"
+            />
           </a>
         </div>
       </subheader>
@@ -40,42 +55,54 @@
       <div class="container">
         <ul>
           <li>
-            <img src="https://i.postimg.cc/SQPh8sYH/Timeless.png" alt="Logo" style="float: right;" height="50px">
+            <img
+              src="https://i.postimg.cc/SQPh8sYH/Timeless.png"
+              alt="Logo"
+              style="float: right;"
+              height="50px"
+            />
           </li>
         </ul>
       </div>
     </nav>
 
-    <!-- Toggle Button for Widget Sidebar -->
-    <button class="toggle-widget-sidebar" onclick="toggleWidgetSidebar()">☰ Widgets</button>
+    <!-- (Widget Sidebar remains unchanged) -->
+    <button class="toggle-widget-sidebar" onclick="toggleWidgetSidebar()">
+      ☰ Widgets
+    </button>
 
-    <!-- Main Container: Chat Region and Widget Display Area -->
+    <!-- Main Container: Minigame (story mode) Region and Widget Display Area -->
     <div class="main-container" id="main-container">
-      <!-- Chat Region -->
+      <!-- Minigame Region -->
       <div class="chat-region" id="chat-region">
         <div class="chat-container">
           <div class="chatbot active" id="chatbot">
-            <h2>Chat Interface</h2>
-            <div class="chat-window" id="chat-window">
-            </div>
-            <div class="horizontal">
-              <input type="text" placeholder="Type a message..." id="chat-input">
-              <button onclick="sendMessage()">Send</button>
+            <h2>Minigame Conversation</h2>
+            <div class="chat-window" id="chat-window"></div>
+            <!-- Single text input (no send button) -->
+            <div class="horizontal" id="minigame-input">
+              <input
+                type="text"
+                placeholder="Type your message and press Enter..."
+                id="chat-input"
+              />
             </div>
           </div>
         </div>
       </div>
-      <!-- Widget Display Area -->
+      <!-- Widget Display Area (unchanged) -->
       <div class="widget-display" id="widget-display">
         <p>Select a widget from the sidebar to load its content here.</p>
       </div>
     </div>
 
-    <!-- Widget Sidebar (List of Clickable Widgets) -->
+    <!-- Widget Sidebar (unchanged) -->
     <div class="widget-sidebar" id="widget-sidebar">
       <div class="widget-sidebar-header">
         <h2>Widgets</h2>
-        <button class="minimize-widget-sidebar" onclick="toggleWidgetSidebar()">👋</button>
+        <button class="minimize-widget-sidebar" onclick="toggleWidgetSidebar()">
+          👋
+        </button>
       </div>
       <ul class="widget-list">
         <li class="widget-item" data-widget="freeprizes">Free Prizes</li>
@@ -83,12 +110,17 @@
         <li class="widget-item" data-widget="library">Library</li>
         <li class="widget-item" data-widget="math">Math Trainer</li>
         <li class="widget-item" data-widget="bio">Bio Trainer</li>
-        <li class="widget-item" data-widget="braille">English to Braille Translator</li>
+        <li class="widget-item" data-widget="braille">
+          English to Braille Translator
+        </li>
         <li class="widget-item" data-widget="mental">Mental Health Advisor</li>
-        <li class="widget-item" data-widget="quote">Random Quote Generator</li>
-        <li class="widget-item" data-widget="language">Language Learning Assistant</li>
+        <li class="widget-item" data-widget="quote">
+          Random Quote Generator
+        </li>
+        <li class="widget-item" data-widget="language">
+          Language Learning Assistant
+        </li>
       </ul>
-
     </div>
 
     <!-- External JS -->
