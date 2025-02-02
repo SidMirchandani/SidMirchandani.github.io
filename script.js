@@ -579,6 +579,7 @@ function volunteerWidget() {
 
 /***************************************
  * [NEW] Choose-Your-Own-Adventure Conversation Engine
+ * Extended to at least 7-8 back-and-forths.
  ***************************************/
 
 // Global state for the adventure
@@ -590,7 +591,7 @@ let conversationData = {}; // For storing temporary choices
 window.onload = function () {
   // Start our captivating "choose your own adventure" story immediately
   startMinigameConversation();
-  // Attach event listener to the input field (id "chat-input")
+  // Attach event listener to the chat input field
   const inputField = document.getElementById("chat-input");
   inputField.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
@@ -632,31 +633,30 @@ function clearChatWindow() {
 // Start the adventure by asking which historical figure to join
 function startMinigameConversation() {
   clearChatWindow();
-  conversationStage = 0;
+  conversationStage = 1;
   selectedCharacter = "";
   conversationData = {};
   addBotMessage(
-    "Welcome to Timeless Adventures!\nWho do you wish to join on your quest? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace)"
+    "Welcome to Timeless Adventures!\nChoose a historical figure to join on your quest:\n(Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace)"
   );
 }
 
 // Process input based on the current stage
 function processConversationInput(input) {
-  if (conversationStage === 0) {
-    // Choose character stage (case-insensitive match)
+  // Stage 1: Choose your character
+  if (conversationStage === 1) {
     const valid = ["isaac newton", "albert einstein", "marie curie", "leonardo da vinci", "william shakespeare", "ludwig van beethoven", "johannes gutenberg", "ada lovelace"];
     const choice = input.toLowerCase();
     if (valid.includes(choice)) {
-      // For better output, capitalize properly (a simple fix)
       selectedCharacter = choice.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
       addBotMessage(`You have chosen ${selectedCharacter}. Let your adventure begin!`);
-      conversationStage = 1;
-      processConversationInput(""); // trigger next prompt
+      conversationStage = 2;
+      processConversationInput(""); // Trigger next prompt
     } else {
       addBotMessage("I didn't recognize that name. Please type one of the valid names.");
     }
   } else {
-    // Dispatch to the appropriate adventure function
+    // Dispatch to the appropriate adventure function based on selected character
     switch (selectedCharacter) {
       case "Isaac Newton":
         processNewtonAdventure(input);
@@ -688,174 +688,282 @@ function processConversationInput(input) {
   }
 }
 
-/* --- Adventure flows for each character --- */
+/* --- Extended Adventure Flows for Each Character --- */
 
-// Isaac Newton Adventure
+// Isaac Newton Adventure (8 stages)
 function processNewtonAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("Isaac Newton: It is the year 1666. As you stroll beneath a sprawling apple tree, an apple suddenly falls. Do you choose to (A) pick it up and examine it, or (B) let it fall and continue your walk? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
-    if (input.toUpperCase() === "A") {
-      conversationData.choice = "examine";
-      addBotMessage("Isaac Newton: Curious and bold, you pick up the apple. Its simple descent sparks thoughts of unseen forces.");
-    } else if (input.toUpperCase() === "B") {
-      conversationData.choice = "ignore";
-      addBotMessage("Isaac Newton: You ignore the apple, yet its fall lingers in your mind as a mystery of nature.");
-    } else {
-      addBotMessage("Please type A or B.");
-      return;
-    }
-    addBotMessage("Isaac Newton: Do you (A) set up a small experiment to measure its fall, or (B) reflect deeply on the mystery of gravity? (Type A or B)");
+  if (conversationStage === 2) {
+    addBotMessage("Isaac Newton: It is the year 1666. As you stroll beneath an apple tree, an apple suddenly falls. Do you (A) pick it up or (B) observe from afar? (Type A or B)");
     conversationStage = 3;
   } else if (conversationStage === 3) {
     if (input.toUpperCase() === "A") {
-      addBotMessage("Isaac Newton: Your experiment reveals that the apple accelerates at roughly 9.8 m/s²—a wondrous discovery!");
+      conversationData.choice = "pick";
+      addBotMessage("Isaac Newton: You pick up the apple. Do you (A) examine its texture and weight, or (B) simply admire its fall? (Type A or B)");
+      conversationStage = 4;
     } else if (input.toUpperCase() === "B") {
-      addBotMessage("Isaac Newton: Your reflections lead you to wonder if nature’s secrets lie in both science and contemplation.");
+      conversationData.choice = "observe";
+      addBotMessage("Isaac Newton: You watch the apple fall. Do you (A) quickly jot down your observations, or (B) let the moment sink into your mind? (Type A or B)");
+      conversationStage = 4;
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
-    addBotMessage("Isaac Newton: Finally, do you (A) embrace your newfound understanding and share it with the world, or (B) remain a quiet observer of nature? (Type A or B)");
-    conversationStage = 4;
   } else if (conversationStage === 4) {
-    if (input.toUpperCase() === "A") {
-      addBotMessage("Isaac Newton: Admirable! Your curiosity and willingness to share echo the spirit of discovery.");
-    } else if (input.toUpperCase() === "B") {
-      addBotMessage("Isaac Newton: Sometimes silent observation is the greatest teacher.");
-    } else {
-      addBotMessage("Please type A or B.");
-      return;
+    if (conversationData.choice === "pick") {
+      if (input.toUpperCase() === "A") {
+        addBotMessage("Isaac Newton: Your close examination reveals its physical properties. Fascinating!");
+      } else if (input.toUpperCase() === "B") {
+        addBotMessage("Isaac Newton: Even without detailed study, your curiosity grows.");
+      } else {
+        addBotMessage("Please type A or B.");
+        return;
+      }
+    } else if (conversationData.choice === "observe") {
+      if (input.toUpperCase() === "A") {
+        addBotMessage("Isaac Newton: Your notes capture the essence of nature’s rhythm.");
+      } else if (input.toUpperCase() === "B") {
+        addBotMessage("Isaac Newton: The experience etches itself into your memory.");
+      } else {
+        addBotMessage("Please type A or B.");
+        return;
+      }
     }
-    addBotMessage("Isaac Newton: Thank you for joining me on this journey of inquiry. Farewell!");
+    addBotMessage("Isaac Newton: Do you now choose to (A) conduct an experiment to measure the apple's acceleration, or (B) reflect on the mystery of gravity? (Type A or B)");
     conversationStage = 5;
-  }
-}
-
-// Albert Einstein Adventure
-function processEinsteinAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("Albert Einstein: Picture yourself in early 20th century Germany. Do you wish to explore (A) the nature of space-time or (B) the quirks of quantum phenomena? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
+  } else if (conversationStage === 5) {
     if (input.toUpperCase() === "A") {
-      conversationData.topic = "relativity";
-      addBotMessage("Albert Einstein: Space and time are intertwined. Do you think time is (A) absolute or (B) relative? (Type A or B)");
+      addBotMessage("Isaac Newton: Your experiment confirms an acceleration of approximately 9.8 m/s². A groundbreaking discovery!");
     } else if (input.toUpperCase() === "B") {
-      conversationData.topic = "quantum";
-      addBotMessage("Albert Einstein: Quantum theory hints at uncertainty. Do you lean towards (A) deterministic behavior or (B) probabilistic outcomes? (Type A or B)");
+      addBotMessage("Isaac Newton: Your reflections spark ideas of an unseen force pulling all things toward Earth.");
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
-    conversationStage = 3;
-  } else if (conversationStage === 3) {
-    if (conversationData.topic === "relativity") {
-      if (input.toUpperCase() === "B") {
-        addBotMessage("Albert Einstein: Precisely! Time is relative.");
-      } else {
-        addBotMessage("Albert Einstein: Actually, time is relative, not absolute.");
-      }
-    } else if (conversationData.topic === "quantum") {
-      if (input.toUpperCase() === "B") {
-        addBotMessage("Albert Einstein: While I was skeptical, quantum theory indeed suggests probabilistic behavior.");
-      } else {
-        addBotMessage("Albert Einstein: Determinism alone cannot explain the quantum world.");
-      }
+    addBotMessage("Isaac Newton: Do you (A) share your findings with your peers, or (B) continue your studies in solitude? (Type A or B)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
+    if (input.toUpperCase() === "A") {
+      addBotMessage("Isaac Newton: Sharing your discovery ignites curiosity and debate among scholars.");
+    } else if (input.toUpperCase() === "B") {
+      addBotMessage("Isaac Newton: Solitude allows you to delve deeper into nature's secrets.");
+    } else {
+      addBotMessage("Please type A or B.");
+      return;
     }
-    addBotMessage("Albert Einstein: Do you find the mysteries of the universe exciting? (Type yes or no)");
-    conversationStage = 4;
-  } else if (conversationStage === 4) {
+    addBotMessage("Isaac Newton: Do you foresee challenges in having your ideas accepted? (Type yes or no)");
+    conversationStage = 7;
+  } else if (conversationStage === 7) {
     if (input.toLowerCase().includes("yes")) {
-      addBotMessage("Albert Einstein: Splendid! Curiosity is the fuel of discovery.");
+      addBotMessage("Isaac Newton: Skepticism is common when pioneering new ideas.");
     } else if (input.toLowerCase().includes("no")) {
-      addBotMessage("Albert Einstein: A pity; even the cosmos has its charms.");
+      addBotMessage("Isaac Newton: Optimism is admirable, though resistance often follows innovation.");
     } else {
       addBotMessage("Please answer with yes or no.");
       return;
     }
-    addBotMessage("Albert Einstein: Thank you for this enlightening exchange. Farewell!");
-    conversationStage = 5;
+    addBotMessage("Isaac Newton: Finally, do you plan to document your theories for future generations? (Type yes or no)");
+    conversationStage = 8;
+  } else if (conversationStage === 8) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Isaac Newton: Your manuscript will inspire countless minds.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Isaac Newton: Sometimes, the pursuit of knowledge is its own reward.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Isaac Newton: Thank you for joining me on this journey of discovery. Farewell!");
+    conversationStage = 9;
   }
 }
 
-// Marie Curie Adventure
-function processCurieAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("Marie Curie: You enter my dimly lit laboratory. A mysterious glow emanates from a vial. Do you (A) approach it boldly, or (B) record your observations first? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
+// Albert Einstein Adventure (8 stages)
+function processEinsteinAdventure(input) {
+  if (conversationStage === 2) {
+    addBotMessage("Albert Einstein: Imagine early 20th century Germany. Do you wish to explore (A) the nature of space-time, or (B) the mysteries of quantum phenomena? (Type A or B)");
+    conversationStage = 3;
+  } else if (conversationStage === 3) {
     if (input.toUpperCase() === "A") {
-      conversationData.topic = "investigate";
-      addBotMessage("Marie Curie: Courageously, you approach the glowing vial. Do you (A) analyze its radioactive properties, or (B) determine its chemical makeup? (Type A or B)");
+      conversationData.topic = "relativity";
+      addBotMessage("Albert Einstein: Do you believe time is (A) absolute or (B) relative? (Type A or B)");
+      conversationStage = 4;
     } else if (input.toUpperCase() === "B") {
-      conversationData.topic = "record";
-      addBotMessage("Marie Curie: Prudence guides you to document your surroundings first. Now, do you (A) perform experiments on the samples, or (B) consult with a colleague? (Type A or B)");
+      conversationData.topic = "quantum";
+      addBotMessage("Albert Einstein: Do you lean towards (A) determinism or (B) probability in the quantum realm? (Type A or B)");
+      conversationStage = 4;
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
+  } else if (conversationStage === 4) {
+    if (conversationData.topic === "relativity") {
+      if (input.toUpperCase() === "B") {
+        addBotMessage("Albert Einstein: Correct! Time is indeed relative.");
+      } else if (input.toUpperCase() === "A") {
+        addBotMessage("Albert Einstein: In reality, time bends with space.");
+      } else {
+        addBotMessage("Please type A or B.");
+        return;
+      }
+    } else if (conversationData.topic === "quantum") {
+      if (input.toUpperCase() === "B") {
+        addBotMessage("Albert Einstein: Although I had reservations, quantum theory supports probabilistic outcomes.");
+      } else if (input.toUpperCase() === "A") {
+        addBotMessage("Albert Einstein: Determinism is appealing, but nature reveals uncertainty.");
+      } else {
+        addBotMessage("Please type A or B.");
+        return;
+      }
+    }
+    addBotMessage("Albert Einstein: Do you find the universe's mysteries exhilarating? (Type yes or no)");
+    conversationStage = 5;
+  } else if (conversationStage === 5) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Albert Einstein: Splendid! Curiosity fuels discovery.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Albert Einstein: Even in doubt, the cosmos speaks to us.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Albert Einstein: Do you believe understanding these mysteries can transform our world? (Type yes or no)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Albert Einstein: Knowledge indeed paves the way for progress.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Albert Einstein: A skeptical mind is the beginning of inquiry.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Albert Einstein: Would you continue researching despite challenges? (Type yes or no)");
+    conversationStage = 7;
+  } else if (conversationStage === 7) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Albert Einstein: Persistence is the heart of scientific endeavor.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Albert Einstein: Without persistence, breakthroughs remain elusive.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Albert Einstein: Lastly, are you ready to share your insights with the world? (Type yes or no)");
+    conversationStage = 8;
+  } else if (conversationStage === 8) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Albert Einstein: Excellent! Your contributions can light the path to the future.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Albert Einstein: Sometimes the journey itself is its own reward.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Albert Einstein: Thank you for this enlightening conversation. Farewell!");
+    conversationStage = 9;
+  }
+}
+
+// Marie Curie Adventure (8 stages)
+function processCurieAdventure(input) {
+  if (conversationStage === 2) {
+    addBotMessage("Marie Curie: You enter my laboratory. A mysterious glow emanates from a vial. Do you (A) approach boldly or (B) record your observations first? (Type A or B)");
     conversationStage = 3;
   } else if (conversationStage === 3) {
+    if (input.toUpperCase() === "A") {
+      conversationData.topic = "investigate";
+      addBotMessage("Marie Curie: Do you (A) analyze its radioactive properties or (B) determine its chemical makeup? (Type A or B)");
+      conversationStage = 4;
+    } else if (input.toUpperCase() === "B") {
+      conversationData.topic = "record";
+      addBotMessage("Marie Curie: Do you (A) perform experiments on the samples or (B) consult with a colleague? (Type A or B)");
+      conversationStage = 4;
+    } else {
+      addBotMessage("Please type A or B.");
+      return;
+    }
+  } else if (conversationStage === 4) {
     if (conversationData.topic === "investigate") {
       if (input.toUpperCase() === "A") {
-        addBotMessage("Marie Curie: Your analysis reveals remarkable radioactive properties.");
+        addBotMessage("Marie Curie: Your analysis reveals striking radioactive properties.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Marie Curie: The chemical composition surprises you with its complexity.");
+        addBotMessage("Marie Curie: The chemical composition is unexpectedly complex.");
       } else {
         addBotMessage("Please type A or B.");
         return;
       }
     } else if (conversationData.topic === "record") {
       if (input.toUpperCase() === "A") {
-        addBotMessage("Marie Curie: Your experiments lead to unexpected breakthroughs.");
+        addBotMessage("Marie Curie: Your experiments lead to intriguing observations.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Marie Curie: Collaboration brings fresh insights.");
+        addBotMessage("Marie Curie: Collaboration brings fresh perspectives.");
       } else {
         addBotMessage("Please type A or B.");
         return;
       }
     }
     addBotMessage("Marie Curie: Do you believe scientific discovery can change the world? (Type yes or no)");
-    conversationStage = 4;
-  } else if (conversationStage === 4) {
+    conversationStage = 5;
+  } else if (conversationStage === 5) {
     if (input.toLowerCase().includes("yes")) {
-      addBotMessage("Marie Curie: I share your optimism—knowledge has the power to transform lives.");
+      addBotMessage("Marie Curie: I share your belief—knowledge is transformative.");
     } else if (input.toLowerCase().includes("no")) {
-      addBotMessage("Marie Curie: Even so, the pursuit of science is its own reward.");
+      addBotMessage("Marie Curie: Even if you doubt, the pursuit of science is rewarding.");
     } else {
       addBotMessage("Please answer with yes or no.");
       return;
     }
-    addBotMessage("Marie Curie: Thank you for embarking on this scientific adventure. Farewell!");
-    conversationStage = 5;
-  }
-}
-
-// Leonardo da Vinci Adventure
-function processDaVinciAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("Leonardo da Vinci: Salutations! In my workshop of wonders, do you wish to (A) design a fantastical flying machine, or (B) explore the secrets of art? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
+    addBotMessage("Marie Curie: Would you publicize your findings or keep them confidential for further study? (Type A for public, B for confidential)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
     if (input.toUpperCase() === "A") {
-      conversationData.topic = "flying machine";
-      addBotMessage("Leonardo da Vinci: A flying machine! Do you (A) sketch its intricate design, or (B) attempt to construct a small model? (Type A or B)");
+      addBotMessage("Marie Curie: Sharing your work can inspire and mobilize change.");
     } else if (input.toUpperCase() === "B") {
-      conversationData.topic = "art";
-      addBotMessage("Leonardo da Vinci: Art inspires the soul. Do you (A) try to replicate the Mona Lisa, or (B) create a completely new masterpiece? (Type A or B)");
+      addBotMessage("Marie Curie: Confidentiality may allow deeper investigation.");
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
+    addBotMessage("Marie Curie: Do you anticipate challenges from skeptics? (Type yes or no)");
+    conversationStage = 7;
+  } else if (conversationStage === 7) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Marie Curie: Skepticism is common, yet perseverance prevails.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Marie Curie: Optimism is a powerful motivator in science.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Marie Curie: Thank you for embarking on this scientific adventure with me. Farewell!");
+    conversationStage = 8;
+  }
+}
+
+// Leonardo da Vinci Adventure (8 stages)
+function processDaVinciAdventure(input) {
+  if (conversationStage === 2) {
+    addBotMessage("Leonardo da Vinci: Salutations! In my workshop, do you wish to (A) design a fantastical flying machine or (B) explore the secrets of art? (Type A or B)");
     conversationStage = 3;
   } else if (conversationStage === 3) {
-    if (conversationData.topic === "flying machine") {
+    if (input.toUpperCase() === "A") {
+      conversationData.topic = "flying";
+      addBotMessage("Leonardo da Vinci: Do you (A) meticulously sketch its design or (B) attempt to construct a small prototype? (Type A or B)");
+      conversationStage = 4;
+    } else if (input.toUpperCase() === "B") {
+      conversationData.topic = "art";
+      addBotMessage("Leonardo da Vinci: Do you (A) try to replicate a classic masterpiece or (B) create an entirely new work of art? (Type A or B)");
+      conversationStage = 4;
+    } else {
+      addBotMessage("Please type A or B.");
+      return;
+    }
+  } else if (conversationStage === 4) {
+    if (conversationData.topic === "flying") {
       if (input.toUpperCase() === "A") {
         addBotMessage("Leonardo da Vinci: Your detailed sketches capture the essence of flight.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Leonardo da Vinci: Building a prototype is a daring step toward innovation.");
+        addBotMessage("Leonardo da Vinci: Building a prototype is a bold step toward innovation.");
       } else {
         addBotMessage("Please type A or B.");
         return;
@@ -864,51 +972,74 @@ function processDaVinciAdventure(input) {
       if (input.toUpperCase() === "A") {
         addBotMessage("Leonardo da Vinci: Replicating a masterpiece is a challenging tribute.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Leonardo da Vinci: Creating something entirely new may redefine beauty.");
+        addBotMessage("Leonardo da Vinci: Creating something new may redefine beauty.");
       } else {
         addBotMessage("Please type A or B.");
         return;
       }
     }
     addBotMessage("Leonardo da Vinci: Do you believe creativity unlocks human potential? (Type yes or no)");
-    conversationStage = 4;
-  } else if (conversationStage === 4) {
+    conversationStage = 5;
+  } else if (conversationStage === 5) {
     if (input.toLowerCase().includes("yes")) {
-      addBotMessage("Leonardo da Vinci: I concur—imagination is the seed of invention.");
+      addBotMessage("Leonardo da Vinci: I agree—imagination is the seed of invention.");
     } else if (input.toLowerCase().includes("no")) {
-      addBotMessage("Leonardo da Vinci: A modest view, yet every mind harbors its own spark.");
+      addBotMessage("Leonardo da Vinci: A modest view, yet every mind harbors a spark.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Leonardo da Vinci: Would you refine your design or art further? (Type A to refine, B to move on)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
+    if (input.toUpperCase() === "A") {
+      addBotMessage("Leonardo da Vinci: Refinement is the pathway to perfection.");
+    } else if (input.toUpperCase() === "B") {
+      addBotMessage("Leonardo da Vinci: Sometimes a bold leap is needed.");
+    } else {
+      addBotMessage("Please type A or B.");
+      return;
+    }
+    addBotMessage("Leonardo da Vinci: Are you ready to present your work to others? (Type yes or no)");
+    conversationStage = 7;
+  } else if (conversationStage === 7) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Leonardo da Vinci: Your courage to share inspires many.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Leonardo da Vinci: The masterpiece may yet remain a personal treasure.");
     } else {
       addBotMessage("Please answer with yes or no.");
       return;
     }
     addBotMessage("Leonardo da Vinci: Thank you for journeying through art and invention with me. Farewell!");
-    conversationStage = 5;
+    conversationStage = 8;
   }
 }
 
-// William Shakespeare Adventure
+// William Shakespeare Adventure (7 stages)
 function processShakespeareAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("William Shakespeare: Hark! I am William Shakespeare. In the realm of drama, do you wish to (A) compose a sonnet, or (B) witness the unfolding of a tragic play? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
+  if (conversationStage === 2) {
+    addBotMessage("William Shakespeare: Hark! Do you wish to (A) compose a sonnet or (B) witness the unfolding of a tragic play? (Type A or B)");
+    conversationStage = 3;
+  } else if (conversationStage === 3) {
     if (input.toUpperCase() === "A") {
       conversationData.topic = "sonnet";
-      addBotMessage("William Shakespeare: A sonnet! Do you choose to (A) write about the ephemeral beauty of nature, or (B) the depths of passionate love? (Type A or B)");
+      addBotMessage("William Shakespeare: Do you choose to write about (A) nature's fleeting beauty or (B) the depths of passionate love? (Type A or B)");
+      conversationStage = 4;
     } else if (input.toUpperCase() === "B") {
       conversationData.topic = "tragedy";
-      addBotMessage("William Shakespeare: A tragedy unfolds! Do you (A) empathize with the doomed hero, or (B) focus on the cruel twists of fate? (Type A or B)");
+      addBotMessage("William Shakespeare: Do you (A) empathize with the doomed hero or (B) focus on fate's cruel twists? (Type A or B)");
+      conversationStage = 4;
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
-    conversationStage = 3;
-  } else if (conversationStage === 3) {
+  } else if (conversationStage === 4) {
     if (conversationData.topic === "sonnet") {
       if (input.toUpperCase() === "A") {
-        addBotMessage("William Shakespeare: Nature's beauty, though fleeting, inspires the soul.");
+        addBotMessage("William Shakespeare: Nature's beauty, though transient, inspires the soul.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("William Shakespeare: Love’s passion is as enduring as it is tragic.");
+        addBotMessage("William Shakespeare: Love's passion burns eternal.");
       } else {
         addBotMessage("Please type A or B.");
         return;
@@ -923,93 +1054,117 @@ function processShakespeareAdventure(input) {
         return;
       }
     }
-    addBotMessage("William Shakespeare: Do you believe that art mirrors life? (Type yes or no)");
-    conversationStage = 4;
-  } else if (conversationStage === 4) {
+    addBotMessage("William Shakespeare: Do you believe art mirrors life? (Type yes or no)");
+    conversationStage = 5;
+  } else if (conversationStage === 5) {
     if (input.toLowerCase().includes("yes")) {
-      addBotMessage("William Shakespeare: Indeed, art and life are intertwined in the grand tapestry of existence.");
+      addBotMessage("William Shakespeare: Indeed, art and life are intertwined.");
     } else if (input.toLowerCase().includes("no")) {
-      addBotMessage("William Shakespeare: A thought-provoking stance, though many would disagree.");
+      addBotMessage("William Shakespeare: A provocative stance, though many disagree.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("William Shakespeare: Would you pen your own verses inspired by life? (Type yes or no)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("William Shakespeare: Your poetic spirit shall shine through your words.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("William Shakespeare: Not every soul is moved to verse.");
     } else {
       addBotMessage("Please answer with yes or no.");
       return;
     }
     addBotMessage("William Shakespeare: Thank you for this poetic journey. Farewell!");
-    conversationStage = 5;
+    conversationStage = 7;
   }
 }
 
-// Ludwig van Beethoven Adventure
+// Ludwig van Beethoven Adventure (7 stages)
 function processBeethovenAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("Ludwig van Beethoven: Greetings! I am Ludwig van Beethoven. In a world of music, do you wish to (A) compose a grand symphony, or (B) craft a soulful piano piece? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
+  if (conversationStage === 2) {
+    addBotMessage("Ludwig van Beethoven: Greetings! Do you wish to (A) compose a grand symphony or (B) craft a soulful piano piece? (Type A or B)");
+    conversationStage = 3;
+  } else if (conversationStage === 3) {
     if (input.toUpperCase() === "A") {
       conversationData.topic = "symphony";
-      addBotMessage("Ludwig van Beethoven: A symphony of epic scale! Do you (A) focus on a powerful orchestral movement, or (B) incorporate a gentle, introspective passage? (Type A or B)");
+      addBotMessage("Ludwig van Beethoven: Do you focus on a (A) powerful orchestral movement or (B) incorporate a gentle, reflective passage? (Type A or B)");
+      conversationStage = 4;
     } else if (input.toUpperCase() === "B") {
       conversationData.topic = "piano";
-      addBotMessage("Ludwig van Beethoven: A piano piece to stir the heart! Do you (A) pour out deep passion, or (B) evoke a bittersweet melancholy? (Type A or B)");
+      addBotMessage("Ludwig van Beethoven: Do you (A) pour out deep passion or (B) evoke a bittersweet melancholy? (Type A or B)");
+      conversationStage = 4;
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
-    conversationStage = 3;
-  } else if (conversationStage === 3) {
+  } else if (conversationStage === 4) {
     if (conversationData.topic === "symphony") {
       if (input.toUpperCase() === "A") {
-        addBotMessage("Ludwig van Beethoven: Your orchestral vision resounds with power and energy.");
+        addBotMessage("Ludwig van Beethoven: Your symphonic vision resounds with power.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Ludwig van Beethoven: The gentle passage adds a touch of reflective beauty.");
+        addBotMessage("Ludwig van Beethoven: The gentle passage adds an emotive contrast.");
       } else {
         addBotMessage("Please type A or B.");
         return;
       }
     } else if (conversationData.topic === "piano") {
       if (input.toUpperCase() === "A") {
-        addBotMessage("Ludwig van Beethoven: Passion is the very heartbeat of music.");
+        addBotMessage("Ludwig van Beethoven: Passion flows like a mighty river.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Ludwig van Beethoven: Melancholy can speak volumes without words.");
+        addBotMessage("Ludwig van Beethoven: Melancholy speaks in subtle, profound tones.");
       } else {
         addBotMessage("Please type A or B.");
         return;
       }
     }
-    addBotMessage("Ludwig van Beethoven: Do you believe music has the power to change the world? (Type yes or no)");
-    conversationStage = 4;
-  } else if (conversationStage === 4) {
+    addBotMessage("Ludwig van Beethoven: Do you believe music can change the world? (Type yes or no)");
+    conversationStage = 5;
+  } else if (conversationStage === 5) {
     if (input.toLowerCase().includes("yes")) {
-      addBotMessage("Ludwig van Beethoven: I wholeheartedly agree—music transcends all barriers.");
+      addBotMessage("Ludwig van Beethoven: I firmly believe so; music touches the soul.");
     } else if (input.toLowerCase().includes("no")) {
-      addBotMessage("Ludwig van Beethoven: Even if opinions differ, music still touches the soul.");
+      addBotMessage("Ludwig van Beethoven: Even so, music remains a universal language.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Ludwig van Beethoven: Would you share your composition with the world? (Type yes or no)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Ludwig van Beethoven: Your music could inspire generations.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Ludwig van Beethoven: Sometimes, the most personal pieces remain unshared.");
     } else {
       addBotMessage("Please answer with yes or no.");
       return;
     }
     addBotMessage("Ludwig van Beethoven: Thank you for sharing this musical journey with me. Farewell!");
-    conversationStage = 5;
+    conversationStage = 7;
   }
 }
 
-// Johannes Gutenberg Adventure
+// Johannes Gutenberg Adventure (7 stages)
 function processGutenbergAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("Johannes Gutenberg: Greetings! I am Johannes Gutenberg. In my workshop of innovation, do you choose to (A) experiment with a revolutionary printing technique, or (B) set out to distribute your printed works to the masses? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
+  if (conversationStage === 2) {
+    addBotMessage("Johannes Gutenberg: Greetings! In my workshop, do you choose to (A) experiment with a revolutionary printing technique or (B) distribute printed works to the masses? (Type A or B)");
+    conversationStage = 3;
+  } else if (conversationStage === 3) {
     if (input.toUpperCase() === "A") {
       conversationData.topic = "experiment";
-      addBotMessage("Johannes Gutenberg: Experimentation fuels progress. Do you (A) refine your method meticulously, or (B) document your breakthrough for posterity? (Type A or B)");
+      addBotMessage("Johannes Gutenberg: Do you (A) refine your printing method meticulously or (B) document your breakthrough for posterity? (Type A or B)");
+      conversationStage = 4;
     } else if (input.toUpperCase() === "B") {
       conversationData.topic = "distribute";
-      addBotMessage("Johannes Gutenberg: Sharing knowledge is transformative. Do you (A) organize public readings, or (B) deliver copies directly to local schools? (Type A or B)");
+      addBotMessage("Johannes Gutenberg: Do you (A) organize public readings or (B) deliver copies directly to local schools? (Type A or B)");
+      conversationStage = 4;
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
-    conversationStage = 3;
-  } else if (conversationStage === 3) {
+  } else if (conversationStage === 4) {
     if (conversationData.topic === "experiment") {
       if (input.toUpperCase() === "A") {
         addBotMessage("Johannes Gutenberg: Your refined technique produces clear, accessible texts.");
@@ -1021,7 +1176,7 @@ function processGutenbergAdventure(input) {
       }
     } else if (conversationData.topic === "distribute") {
       if (input.toUpperCase() === "A") {
-        addBotMessage("Johannes Gutenberg: Public readings inspire a community of learners.");
+        addBotMessage("Johannes Gutenberg: Public readings can inspire a community of learners.");
       } else if (input.toUpperCase() === "B") {
         addBotMessage("Johannes Gutenberg: Direct delivery brings knowledge straight to eager minds.");
       } else {
@@ -1030,44 +1185,56 @@ function processGutenbergAdventure(input) {
       }
     }
     addBotMessage("Johannes Gutenberg: Do you believe that spreading knowledge can reshape society? (Type yes or no)");
-    conversationStage = 4;
-  } else if (conversationStage === 4) {
+    conversationStage = 5;
+  } else if (conversationStage === 5) {
     if (input.toLowerCase().includes("yes")) {
-      addBotMessage("Johannes Gutenberg: I share your vision—knowledge empowers people.");
+      addBotMessage("Johannes Gutenberg: I share your vision—knowledge empowers the people.");
     } else if (input.toLowerCase().includes("no")) {
-      addBotMessage("Johannes Gutenberg: Yet even a single book can open a new world.");
+      addBotMessage("Johannes Gutenberg: Even one book can open a new world.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
+    addBotMessage("Johannes Gutenberg: Would you overcome skepticism to promote your innovation? (Type yes or no)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Johannes Gutenberg: Boldness is essential for revolutionary ideas.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Johannes Gutenberg: Caution is wise, yet progress demands risk.");
     } else {
       addBotMessage("Please answer with yes or no.");
       return;
     }
     addBotMessage("Johannes Gutenberg: Thank you for this enlightening adventure. Farewell!");
-    conversationStage = 5;
+    conversationStage = 7;
   }
 }
 
-// Ada Lovelace Adventure
+// Ada Lovelace Adventure (7 stages)
 function processLovelaceAdventure(input) {
-  if (conversationStage === 1) {
-    addBotMessage("Ada Lovelace: Greetings! I am Ada Lovelace. In the realm of possibility, do you wish to (A) write a program for a mechanical computer, or (B) imagine how machines might someday create art? (Type A or B)");
-    conversationStage = 2;
-  } else if (conversationStage === 2) {
+  if (conversationStage === 2) {
+    addBotMessage("Ada Lovelace: Greetings! Do you wish to (A) write a program for a mechanical computer or (B) imagine how machines might create art? (Type A or B)");
+    conversationStage = 3;
+  } else if (conversationStage === 3) {
     if (input.toUpperCase() === "A") {
       conversationData.topic = "programming";
-      addBotMessage("Ada Lovelace: Fascinating! Do you (A) write an algorithm to compute complex numbers, or (B) design a program that simulates a simple game? (Type A or B)");
+      addBotMessage("Ada Lovelace: Do you (A) develop an algorithm for complex calculations or (B) design a program that simulates a simple game? (Type A or B)");
+      conversationStage = 4;
     } else if (input.toUpperCase() === "B") {
       conversationData.topic = "art";
-      addBotMessage("Ada Lovelace: Intriguing! Do you (A) compose a digital sonnet, or (B) create an abstract algorithm that generates visuals? (Type A or B)");
+      addBotMessage("Ada Lovelace: Do you (A) compose a digital sonnet or (B) create an abstract algorithm that generates visuals? (Type A or B)");
+      conversationStage = 4;
     } else {
       addBotMessage("Please type A or B.");
       return;
     }
-    conversationStage = 3;
-  } else if (conversationStage === 3) {
+  } else if (conversationStage === 4) {
     if (conversationData.topic === "programming") {
       if (input.toUpperCase() === "A") {
-        addBotMessage("Ada Lovelace: Your algorithm elegantly handles intricate calculations.");
+        addBotMessage("Ada Lovelace: Your algorithm handles intricate computations with elegance.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Ada Lovelace: Designing a game is a bold way to blend logic and fun.");
+        addBotMessage("Ada Lovelace: A playful simulation can reveal deeper computational truths.");
       } else {
         addBotMessage("Please type A or B.");
         return;
@@ -1076,25 +1243,36 @@ function processLovelaceAdventure(input) {
       if (input.toUpperCase() === "A") {
         addBotMessage("Ada Lovelace: A digital sonnet—where logic meets lyricism.");
       } else if (input.toUpperCase() === "B") {
-        addBotMessage("Ada Lovelace: An abstract algorithm can unveil patterns of beauty.");
+        addBotMessage("Ada Lovelace: An abstract algorithm unveils patterns of unexpected beauty.");
       } else {
         addBotMessage("Please type A or B.");
         return;
       }
     }
     addBotMessage("Ada Lovelace: Do you believe technology will redefine creativity? (Type yes or no)");
-    conversationStage = 4;
-  } else if (conversationStage === 4) {
+    conversationStage = 5;
+  } else if (conversationStage === 5) {
     if (input.toLowerCase().includes("yes")) {
-      addBotMessage("Ada Lovelace: I am optimistic—the fusion of art and science knows no bounds.");
+      addBotMessage("Ada Lovelace: I am optimistic—the fusion of art and science is limitless.");
     } else if (input.toLowerCase().includes("no")) {
       addBotMessage("Ada Lovelace: A cautious view, yet innovation often surprises us.");
     } else {
       addBotMessage("Please answer with yes or no.");
       return;
     }
+    addBotMessage("Ada Lovelace: Would you share your innovative ideas with the world? (Type yes or no)");
+    conversationStage = 6;
+  } else if (conversationStage === 6) {
+    if (input.toLowerCase().includes("yes")) {
+      addBotMessage("Ada Lovelace: Your vision can bridge the gap between art and technology.");
+    } else if (input.toLowerCase().includes("no")) {
+      addBotMessage("Ada Lovelace: Sometimes, the most revolutionary ideas remain private.");
+    } else {
+      addBotMessage("Please answer with yes or no.");
+      return;
+    }
     addBotMessage("Ada Lovelace: Thank you for venturing into the digital frontier with me. Farewell!");
-    conversationStage = 5;
+    conversationStage = 7;
   }
 }
 
@@ -1156,4 +1334,3 @@ function learnOnlineWidget() {
           <p>Explore our online communities and sessions:</p>
           ${coursesHtml}`;
 }
-
