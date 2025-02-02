@@ -1097,3 +1097,63 @@ function processLovelaceAdventure(input) {
     conversationStage = 5;
   }
 }
+
+/***************************************
+ * Learn Online Widget
+ ***************************************/
+function learnOnlineWidget() {
+  const courses = [
+    {
+      title: "ReadJAMS",
+      description: "An online library for JAMS.",
+      buttonText: "Join ReadJAMS!",
+      buttonUrl: "https://readjams.vercel.app",
+      imageUrl: "https://i.ibb.co/61pC5Px/Read-JAMS.png"
+    },
+    {
+      title: "MathJAMS",
+      description: "An online math trainer for JAMS.",
+      buttonText: "Join MathJAMS!",
+      buttonUrl: "https://mathjams.vercel.app",
+      imageUrl: "https://i.postimg.cc/2jv9GmfM/Read-JAMS-1.png"
+    },
+    {
+      title: "CodeJAMS",
+      description: "An online code trainer for JAMS.",
+      buttonText: "Join CodeJAMS!",
+      buttonUrl: "https://codejams.vercel.app/",
+      imageUrl: "https://i.postimg.cc/cCV9cxx1/Code-JAMS.png"
+    },
+    {
+      title: "MathDash",
+      description: "An online math trainer for all!",
+      buttonText: "Join MathDash!",
+      buttonUrl: "https://playmathdash.vercel.app",
+      imageUrl: "https://i.postimg.cc/B6H7jhyX/MATH.png"
+    }
+  ];
+
+  let coursesHtml = `<div class="learnonline-container"><div class="learnonline-grid">`;
+  courses.forEach(course => {
+    let buttonClass = "learnonline-button";
+    if (course.title === "MathDash") {
+      buttonClass += " mathdash-button";
+    }
+    coursesHtml += `
+      <div class="learnonline-item">
+        <div class="learnonline-image-wrapper">
+          <img src="${course.imageUrl}" alt="${course.title}" class="learnonline-image">
+        </div>
+        <div class="learnonline-details">
+          <p>${course.description}</p>
+          <button onclick="window.open('${course.buttonUrl}', '_blank')" class="${buttonClass}">${course.buttonText}</button>
+        </div>
+      </div>
+    `;
+  });
+  coursesHtml += `</div></div>`;
+  return `<h3>Learn Online!</h3>
+          <p>Explore our online communities and sessions:</p>
+          ${coursesHtml}`;
+}
+
