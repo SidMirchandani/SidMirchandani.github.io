@@ -189,14 +189,26 @@ function loadWidget(widgetType) {
 /* ---------------------- */
 
 function freePrizesWidget() {
-  // An array of free prize objects (update with your own content as needed)
+  // Updated prize objects with individual links for each button.
   const prizes = [
-    { title: "Free E-Book", description: "Get a free e-book on web development." },
-    { title: "Discount Coupon", description: "Receive a 20% discount coupon on our services." },
-    { title: "Free Trial Subscription", description: "Enjoy a 30-day free trial of premium features." }
+    {
+      title: "72% off NordVPN",
+      description: "+ 30 days free!",
+      link: "https://nordvpn.com/"
+    },
+    {
+      title: "50% off NordPass",
+      description: "+ 30 days free!",
+      link: "https://nordpass.com/"
+    },
+    {
+      title: ".xyz Domains",
+      description: "Use TAI25 for the first year free!",
+      link: "https://gen.xyz/"
+    }
   ];
 
-  // Build a responsive grid of prize cards
+  // Build a responsive grid of prize cards including a button for each prize.
   let prizesHtml = `<div class="prizes-container"><div class="prizes-grid">`;
   prizes.forEach(prize => {
     prizesHtml += `
@@ -205,6 +217,7 @@ function freePrizesWidget() {
         <div class="prize-details">
           <h4>${prize.title}</h4>
           <p>${prize.description}</p>
+          <button onclick="window.open('${prize.link}', '_blank')">Claim Prize</button>
         </div>
       </div>
     `;
@@ -215,6 +228,7 @@ function freePrizesWidget() {
           <p>Check out these exclusive free prizes:</p>
           ${prizesHtml}`;
 }
+
 
 function mathWidget() {
   if (!window.currentMathSubject) window.currentMathSubject = "arithmetic";
@@ -605,4 +619,3 @@ function learnOnlineWidget() {
           <p>Explore our online communities and sessions:</p>
           ${coursesHtml}`;
 }
-
