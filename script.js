@@ -162,10 +162,10 @@ function loadWidget(widgetType) {
       content = languageWidget();
       break;
     case "environment":
-      content = environmentWidget();
+      content = environmentWidget ? environmentWidget() : "<p>Coming soon!</p>";
       break;
     case "volunteer":
-      content = volunteerWidget();
+      content = volunteerWidget ? volunteerWidget() : "<p>Coming soon!</p>";
       break;
     case "library":
       content = libraryWidget();
@@ -603,624 +603,548 @@ function checkLanguageAnswer() {
 }
 
 /***************************************
- * [NEW] Choose-Your-Own-Adventure Minigame Conversation Engine
+ * Choose-Your-Own-Adventure Minigame Conversation Engine
  ***************************************/
 
-// We will create a conversation flow for each historical persona.
-// Each flow is an array of steps (with at least 10 back-and-forths).
-// Each step is an object with:
-//   id: step index (starting at 0)
-//   prompt: the narrative text that the persona speaks, including options
-//   choices: an object mapping valid user input (like "1", "2", "3") to a choice text
-//   next: an object mapping the same keys to the next step id (or undefined to indicate the conversation end)
+// Global variables for the minigame conversation
+let conversationStepIndex = null; // null indicates waiting for character selection
+let selectedCharacter = "";
+let currentFlow = null;
 
+// Conversation flows for all 8 historical figures (10 events each, correct answer pattern: 2 → 3 → 1 → 1 → 2 → 3 → 3 → 2 → 1 → 2)
 const conversationFlows = {
   "Isaac Newton": [
-    {
-      id: 0,
-      prompt: "Newton: Greetings, I am Isaac Newton. Today, I invite you on a journey of discovery. Would you like to join me in:\n(1) Observing a falling apple\n(2) Calculating planetary motion\n(3) Reflecting on nature",
-      choices: { "1": "Observe a falling apple", "2": "Calculate planetary motion", "3": "Reflect on nature" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "1665: You see an apple fall from a tree. What do you do?", 
+      options: { "1": "Ignore it and continue reading.", "2": "Ponder why it fell straight down.", "3": "Eat it because you're hungry." }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Newton: As we watch the apple fall, tell me, what is the acceleration due to gravity on Earth?\n(1) 9.8 m/s²\n(2) 10 m/s²\n(3) 8 m/s²",
-      choices: { "1": "9.8 m/s²", "2": "10 m/s²", "3": "8 m/s²" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "Observing the moon’s orbit, you wonder what keeps it in motion. What is your insight?", 
+      options: { "1": "It's pushed by solar winds.", "2": "It is in constant free-fall while moving sideways.", "3": "Magic holds it in place." }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Newton: Calculating planetary motion! Do you believe that the same forces govern celestial bodies?\n(1) Absolutely\n(2) Not really\n(3) I'm not sure",
-      choices: { "1": "Absolutely", "2": "Not really", "3": "I'm not sure" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "To mathematically describe motion, what do you develop?", 
+      options: { "1": "Calculus", "2": "Algebra", "3": "Geometry" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Newton: Reflecting on nature is profound. Do you think nature is governed by hidden laws?\n(1) Yes\n(2) No\n(3) Maybe",
-      choices: { "1": "Yes", "2": "No", "3": "Maybe" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "Studying optics, you experiment with light. What do you discover?", 
+      options: { "1": "White light is composed of various colors.", "2": "Light is purely a wave.", "3": "Light travels in spirals." }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Newton: Your insight pleases me. Now, shall we discuss the invention of calculus?\n(1) Yes\n(2) No\n(3) Perhaps later",
-      choices: { "1": "Yes", "2": "No", "3": "Perhaps later" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "You write 'Principia Mathematica.' What phenomena does it explain?", 
+      options: { "1": "Chemical reactions.", "2": "Gravity and motion.", "3": "The behavior of gases." }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Newton: I see. Nonetheless, the laws of motion reveal themselves to the observant. Would you explore these laws further?\n(1) Yes\n(2) No\n(3) I'm curious",
-      choices: { "1": "Yes", "2": "No", "3": "I'm curious" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Leibniz publishes work on calculus. How do you react?", 
+      options: { "1": "Praise his efforts.", "2": "Ignore his work.", "3": "Accuse him of plagiarism." }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Newton: Imagine a world where every force has its cause. Do you believe mathematics explains the universe?\n(1) Absolutely\n(2) Partially\n(3) Not at all",
-      choices: { "1": "Absolutely", "2": "Partially", "3": "Not at all" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "Appointed as Warden of the Royal Mint, what is your priority?", 
+      options: { "1": "Increase coin production.", "2": "Improve coinage security.", "3": "Implement measures against counterfeiting." }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Newton: As we delve deeper, do you feel that understanding nature increases our wisdom?\n(1) Yes\n(2) No\n(3) Uncertain",
-      choices: { "1": "Yes", "2": "No", "3": "Uncertain" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "Enhancing observational instruments, which design do you refine?", 
+      options: { "1": "The Galilean telescope.", "2": "A reflecting telescope.", "3": "An electron microscope." }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Newton: Almost at the end—do you agree that every discovery is a step toward greater truth?\n(1) Certainly\n(2) Possibly\n(3) I doubt it",
-      choices: { "1": "Certainly", "2": "Possibly", "3": "I doubt it" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "While studying planetary motion, whose work inspires you the most?", 
+      options: { "1": "Kepler", "2": "Aristotle", "3": "Descartes" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Newton: Thank you for this enlightening adventure. May your curiosity forever light your way. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "In your later years, how do you secure your legacy?", 
+      options: { "1": "Retire quietly.", "2": "Defend your theories against critics.", "3": "Write philosophical treatises." }, 
+      correct: "2" 
     }
   ],
   "Albert Einstein": [
-    {
-      id: 0,
-      prompt: "Einstein: Greetings, I am Albert Einstein. Would you like to discuss:\n(1) Relativity\n(2) Quantum mysteries\n(3) The nature of light",
-      choices: { "1": "Relativity", "2": "Quantum mysteries", "3": "The nature of light" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "Working at a patent office, you conceive a revolutionary idea. What is it?", 
+      options: { "1": "Black holes", "2": "Special Relativity", "3": "DNA structure" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Einstein: Relativity is revolutionary. Do you believe that time is:\n(1) Relative\n(2) Absolute\n(3) Uncertain",
-      choices: { "1": "Relative", "2": "Absolute", "3": "Uncertain" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "You propose that light has particle properties. What do you call these particles?", 
+      options: { "1": "Quarks", "2": "Electrons", "3": "Photons" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Einstein: Quantum mysteries challenge our understanding. Do you think particles behave like:\n(1) Waves\n(2) Particles\n(3) Both",
-      choices: { "1": "Waves", "2": "Particles", "3": "Both" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "You derive an equation linking energy and mass. Which equation is it?", 
+      options: { "1": "E=mc²", "2": "F=ma", "3": "PV=nRT" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Einstein: Light is a curious phenomenon. Would you agree that light can be:\n(1) Both a particle and a wave\n(2) Only a wave\n(3) Only a particle",
-      choices: { "1": "Both", "2": "Only a wave", "3": "Only a particle" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "Upon receiving a Nobel Prize, what discovery is it awarded for?", 
+      options: { "1": "The Photoelectric Effect", "2": "General Relativity", "3": "Nuclear fusion" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Einstein: Splendid. Shall we now explore whether the universe is deterministic?\n(1) Yes\n(2) No\n(3) Uncertain",
-      choices: { "1": "Yes", "2": "No", "3": "Uncertain" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Facing rising political tensions, where do you relocate?", 
+      options: { "1": "England", "2": "The United States", "3": "Russia" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Einstein: Intriguing. Do you believe scientific inquiry can reveal all cosmic secrets?\n(1) Definitely\n(2) Not entirely\n(3) I doubt it",
-      choices: { "1": "Definitely", "2": "Not entirely", "3": "I doubt it" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Amid warnings about nuclear weapons, how do you respond?", 
+      options: { "1": "Remain silent.", "2": "Warn the U.S. President.", "3": "Protest publicly." }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Einstein: Imagine a realm where imagination drives discovery. Do you think that:\n(1) Imagination is key\n(2) Logic alone suffices\n(3) A blend of both is needed",
-      choices: { "1": "Imagination", "2": "Logic", "3": "Both" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "Offered the presidency of Israel, what do you do?", 
+      options: { "1": "Accept the role.", "2": "Decline to focus on science.", "3": "Relocate to Switzerland instead." }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Einstein: Our dialogue inspires me. Do you feel that art and science are:\n(1) Inseparable\n(2) Separate\n(3) Occasionally intertwined",
-      choices: { "1": "Inseparable", "2": "Separate", "3": "Occasionally intertwined" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "In your later years, you pursue a grand unifying theory. What is its focus?", 
+      options: { "1": "Quantum Gravity", "2": "Unified Field Theory", "3": "Time Travel" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Einstein: One final question: does knowledge bring joy?\n(1) Yes\n(2) No\n(3) It depends",
-      choices: { "1": "Yes", "2": "No", "3": "It depends" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "Advocating for peace, what stance do you take on nuclear weapons?", 
+      options: { "1": "Pacifism", "2": "Pre-emptive war", "3": "Call for complete disarmament" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Einstein: Thank you for this journey of thought. May your mind forever wander among the stars. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "At the end of your life, what is your final wish?", 
+      options: { "1": "To be buried in space.", "2": "To be cremated anonymously.", "3": "To be cloned for further research." }, 
+      correct: "2" 
     }
   ],
   "Marie Curie": [
-    {
-      id: 0,
-      prompt: "Curie: Greetings, I am Marie Curie. Would you prefer to discuss:\n(1) Radioactivity\n(2) Scientific research\n(3) The ethics of science",
-      choices: { "1": "Radioactivity", "2": "Scientific research", "3": "The ethics of science" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "Upon discovering a new element, what do you name it?", 
+      options: { "1": "Curium", "2": "Polonium", "3": "Radium" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Curie: Radioactivity is a potent force. Which element is most associated with my work?\n(1) Radium\n(2) Polonium\n(3) Uranium",
-      choices: { "1": "Radium", "2": "Polonium", "3": "Uranium" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "You coin a term for the phenomenon in your research. What is it?", 
+      options: { "1": "Electromagnetism", "2": "Quantum Mechanics", "3": "Radioactivity" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Curie: Research drives progress. Do you believe science can change the world?\n(1) Yes\n(2) No\n(3) Sometimes",
-      choices: { "1": "Yes", "2": "No", "3": "Sometimes" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "You win a Nobel Prize. In which field is it awarded?", 
+      options: { "1": "Physics", "2": "Medicine", "3": "Astronomy" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Curie: Ethics in science are vital. Should discoveries be shared freely?\n(1) Always\n(2) With caution\n(3) Not always",
-      choices: { "1": "Always", "2": "With caution", "3": "Not always" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "Developing new medical applications, what breakthrough do you achieve?", 
+      options: { "1": "Cancer treatment", "2": "Early disease detection", "3": "Enhancing metabolism" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Curie: Your perspective is enlightening. Shall we now discuss the challenges of working with radioactive materials?\n(1) Yes\n(2) No\n(3) Perhaps later",
-      choices: { "1": "Yes", "2": "No", "3": "Perhaps later" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Your research leads to technological advances. Which one emerges?", 
+      options: { "1": "Advanced microscopes", "2": "X-ray machines", "3": "MRI scanners" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Curie: I understand. Nonetheless, understanding risks leads to safety. Do you value scientific safety?\n(1) Highly\n(2) Moderately\n(3) Not much",
-      choices: { "1": "Highly", "2": "Moderately", "3": "Not much" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "During World War I, how do you contribute to medical care?", 
+      options: { "1": "Join the battlefield as a nurse", "2": "Develop portable X-ray units", "3": "Emigrate to the United States" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Curie: Let us ponder: does passion drive discovery?\n(1) Absolutely\n(2) Sometimes\n(3) Rarely",
-      choices: { "1": "Absolutely", "2": "Sometimes", "3": "Rarely" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "When offered a prestigious but non-scientific award, what do you do?", 
+      options: { "1": "Embrace it for the honor", "2": "Politely decline it", "3": "Retreat into privacy" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Curie: Your insights are most valuable. Is scientific research a noble pursuit?\n(1) Yes\n(2) No\n(3) It depends",
-      choices: { "1": "Yes", "2": "No", "3": "It depends" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "Your pioneering work paves the way for future advances. What does it inspire?", 
+      options: { "1": "The development of nuclear weapons", "2": "Nuclear medicine", "3": "Modern biotechnology" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Curie: Almost at the end—should discoveries benefit all humanity?\n(1) Yes\n(2) No\n(3) With conditions",
-      choices: { "1": "Yes", "2": "No", "3": "With conditions" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "Your daughter follows in your footsteps. What milestone does she achieve?", 
+      options: { "1": "Winning a Nobel Prize", "2": "Becoming a renowned poet", "3": "Pursuing a political career" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Curie: Thank you for this heartfelt conversation. May your curiosity lead to great discoveries. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "What is your final legacy?", 
+      options: { "1": "Discovering antibiotics", "2": "Pioneering research in radioactivity", "3": "The invention of solar panels" }, 
+      correct: "2" 
     }
   ],
   "Leonardo da Vinci": [
-    {
-      id: 0,
-      prompt: "Da Vinci: Salutations, I am Leonardo da Vinci. Shall we explore:\n(1) Art\n(2) Invention\n(3) The mysteries of anatomy",
-      choices: { "1": "Art", "2": "Invention", "3": "Anatomy" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "Commissioned for a portrait, what style do you choose?", 
+      options: { "1": "A rigid, traditional style", "2": "A lifelike, innovative realism", "3": "An abstract, surreal approach" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Da Vinci: Art inspires the soul. What is the name of my most famous painting?\n(1) The Last Supper\n(2) Mona Lisa\n(3) Vitruvian Man",
-      choices: { "1": "The Last Supper", "2": "Mona Lisa", "3": "Vitruvian Man" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "Observing nature, how do you capture its essence?", 
+      options: { "1": "Rely solely on classical formulas", "2": "Imitate older masters", "3": "Sketch directly from observation" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Da Vinci: Invention fuels progress. Would you rather design a flying machine or a diving suit?\n(1) Flying machine\n(2) Diving suit\n(3) Both",
-      choices: { "1": "Flying machine", "2": "Diving suit", "3": "Both" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "Designing a flying machine, what inspires your design?", 
+      options: { "1": "Study of bird flight", "2": "Ancient myths", "3": "Pure invention without basis" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Da Vinci: Anatomy reveals life's secrets. Do you believe studying human anatomy is essential for art?\n(1) Yes\n(2) No\n(3) Sometimes",
-      choices: { "1": "Yes", "2": "No", "3": "Sometimes" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "To improve your art, how do you study human anatomy?", 
+      options: { "1": "Dissect cadavers discreetly", "2": "Rely solely on texts", "3": "Use animal dissections" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Da Vinci: Splendid. Shall we now discuss the harmony of art and science?\n(1) Yes\n(2) No\n(3) Perhaps later",
-      choices: { "1": "Yes", "2": "No", "3": "Perhaps later" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Working on The Last Supper, what innovative technique do you employ?", 
+      options: { "1": "Traditional fresco techniques", "2": "New perspective methods", "3": "Impasto and texture experiments" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Da Vinci: I understand. Yet, the pursuit of knowledge is ceaseless. Do you believe creativity can change the world?\n(1) Absolutely\n(2) Not really\n(3) Maybe",
-      choices: { "1": "Absolutely", "2": "Not really", "3": "Maybe" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "A patron requests an engineering design. What do you propose?", 
+      options: { "1": "A basic pulley system", "2": "A simple waterwheel", "3": "A complex system of gears and hydraulics" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Da Vinci: Imagine a future where art and invention merge. Would you join such a renaissance?\n(1) Certainly\n(2) Uncertain\n(3) No",
-      choices: { "1": "Certainly", "2": "Uncertain", "3": "No" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "Facing setbacks with your inventions, how do you respond?", 
+      options: { "1": "Abandon your ideas", "2": "Seek help immediately", "3": "Persist and refine your sketches" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Da Vinci: Our dialogue is inspiring. Do you think the secrets of nature are revealed through art?\n(1) Yes\n(2) No\n(3) In part",
-      choices: { "1": "Yes", "2": "No", "3": "In part" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "Invited to the royal court, what project do you pitch?", 
+      options: { "1": "Minor decorative art", "2": "An ambitious, multi-disciplinary project", "3": "A short-lived experiment" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Da Vinci: As our journey nears its end, does the pursuit of beauty give meaning to life?\n(1) Yes\n(2) No\n(3) Sometimes",
-      choices: { "1": "Yes", "2": "No", "3": "Sometimes" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "In your later years, how do you document your ideas?", 
+      options: { "1": "Keep detailed notebooks", "2": "Rely on memory", "3": "Verbal storytelling only" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Da Vinci: Thank you for this wondrous journey. May you forever seek beauty and knowledge. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "Your legacy is celebrated. What is your final wish?", 
+      options: { "1": "To be forgotten", "2": "To inspire future generations", "3": "To remain a mysterious figure" }, 
+      correct: "2" 
     }
   ],
   "William Shakespeare": [
-    {
-      id: 0,
-      prompt: "Shakespeare: Hark! I am William Shakespeare. Wouldst thou prefer to discuss:\n(1) Tragedy\n(2) Comedy\n(3) Sonnet",
-      choices: { "1": "Tragedy", "2": "Comedy", "3": "Sonnet" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "Commissioned by the royal court, what genre do you choose for your play?", 
+      options: { "1": "A historical epic", "2": "A witty comedy rich with wordplay", "3": "A mythological tragedy" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Shakespeare: Tragedy doth stir the soul. Name one of my tragedies:\n(1) Hamlet\n(2) Macbeth\n(3) Othello",
-      choices: { "1": "Hamlet", "2": "Macbeth", "3": "Othello" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "During rehearsals, actors propose changes. How do you respond?", 
+      options: { "1": "Ignore their suggestions", "2": "Dictate your own version", "3": "Embrace creative collaboration" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Shakespeare: Comedy brings mirth. Wouldst thou favor witty repartee or joyful chaos?\n(1) Wit\n(2) Chaos\n(3) Both",
-      choices: { "1": "Wit", "2": "Chaos", "3": "Both" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "Facing criticism of your writing, how do you refine your work?", 
+      options: { "1": "Revise your language and structure", "2": "Overhaul your style completely", "3": "Stop writing altogether" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Shakespeare: A sonnet, then. Which of mine begins with 'Shall I compare thee to a summer's day?'\n(1) Sonnet 18\n(2) Sonnet 116\n(3) Sonnet 130",
-      choices: { "1": "Sonnet 18", "2": "Sonnet 116", "3": "Sonnet 130" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "When The Globe Theatre burns down, what is your response?", 
+      options: { "1": "Organize a rebuild with your company", "2": "Abandon theatre entirely", "3": "Write a play about the fire" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Shakespeare: Thy choice is admirable. Now, wouldst thou enjoy a discourse on the nature of love?\n(1) Indeed\n(2) Nay\n(3) Perchance",
-      choices: { "1": "Indeed", "2": "Nay", "3": "Perchance" },
-      next: { "1": 5, "2": 5, "3": 5 }
+    { 
+      event: "Receiving praise from influential patrons, how do you show gratitude?", 
+      options: { "1": "Demand higher fees", "2": "Dedicate a play to them", "3": "Hold lavish celebrations" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Shakespeare: Love, that most perplexing emotion! Doth love conquer all?\n(1) Aye\n(2) Nay\n(3) 'Tis uncertain",
-      choices: { "1": "Aye", "2": "Nay", "3": "'Tis uncertain" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "A rival challenges your methods. What do you do?", 
+      options: { "1": "Ignore the challenge", "2": "Criticize them publicly", "3": "Craft a play subtly critiquing their style" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Shakespeare: As our play unfolds, art and tragedy entwine. Dost thou agree that tragedy and comedy are but two sides of the same coin?\n(1) Truly\n(2) Not at all\n(3) Perhaps",
-      choices: { "1": "Truly", "2": "Not at all", "3": "Perhaps" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "Invited to perform at the royal court, what do you do?", 
+      options: { "1": "Decline the invitation", "2": "Send a proxy", "3": "Attend and present your work personally" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Shakespeare: Our dialogue echoes with beauty. Dost thou find solace in the written word?\n(1) Verily\n(2) Not really\n(3) Sometimes",
-      choices: { "1": "Verily", "2": "Not really", "3": "Sometimes" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "New experimental styles emerge in theatre. How do you react?", 
+      options: { "1": "Stick strictly to tradition", "2": "Blend innovative ideas with classic forms", "3": "Completely reinvent your approach" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Shakespeare: Before we part, answer me this: is life but a stage, where all the world’s a performance?\n(1) Indeed\n(2) Nay\n(3) 'Tis ambiguous",
-      choices: { "1": "Indeed", "2": "Nay", "3": "'Tis ambiguous" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "In later years, how do you want your plays remembered?", 
+      options: { "1": "As masterpieces of language and drama", "2": "As outdated relics", "3": "As mere entertainment" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Shakespeare: I thank thee for this stirring exchange. May thy days be filled with poetic wonder. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "Your legacy endures. What is your final wish?", 
+      options: { "1": "To be forgotten quickly", "2": "To inspire future generations of playwrights", "3": "To retire in obscurity" }, 
+      correct: "2" 
     }
   ],
   "Ludwig van Beethoven": [
-    {
-      id: 0,
-      prompt: "Beethoven: Greetings, I am Ludwig van Beethoven. Shall we converse about:\n(1) Music\n(2) Composition\n(3) Overcoming adversity",
-      choices: { "1": "Music", "2": "Composition", "3": "Overcoming adversity" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "In your early years, what fuels your passion for music?", 
+      options: { "1": "Wealth", "2": "A deep, intrinsic passion", "3": "Peer pressure" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Beethoven: Music is the language of the soul. How many symphonies did I compose?\n(1) 9\n(2) 7\n(3) 10",
-      choices: { "1": "9", "2": "7", "3": "10" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "Facing progressive hearing loss, what is your determined response?", 
+      options: { "1": "Stop composing altogether", "2": "Switch solely to conducting", "3": "Persevere and innovate in composition" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Beethoven: Composition is an art. Which is more important: (1) Melody, (2) Harmony, or (3) Both equally?",
-      choices: { "1": "Melody", "2": "Harmony", "3": "Both equally" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "Composing a groundbreaking symphony, what drives your creativity?", 
+      options: { "1": "Expressing profound human emotion", "2": "Imitating past composers", "3": "Pursuing popular trends" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Beethoven: Overcoming adversity defines character. Did my deafness strengthen my resolve?\n(1) Yes\n(2) No\n(3) Perhaps",
-      choices: { "1": "Yes", "2": "No", "3": "Perhaps" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "During personal hardships, what keeps you composing?", 
+      options: { "1": "An unyielding inner drive", "2": "Financial necessity", "3": "A quest for fame" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Beethoven: Your perspective inspires me. Shall we discuss the healing power of music?\n(1) Yes\n(2) No\n(3) I'm curious",
-      choices: { "1": "Yes", "2": "No", "3": "I'm curious" },
-      next: { "1": 5, "2": 5, "3": 5 }
+    { 
+      event: "Experimenting with musical forms, what do you create?", 
+      options: { "1": "A simple melody", "2": "A complex, multi-movement symphony", "3": "A brief operatic piece" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Beethoven: Imagine a world without music. Would it be (1) Darker, (2) Lighter, or (3) Unchanged?",
-      choices: { "1": "Darker", "2": "Lighter", "3": "Unchanged" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Critics challenge your innovative style. How do you respond?", 
+      options: { "1": "Conform to expectations", "2": "Withdraw from public life", "3": "Stand firm and evolve your music" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Beethoven: As I compose, I pour my soul into each note. Do you believe personal struggle fuels art?\n(1) Absolutely\n(2) Sometimes\n(3) Not at all",
-      choices: { "1": "Absolutely", "2": "Sometimes", "3": "Not at all" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "Invited to premiere your latest work, how do you prepare?", 
+      options: { "1": "Delegate all responsibilities", "2": "Let someone else conduct", "3": "Oversee every detail personally despite your deafness" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Beethoven: Our conversation resounds like a symphony. Do you think music can unite humanity?\n(1) Yes\n(2) No\n(3) In some ways",
-      choices: { "1": "Yes", "2": "No", "3": "In some ways" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "Reflecting on your legacy, what matters most to you?", 
+      options: { "1": "Personal wealth and fame", "2": "The emotional impact of your music", "3": "A fleeting popular hit" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Beethoven: One final thought: does the passion in music mirror the passion in life?\n(1) Indeed\n(2) Not quite\n(3) It's complicated",
-      choices: { "1": "Indeed", "2": "Not quite", "3": "It's complicated" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "In later years, how do you express your inner emotions?", 
+      options: { "1": "Compose deeply personal piano sonatas", "2": "Give impassioned public speeches", "3": "Compose cheerful, lighthearted tunes" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Beethoven: Thank you for this inspiring dialogue. May your life be as moving as a timeless symphony. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "At the end of your life, what is your hope for your music?", 
+      options: { "1": "To be forgotten", "2": "To inspire future generations", "3": "To be seen as mere entertainment" }, 
+      correct: "2" 
     }
   ],
   "Johannes Gutenberg": [
-    {
-      id: 0,
-      prompt: "Gutenberg: Greetings, I am Johannes Gutenberg. Shall we discuss:\n(1) Printing\n(2) The spread of knowledge\n(3) The power of the written word",
-      choices: { "1": "Printing", "2": "The spread of knowledge", "3": "The power of the written word" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "Inspired to revolutionize printing, what is your initial idea?", 
+      options: { "1": "Hand-copy texts manually", "2": "Use movable type", "3": "Engrave images by hand" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Gutenberg: Printing revolutionized the world. What invention am I famous for?\n(1) The printing press\n(2) Movable type\n(3) Paper production",
-      choices: { "1": "The printing press", "2": "Movable type", "3": "Paper production" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "Determined to spread knowledge, what is your next step?", 
+      options: { "1": "Print only religious texts", "2": "Start a small press", "3": "Develop a full-scale printing press" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Gutenberg: Knowledge spreads swiftly. Do you think printed books changed society?\n(1) Yes\n(2) No\n(3) Uncertain",
-      choices: { "1": "Yes", "2": "No", "3": "Uncertain" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "Facing skepticism from investors, how do you proceed?", 
+      options: { "1": "Persist and demonstrate your invention", "2": "Abandon your idea", "3": "Stick to traditional methods" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Gutenberg: The written word holds immense power. Should literature be accessible to all?\n(1) Yes\n(2) With restrictions\n(3) No",
-      choices: { "1": "Yes", "2": "With restrictions", "3": "No" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "To improve efficiency, what material do you choose for your typefaces?", 
+      options: { "1": "Metal alloy", "2": "Wood", "3": "Clay" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Gutenberg: Splendid. Would you say that printing ushered in a new age of enlightenment?\n(1) Absolutely\n(2) Somewhat\n(3) Not really",
-      choices: { "1": "Absolutely", "2": "Somewhat", "3": "Not really" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Needing funding, what is your strategy?", 
+      options: { "1": "Sell your invention outright", "2": "Seek patronage from wealthy citizens", "3": "Crowdsource funds from the masses" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Gutenberg: I see. Yet, preserving knowledge is vital. Do you value knowledge?\n(1) Highly\n(2) Moderately\n(3) Not much",
-      choices: { "1": "Highly", "2": "Moderately", "3": "Not much" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Your press begins producing books. What do you print first?", 
+      options: { "1": "Modern novels", "2": "Scientific journals", "3": "The Gutenberg Bible" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Gutenberg: Imagine a world without books. Would it be:\n(1) A darker place\n(2) About the same\n(3) Brighter",
-      choices: { "1": "A darker place", "2": "About the same", "3": "Brighter" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "Encountering technical challenges, how do you respond?", 
+      options: { "1": "Wait for a natural solution", "2": "Abandon the project", "3": "Innovate and refine your design" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Gutenberg: Our dialogue is enriching. Do you believe the written word empowers society?\n(1) Yes\n(2) No\n(3) In part",
-      choices: { "1": "Yes", "2": "No", "3": "In part" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "To further disseminate knowledge, what do you establish?", 
+      options: { "1": "A secret printing society", "2": "A network of printers across Europe", "3": "A government-run press" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Gutenberg: As we conclude, should knowledge be shared freely?\n(1) Yes\n(2) No\n(3) With conditions",
-      choices: { "1": "Yes", "2": "No", "3": "With conditions" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "Your invention revolutionizes communication. How do you feel?", 
+      options: { "1": "Proud and hopeful", "2": "Indifferent", "3": "Overwhelmed with doubt" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Gutenberg: Thank you for this enlightening discussion. May the written word continue to illuminate the world. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "What is your final wish for your invention?", 
+      options: { "1": "To be forgotten", "2": "For your press to inspire global literacy", "3": "To monopolize the book trade" }, 
+      correct: "2" 
     }
   ],
   "Ada Lovelace": [
-    {
-      id: 0,
-      prompt: "Lovelace: Greetings, I am Ada Lovelace. Would you like to explore:\n(1) Computing\n(2) Programming\n(3) The future of technology",
-      choices: { "1": "Computing", "2": "Programming", "3": "The future of technology" },
-      next: { "1": 1, "2": 2, "3": 3 }
+    { 
+      event: "Encountering Charles Babbage's Analytical Engine, what excites you most?", 
+      options: { "1": "Its mechanical sounds", "2": "Its computational potential", "3": "Its aesthetic design" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      prompt: "Lovelace: Computing is wondrous. Which machine did I work on?\n(1) The Analytical Engine\n(2) The Difference Engine\n(3) The Turing Machine",
-      choices: { "1": "The Analytical Engine", "2": "The Difference Engine", "3": "The Turing Machine" },
-      next: { "1": 4, "2": 4, "3": 4 }
+    { 
+      event: "You begin writing notes on the engine. What is your focus?", 
+      options: { "1": "Basic arithmetic operations", "2": "The machine’s mechanics", "3": "Developing algorithms for complex tasks" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      prompt: "Lovelace: Programming is an art. Do you believe that algorithms can solve every problem?\n(1) Yes\n(2) No\n(3) Only some",
-      choices: { "1": "Yes", "2": "No", "3": "Only some" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "Your work results in a groundbreaking achievement. What is it?", 
+      options: { "1": "The first computer program", "2": "A novel type of engine", "3": "A new mathematical theorem" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      prompt: "Lovelace: The future of technology is bright. Should technology be accessible to all?\n(1) Yes\n(2) No\n(3) With restrictions",
-      choices: { "1": "Yes", "2": "No", "3": "With restrictions" },
-      next: { "1": 4, "2": 5, "3": 5 }
+    { 
+      event: "Imagining a future for machines, what do you envision?", 
+      options: { "1": "Devices capable of creative tasks", "2": "Simple calculators", "3": "Mere industrial tools" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      prompt: "Lovelace: Excellent. Do you believe innovation is driven by creativity?\n(1) Absolutely\n(2) Somewhat\n(3) Not really",
-      choices: { "1": "Absolutely", "2": "Somewhat", "3": "Not really" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Debating the significance of your notes, what do you proclaim?", 
+      options: { "1": "They are overhyped", "2": "They herald a new era in computing", "3": "They are irrelevant" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      prompt: "Lovelace: I see. Yet, without innovation, progress stalls. Do you think collaboration enhances technological advancement?\n(1) Yes\n(2) No\n(3) Occasionally",
-      choices: { "1": "Yes", "2": "No", "3": "Occasionally" },
-      next: { "1": 6, "2": 6, "3": 6 }
+    { 
+      event: "Invited to present your ideas publicly, how do you proceed?", 
+      options: { "1": "Decline to speak", "2": "Give a brief technical talk", "3": "Deliver a visionary lecture on machine intelligence" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      prompt: "Lovelace: Imagine a world where technology solves all problems. Is that a desirable future?\n(1) Yes\n(2) No\n(3) I'm unsure",
-      choices: { "1": "Yes", "2": "No", "3": "I'm unsure" },
-      next: { "1": 7, "2": 7, "3": 7 }
+    { 
+      event: "Facing skepticism from peers, how do you handle criticism?", 
+      options: { "1": "Withdraw your work", "2": "Deny the criticism", "3": "Refine and expand your theories" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      prompt: "Lovelace: Our dialogue has been fascinating. Do you believe programming will shape the future of work?\n(1) Yes\n(2) No\n(3) It already has",
-      choices: { "1": "Yes", "2": "No", "3": "It already has" },
-      next: { "1": 8, "2": 8, "3": 8 }
+    { 
+      event: "As the engine’s potential becomes clear, what is your hope?", 
+      options: { "1": "That it remains a mere curiosity", "2": "That it revolutionizes computation", "3": "That it is used only for simple tasks" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      prompt: "Lovelace: One final query: does the pursuit of knowledge lead to a better society?\n(1) Yes\n(2) No\n(3) Sometimes",
-      choices: { "1": "Yes", "2": "No", "3": "Sometimes" },
-      next: { "1": 9, "2": 9, "3": 9 }
+    { 
+      event: "In your later years, how do you document your visionary ideas?", 
+      options: { "1": "In detailed, forward-thinking notebooks", "2": "Through secret correspondences", "3": "By delivering public lectures" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      prompt: "Lovelace: Thank you for this captivating conversation. May your future be as innovative as your spirit. Farewell.",
-      choices: {},
-      next: {}
+    { 
+      event: "What is your final wish for your legacy?", 
+      options: { "1": "To be forgotten", "2": "To be remembered as the first computer programmer", "3": "To have your work remain hidden" }, 
+      correct: "2" 
     }
   ]
 };
 
-// Global flag for minigame mode (this version is exclusively minigame mode)
-let isMinigameMode = true;
-let conversationStage = 0; // We'll use conversationStage as (current step id + 1)
-let selectedCharacter = "";
-let conversationData = {};
+// Helper function to display the current conversation step (event and options)
+function displayCurrentStep() {
+  const currentStep = currentFlow[conversationStepIndex];
+  // Display the event prefixed by the character's name.
+  addBotMessage(`${selectedCharacter}: ${currentStep.event}`);
+  
+  // Create a new div for the options, joining each option with <br> tags.
+  const chatWindow = document.getElementById("chat-window");
+  if (chatWindow) {
+    const optionsElem = document.createElement("div");
+    optionsElem.className = "bot-message";
+    const optionsText = Object.entries(currentStep.options)
+      .map(([key, value]) => `${key}. ${value}`)
+      .join("<br>");
+    optionsElem.innerHTML = optionsText;  // Use innerHTML so <br> tags are rendered.
+    chatWindow.appendChild(optionsElem);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+}
 
-// Start the minigame conversation immediately when the page loads
+
+// Start the minigame conversation when the page loads
 window.onload = function () {
   startMinigameConversation();
-  // Attach event listener on the text input (#chat-input)
   const inputField = document.getElementById("chat-input");
-  inputField.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      const userInput = inputField.value.trim();
-      if (userInput !== "") {
-        addUserMessage(userInput);
-        inputField.value = "";
-        processConversationInput(userInput);
+  if (inputField) {
+    inputField.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const userInput = inputField.value.trim();
+        if (userInput !== "") {
+          addUserMessage(userInput);
+          inputField.value = "";
+          processConversationInput(userInput);
+        }
       }
-    }
-  });
-};
+    });
+  }
+}
 
 // Append a bot message to the chat window
 function addBotMessage(text) {
   const chatWindow = document.getElementById("chat-window");
-  const messageElem = document.createElement("div");
-  messageElem.className = "bot-message";
-  messageElem.textContent = text;
-  chatWindow.appendChild(messageElem);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  if (chatWindow) {
+    const messageElem = document.createElement("div");
+    messageElem.className = "bot-message";
+    messageElem.textContent = text;
+    chatWindow.appendChild(messageElem);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
 }
 
 // Append a user message to the chat window
 function addUserMessage(text) {
   const chatWindow = document.getElementById("chat-window");
-  const messageElem = document.createElement("div");
-  messageElem.className = "user-message";
-  messageElem.textContent = text;
-  chatWindow.appendChild(messageElem);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  if (chatWindow) {
+    const messageElem = document.createElement("div");
+    messageElem.className = "user-message";
+    messageElem.textContent = text;
+    chatWindow.appendChild(messageElem);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
 }
 
 // Clear the chat window
 function clearChatWindow() {
-  document.getElementById("chat-window").innerHTML = "";
+  const chatWindow = document.getElementById("chat-window");
+  if (chatWindow) {
+    chatWindow.innerHTML = "";
+  }
 }
 
-// Begin the conversation by asking which persona to play with
+// Start (or reset) the conversation
 function startMinigameConversation() {
   clearChatWindow();
-  conversationStage = 0;
+  conversationStepIndex = null;
   selectedCharacter = "";
-  conversationData = {};
-  addBotMessage(
-    "Welcome to Timeless Minigames!\nWho do you want to play with? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace)"
-  );
+  currentFlow = null;
+  addBotMessage("Welcome to Timeless Minigames!\nWho do you want to play with? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace)");
 }
 
-// Process user input based on current conversation stage
+// Process user input for the conversation
 function processConversationInput(input) {
-  // Stage 0: Choose a character
-  if (conversationStage === 0) {
-    let found = ["isaac newton","albert einstein","marie curie","leonardo da vinci","william shakespeare","ludwig van beethoven","johannes gutenberg","ada lovelace"].find(
-      char => char === input.toLowerCase()
-    );
-    if (found) {
-      // Capitalize simply:
-      selectedCharacter = found.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-      addBotMessage(`You have chosen ${selectedCharacter}. Let the adventure begin!`);
-      conversationStage = 1; // Set stage to 1 (which means step id 0 is done)
-      // Immediately trigger the next step:
-      processConversationInput("");
+  if (input.toLowerCase() === "reset") {
+    startMinigameConversation();
+    return;
+  }
+  // If no character is selected yet, process character selection.
+  if (conversationStepIndex === null) {
+    const validNames = ["isaac newton", "albert einstein", "marie curie", "leonardo da vinci", "william shakespeare", "ludwig van beethoven", "johannes gutenberg", "ada lovelace"];
+    if (validNames.includes(input.toLowerCase())) {
+      // Properly capitalize the name.
+      selectedCharacter = input.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+      currentFlow = conversationFlows[selectedCharacter];
+      conversationStepIndex = 0;
+      displayCurrentStep();
     } else {
-      addBotMessage(
-        "I didn't recognize that name. Please type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace."
-      );
+      addBotMessage("I didn't recognize that name. Please type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace.");
     }
   } else {
-    // Get the conversation flow for the selected character
-    const flow = conversationFlows[selectedCharacter];
-    if (!flow) {
-      addBotMessage("Error: No conversation flow found for this character.");
+    // Process the current conversation step.
+    let currentStep = currentFlow[conversationStepIndex];
+    if (!currentStep || currentStep.correct === "") {
+      addBotMessage("The conversation has ended. Type 'reset' to restart.");
       return;
     }
-    // Determine the current step by matching conversationStage-1 to step id
-    let currentStep = flow.find(step => step.id === conversationStage - 1);
-    if (!currentStep) {
-      addBotMessage("The adventure has concluded. Farewell!");
-      return;
-    }
-    // If the current step has no choices, conversation ends.
-    if (!currentStep.choices || Object.keys(currentStep.choices).length === 0) {
-      addBotMessage("The conversation has ended.");
-      return;
-    }
-    // Expect the user to type one of the valid choice keys (like "1", "2", etc.)
-    if (currentStep.choices.hasOwnProperty(input)) {
-      let nextId = currentStep.next[input];
-      let nextStep = flow.find(step => step.id === nextId);
-      if (nextStep) {
-        conversationStage = nextStep.id + 1;
-        addBotMessage(nextStep.prompt);
+    if (input === currentStep.correct) {
+      conversationStepIndex++;
+      if (conversationStepIndex < currentFlow.length) {
+        displayCurrentStep();
       } else {
-        addBotMessage("The adventure has concluded. Farewell!");
+        addBotMessage("The adventure has concluded. Congratulations!");
       }
     } else {
-      addBotMessage("Please choose a valid option (e.g., type 1, 2, or 3).");
+      addBotMessage("Incorrect. Type 'reset' to reset chat.");
     }
   }
 }
