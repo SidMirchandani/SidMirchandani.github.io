@@ -376,7 +376,7 @@ function libraryWidget() {
       url: "https://www.gutenberg.org/cache/epub/1513/pg1513-images.html"
     },
     {
-      title: "The Complete Works of William Shakespeare",
+      title: "William Shakespeare's Works",
       url: "https://www.gutenberg.org/cache/epub/100/pg100-images.html"
     },
     {
