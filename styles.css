@@ -106,6 +106,20 @@ header img {
   gap: 10px 20px;
 }
 
+.user-message {
+  display: inline-block;
+  background-color: rgba(94, 23, 235, 0.1);
+  color: #5e17eb;
+  border-radius: 20px 20px 20px 10px;
+  padding: 8px 12px;
+  margin: 5px 0;
+  max-width: 70%;
+  font-size: 12px;
+}
+.bot-message {
+  font-size: 12px;
+}
+
 /* Toggle Button for Widget Sidebar */
 .toggle-widget-sidebar {
   position: fixed;
@@ -154,21 +168,18 @@ header img {
 }
 
 /* Library Widget Styles */
-/* Library Widget Styles */
 .library-container {
   margin-top: 20px;
   margin-bottom: 20px;
-  max-height: 200px;  /* Adjust the max-height as needed */
-  overflow-y: auto;   /* Enables vertical scrolling when content exceeds the max height */
-  padding-right: 10px; /* Optional: adds space for the scrollbar */
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 10px;
 }
-
 .pdf-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 0px;
 }
-
 .pdf-item {
   background-color: #fafafa;
   border: 1px solid #ddd;
@@ -178,30 +189,24 @@ header img {
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease;
   margin: 10px;
 }
-
 .pdf-item:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transform: translateY(-3px);
 }
-
 .pdf-icon {
   font-size: 2em;
   margin-bottom: 10px;
 }
-
 .pdf-title a {
   color: #5e17eb;
   text-decoration: none;
   font-weight: bold;
   transition: color 0.3s ease;
 }
-
 .pdf-title a:hover {
   color: #4b13c7;
   text-decoration: underline;
 }
-
-
 
 /* Additional styling for the Braille output and points stars */
 #braille-output {
@@ -366,36 +371,19 @@ header img {
   background-color: #4b13c7;
 }
 
-/* Optional: Styles for user and bot messages in the chat window */
-.user-message {
-  display: inline-block;
-  background-color: rgba(94, 23, 235, 0.1);
-  color: #5e17eb;
-  border-radius: 20px 20px 20px 10px;
-  padding: 8px 12px;
-  margin: 5px 0;
-  max-width: 70%;
-  font-size: 12px;
-}
-.bot-message {
-  font-size: 12px;
-}
-
 /* Free Prizes Widget Styles */
 .prizes-container {
   margin-top: 20px;
   margin-bottom: 20px;
-  max-height: 200px;  /* Adjust max-height as needed */
-  overflow-y: auto;   /* Enable vertical scrolling when content exceeds max height */
-  padding-right: 10px; /* Optional: ensures content doesn't get hidden behind the scrollbar */
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
 }
-
 .prizes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 0px;
 }
-
 .prize-item {
   background-color: #fafafa;
   border: 1px solid #ddd;
@@ -405,23 +393,19 @@ header img {
   transition: box-shadow 0.3s ease-in-out, transform 0.3s ease;
   margin: 10px;
 }
-
 .prize-item:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transform: translateY(-3px);
 }
-
 .prize-icon {
   font-size: 2em;
   margin-bottom: 10px;
 }
-
 .prize-details h4 {
   color: #5e17eb;
   margin-bottom: 5px;
   font-size: 1.1em;
 }
-
 .prize-details p {
   font-size: 14px;
   color: #333;
@@ -432,17 +416,15 @@ header img {
 .learnonline-container {
   margin-top: 20px;
   margin-bottom: 20px;
-  max-height: 300px;  /* Adjust max-height as needed */
-  overflow-y: auto;   /* Enable vertical scrolling if content exceeds max height */
-  padding-right: 10px; /* Provides space for the scrollbar */
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
 }
-
 .learnonline-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 0px;
 }
-
 .learnonline-item {
   background-color: white;
   border: 1px solid #ddd;
@@ -452,34 +434,28 @@ header img {
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   margin: 10px;
 }
-
 .learnonline-item:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   transform: translateY(-3px);
 }
-
 .learnonline-image-wrapper {
   margin-bottom: 10px;
 }
-
 .learnonline-image {
   width: 100px;
   height: 100px;
   object-fit: cover;
 }
-
 .learnonline-details h4 {
   color: #5e17eb;
   margin-bottom: 5px;
   font-size: 1.1em;
 }
-
 .learnonline-details p {
   font-size: 14px;
   color: #333;
   margin-bottom: 10px;
 }
-
 .learnonline-button {
   display: inline-block;
   padding: 8px 12px;
@@ -491,16 +467,109 @@ header img {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .learnonline-button:hover {
   background-color: #4b13c7;
 }
-
-/* Combined selector for MathDash button to increase specificity */
 .learnonline-button.mathdash-button {
   background-color: #10b3ef;
 }
-
 .learnonline-button.mathdash-button:hover {
   background-color: #0ea7dc;
+}
+
+/* Persona Selector Container */
+.chat-persona-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 10px;
+  position: relative;
+}
+.persona-item {
+  margin: 0 10px;
+  padding: 5px 10px;
+  background-color: #eee;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  flex-shrink: 0;
+}
+.persona-item.selected {
+  background-color: #5e17eb;
+  color: white;
+}
+
+/* New Styles for Minigame Region */
+.minigame-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.minigame-button {
+  padding: 8px 15px;
+  background-color: #10b3ef;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.minigame-button:hover {
+  background-color: #0ea7dc;
+}
+.minigame-desc {
+  margin: 0 0 10px 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+.back-button {
+  padding: 5px 10px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+.back-button:hover {
+  background-color: #ccc;
+}
+
+/* Styles for Minigame Input & Button Container */
+#button-container {
+  text-align: center;
+  margin-top: 10px;
+}
+#minigame-input-container {
+  display: none;
+  margin-top: 10px;
+}
+#minigame-input-container input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 80%;
+}
+#minigame-input-container button {
+  padding: 10px 15px;
+  background-color: #198754;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 800px) {
+  .main-container {
+    flex-direction: column;
+  }
+  .minigame-region,
+  .widget-display {
+    width: 100%;
+  }
+  .widget-display {
+    margin-top: 20px;
+  }
 }
