@@ -201,12 +201,12 @@ function freePrizesWidget() {
     {
       title: "72% off NordVPN",
       description: "+ 30 days free!",
-      link: "https://nordvpn.com/"
+      link: "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=116893&url_id=902"
     },
     {
       title: "50% off NordPass",
       description: "+ 30 days free!",
-      link: "https://nordpass.com/"
+      link: "https://nordpass.com/special/?utm_medium=affiliate&utm_term&utm_content&utm_campaign=off488&utm_source=aff116893&aff_free"
     },
     {
       title: ".xyz Domains",
