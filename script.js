@@ -162,10 +162,10 @@ function loadWidget(widgetType) {
       content = languageWidget();
       break;
     case "environment":
-      content = environmentWidget ? environmentWidget() : "<p>Coming soon!</p>";
+      content = environmentWidget();
       break;
     case "volunteer":
-      content = volunteerWidget ? volunteerWidget() : "<p>Coming soon!</p>";
+      content = volunteerWidget();
       break;
     case "library":
       content = libraryWidget();
@@ -201,12 +201,12 @@ function freePrizesWidget() {
     {
       title: "72% off NordVPN",
       description: "+ 30 days free!",
-      link: "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=116893&url_id=902"
+      link: "https://nordvpn.com/"
     },
     {
       title: "50% off NordPass",
       description: "+ 30 days free!",
-      link: "https://nordpass.com/special/?utm_medium=affiliate&utm_term&utm_content&utm_campaign=off488&utm_source=aff116893&aff_free"
+      link: "https://nordpass.com/"
     },
     {
       title: ".xyz Domains",
@@ -603,548 +603,127 @@ function checkLanguageAnswer() {
 }
 
 /***************************************
- * Choose-Your-Own-Adventure Minigame Conversation Engine
+ * [NEW] Choose-Your-Own-Adventure Minigame Conversation Engine
  ***************************************/
 
-// Global variables for the minigame conversation
-let conversationStepIndex = null; // null indicates waiting for character selection
+// We will create a conversation flow for each historical persona.
+// Each flow is an array of steps (with at least 10 back-and-forths).
+// Each step is an object with:
+//   id: step index (starting at 0)
+//   prompt: the narrative text that the persona speaks, including options
+//   choices: an object mapping valid user input (like "1", "2", "3") to a choice text
+//   next: an object mapping the same keys to the next step id (or undefined to indicate the conversation end)
+
+
+
+// Global flag for minigame mode (this version is exclusively minigame mode)
+let isMinigameMode = true;
+let conversationStage = 0; // We'll use conversationStage as (current step id + 1)
 let selectedCharacter = "";
-let currentFlow = null;
+let conversationData = {};
 
-// Conversation flows for all 8 historical figures (10 events each, correct answer pattern: 2 → 3 → 1 → 1 → 2 → 3 → 3 → 2 → 1 → 2)
-const conversationFlows = {
-  "Isaac Newton": [
-    { 
-      event: "1665: You see an apple fall from a tree. What do you do?", 
-      options: { "1": "Ignore it and continue reading.", "2": "Ponder why it fell straight down.", "3": "Eat it because you're hungry." }, 
-      correct: "2" 
-    },
-    { 
-      event: "Observing the moon’s orbit, you wonder what keeps it in motion. What is your insight?", 
-      options: { "1": "It's pushed by solar winds.", "2": "It is in constant free-fall while moving sideways.", "3": "Magic holds it in place." }, 
-      correct: "3" 
-    },
-    { 
-      event: "To mathematically describe motion, what do you develop?", 
-      options: { "1": "Calculus", "2": "Algebra", "3": "Geometry" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Studying optics, you experiment with light. What do you discover?", 
-      options: { "1": "White light is composed of various colors.", "2": "Light is purely a wave.", "3": "Light travels in spirals." }, 
-      correct: "1" 
-    },
-    { 
-      event: "You write 'Principia Mathematica.' What phenomena does it explain?", 
-      options: { "1": "Chemical reactions.", "2": "Gravity and motion.", "3": "The behavior of gases." }, 
-      correct: "2" 
-    },
-    { 
-      event: "Leibniz publishes work on calculus. How do you react?", 
-      options: { "1": "Praise his efforts.", "2": "Ignore his work.", "3": "Accuse him of plagiarism." }, 
-      correct: "3" 
-    },
-    { 
-      event: "Appointed as Warden of the Royal Mint, what is your priority?", 
-      options: { "1": "Increase coin production.", "2": "Improve coinage security.", "3": "Implement measures against counterfeiting." }, 
-      correct: "3" 
-    },
-    { 
-      event: "Enhancing observational instruments, which design do you refine?", 
-      options: { "1": "The Galilean telescope.", "2": "A reflecting telescope.", "3": "An electron microscope." }, 
-      correct: "2" 
-    },
-    { 
-      event: "While studying planetary motion, whose work inspires you the most?", 
-      options: { "1": "Kepler", "2": "Aristotle", "3": "Descartes" }, 
-      correct: "1" 
-    },
-    { 
-      event: "In your later years, how do you secure your legacy?", 
-      options: { "1": "Retire quietly.", "2": "Defend your theories against critics.", "3": "Write philosophical treatises." }, 
-      correct: "2" 
-    }
-  ],
-  "Albert Einstein": [
-    { 
-      event: "Working at a patent office, you conceive a revolutionary idea. What is it?", 
-      options: { "1": "Black holes", "2": "Special Relativity", "3": "DNA structure" }, 
-      correct: "2" 
-    },
-    { 
-      event: "You propose that light has particle properties. What do you call these particles?", 
-      options: { "1": "Quarks", "2": "Electrons", "3": "Photons" }, 
-      correct: "3" 
-    },
-    { 
-      event: "You derive an equation linking energy and mass. Which equation is it?", 
-      options: { "1": "E=mc²", "2": "F=ma", "3": "PV=nRT" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Upon receiving a Nobel Prize, what discovery is it awarded for?", 
-      options: { "1": "The Photoelectric Effect", "2": "General Relativity", "3": "Nuclear fusion" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Facing rising political tensions, where do you relocate?", 
-      options: { "1": "England", "2": "The United States", "3": "Russia" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Amid warnings about nuclear weapons, how do you respond?", 
-      options: { "1": "Remain silent.", "2": "Warn the U.S. President.", "3": "Protest publicly." }, 
-      correct: "3" 
-    },
-    { 
-      event: "Offered the presidency of Israel, what do you do?", 
-      options: { "1": "Accept the role.", "2": "Decline to focus on science.", "3": "Relocate to Switzerland instead." }, 
-      correct: "3" 
-    },
-    { 
-      event: "In your later years, you pursue a grand unifying theory. What is its focus?", 
-      options: { "1": "Quantum Gravity", "2": "Unified Field Theory", "3": "Time Travel" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Advocating for peace, what stance do you take on nuclear weapons?", 
-      options: { "1": "Pacifism", "2": "Pre-emptive war", "3": "Call for complete disarmament" }, 
-      correct: "1" 
-    },
-    { 
-      event: "At the end of your life, what is your final wish?", 
-      options: { "1": "To be buried in space.", "2": "To be cremated anonymously.", "3": "To be cloned for further research." }, 
-      correct: "2" 
-    }
-  ],
-  "Marie Curie": [
-    { 
-      event: "Upon discovering a new element, what do you name it?", 
-      options: { "1": "Curium", "2": "Polonium", "3": "Radium" }, 
-      correct: "2" 
-    },
-    { 
-      event: "You coin a term for the phenomenon in your research. What is it?", 
-      options: { "1": "Electromagnetism", "2": "Quantum Mechanics", "3": "Radioactivity" }, 
-      correct: "3" 
-    },
-    { 
-      event: "You win a Nobel Prize. In which field is it awarded?", 
-      options: { "1": "Physics", "2": "Medicine", "3": "Astronomy" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Developing new medical applications, what breakthrough do you achieve?", 
-      options: { "1": "Cancer treatment", "2": "Early disease detection", "3": "Enhancing metabolism" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Your research leads to technological advances. Which one emerges?", 
-      options: { "1": "Advanced microscopes", "2": "X-ray machines", "3": "MRI scanners" }, 
-      correct: "2" 
-    },
-    { 
-      event: "During World War I, how do you contribute to medical care?", 
-      options: { "1": "Join the battlefield as a nurse", "2": "Develop portable X-ray units", "3": "Emigrate to the United States" }, 
-      correct: "3" 
-    },
-    { 
-      event: "When offered a prestigious but non-scientific award, what do you do?", 
-      options: { "1": "Embrace it for the honor", "2": "Politely decline it", "3": "Retreat into privacy" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Your pioneering work paves the way for future advances. What does it inspire?", 
-      options: { "1": "The development of nuclear weapons", "2": "Nuclear medicine", "3": "Modern biotechnology" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Your daughter follows in your footsteps. What milestone does she achieve?", 
-      options: { "1": "Winning a Nobel Prize", "2": "Becoming a renowned poet", "3": "Pursuing a political career" }, 
-      correct: "1" 
-    },
-    { 
-      event: "What is your final legacy?", 
-      options: { "1": "Discovering antibiotics", "2": "Pioneering research in radioactivity", "3": "The invention of solar panels" }, 
-      correct: "2" 
-    }
-  ],
-  "Leonardo da Vinci": [
-    { 
-      event: "Commissioned for a portrait, what style do you choose?", 
-      options: { "1": "A rigid, traditional style", "2": "A lifelike, innovative realism", "3": "An abstract, surreal approach" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Observing nature, how do you capture its essence?", 
-      options: { "1": "Rely solely on classical formulas", "2": "Imitate older masters", "3": "Sketch directly from observation" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Designing a flying machine, what inspires your design?", 
-      options: { "1": "Study of bird flight", "2": "Ancient myths", "3": "Pure invention without basis" }, 
-      correct: "1" 
-    },
-    { 
-      event: "To improve your art, how do you study human anatomy?", 
-      options: { "1": "Dissect cadavers discreetly", "2": "Rely solely on texts", "3": "Use animal dissections" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Working on The Last Supper, what innovative technique do you employ?", 
-      options: { "1": "Traditional fresco techniques", "2": "New perspective methods", "3": "Impasto and texture experiments" }, 
-      correct: "2" 
-    },
-    { 
-      event: "A patron requests an engineering design. What do you propose?", 
-      options: { "1": "A basic pulley system", "2": "A simple waterwheel", "3": "A complex system of gears and hydraulics" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Facing setbacks with your inventions, how do you respond?", 
-      options: { "1": "Abandon your ideas", "2": "Seek help immediately", "3": "Persist and refine your sketches" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Invited to the royal court, what project do you pitch?", 
-      options: { "1": "Minor decorative art", "2": "An ambitious, multi-disciplinary project", "3": "A short-lived experiment" }, 
-      correct: "2" 
-    },
-    { 
-      event: "In your later years, how do you document your ideas?", 
-      options: { "1": "Keep detailed notebooks", "2": "Rely on memory", "3": "Verbal storytelling only" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Your legacy is celebrated. What is your final wish?", 
-      options: { "1": "To be forgotten", "2": "To inspire future generations", "3": "To remain a mysterious figure" }, 
-      correct: "2" 
-    }
-  ],
-  "William Shakespeare": [
-    { 
-      event: "Commissioned by the royal court, what genre do you choose for your play?", 
-      options: { "1": "A historical epic", "2": "A witty comedy rich with wordplay", "3": "A mythological tragedy" }, 
-      correct: "2" 
-    },
-    { 
-      event: "During rehearsals, actors propose changes. How do you respond?", 
-      options: { "1": "Ignore their suggestions", "2": "Dictate your own version", "3": "Embrace creative collaboration" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Facing criticism of your writing, how do you refine your work?", 
-      options: { "1": "Revise your language and structure", "2": "Overhaul your style completely", "3": "Stop writing altogether" }, 
-      correct: "1" 
-    },
-    { 
-      event: "When The Globe Theatre burns down, what is your response?", 
-      options: { "1": "Organize a rebuild with your company", "2": "Abandon theatre entirely", "3": "Write a play about the fire" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Receiving praise from influential patrons, how do you show gratitude?", 
-      options: { "1": "Demand higher fees", "2": "Dedicate a play to them", "3": "Hold lavish celebrations" }, 
-      correct: "2" 
-    },
-    { 
-      event: "A rival challenges your methods. What do you do?", 
-      options: { "1": "Ignore the challenge", "2": "Criticize them publicly", "3": "Craft a play subtly critiquing their style" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Invited to perform at the royal court, what do you do?", 
-      options: { "1": "Decline the invitation", "2": "Send a proxy", "3": "Attend and present your work personally" }, 
-      correct: "3" 
-    },
-    { 
-      event: "New experimental styles emerge in theatre. How do you react?", 
-      options: { "1": "Stick strictly to tradition", "2": "Blend innovative ideas with classic forms", "3": "Completely reinvent your approach" }, 
-      correct: "2" 
-    },
-    { 
-      event: "In later years, how do you want your plays remembered?", 
-      options: { "1": "As masterpieces of language and drama", "2": "As outdated relics", "3": "As mere entertainment" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Your legacy endures. What is your final wish?", 
-      options: { "1": "To be forgotten quickly", "2": "To inspire future generations of playwrights", "3": "To retire in obscurity" }, 
-      correct: "2" 
-    }
-  ],
-  "Ludwig van Beethoven": [
-    { 
-      event: "In your early years, what fuels your passion for music?", 
-      options: { "1": "Wealth", "2": "A deep, intrinsic passion", "3": "Peer pressure" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Facing progressive hearing loss, what is your determined response?", 
-      options: { "1": "Stop composing altogether", "2": "Switch solely to conducting", "3": "Persevere and innovate in composition" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Composing a groundbreaking symphony, what drives your creativity?", 
-      options: { "1": "Expressing profound human emotion", "2": "Imitating past composers", "3": "Pursuing popular trends" }, 
-      correct: "1" 
-    },
-    { 
-      event: "During personal hardships, what keeps you composing?", 
-      options: { "1": "An unyielding inner drive", "2": "Financial necessity", "3": "A quest for fame" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Experimenting with musical forms, what do you create?", 
-      options: { "1": "A simple melody", "2": "A complex, multi-movement symphony", "3": "A brief operatic piece" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Critics challenge your innovative style. How do you respond?", 
-      options: { "1": "Conform to expectations", "2": "Withdraw from public life", "3": "Stand firm and evolve your music" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Invited to premiere your latest work, how do you prepare?", 
-      options: { "1": "Delegate all responsibilities", "2": "Let someone else conduct", "3": "Oversee every detail personally despite your deafness" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Reflecting on your legacy, what matters most to you?", 
-      options: { "1": "Personal wealth and fame", "2": "The emotional impact of your music", "3": "A fleeting popular hit" }, 
-      correct: "2" 
-    },
-    { 
-      event: "In later years, how do you express your inner emotions?", 
-      options: { "1": "Compose deeply personal piano sonatas", "2": "Give impassioned public speeches", "3": "Compose cheerful, lighthearted tunes" }, 
-      correct: "1" 
-    },
-    { 
-      event: "At the end of your life, what is your hope for your music?", 
-      options: { "1": "To be forgotten", "2": "To inspire future generations", "3": "To be seen as mere entertainment" }, 
-      correct: "2" 
-    }
-  ],
-  "Johannes Gutenberg": [
-    { 
-      event: "Inspired to revolutionize printing, what is your initial idea?", 
-      options: { "1": "Hand-copy texts manually", "2": "Use movable type", "3": "Engrave images by hand" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Determined to spread knowledge, what is your next step?", 
-      options: { "1": "Print only religious texts", "2": "Start a small press", "3": "Develop a full-scale printing press" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Facing skepticism from investors, how do you proceed?", 
-      options: { "1": "Persist and demonstrate your invention", "2": "Abandon your idea", "3": "Stick to traditional methods" }, 
-      correct: "1" 
-    },
-    { 
-      event: "To improve efficiency, what material do you choose for your typefaces?", 
-      options: { "1": "Metal alloy", "2": "Wood", "3": "Clay" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Needing funding, what is your strategy?", 
-      options: { "1": "Sell your invention outright", "2": "Seek patronage from wealthy citizens", "3": "Crowdsource funds from the masses" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Your press begins producing books. What do you print first?", 
-      options: { "1": "Modern novels", "2": "Scientific journals", "3": "The Gutenberg Bible" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Encountering technical challenges, how do you respond?", 
-      options: { "1": "Wait for a natural solution", "2": "Abandon the project", "3": "Innovate and refine your design" }, 
-      correct: "3" 
-    },
-    { 
-      event: "To further disseminate knowledge, what do you establish?", 
-      options: { "1": "A secret printing society", "2": "A network of printers across Europe", "3": "A government-run press" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Your invention revolutionizes communication. How do you feel?", 
-      options: { "1": "Proud and hopeful", "2": "Indifferent", "3": "Overwhelmed with doubt" }, 
-      correct: "1" 
-    },
-    { 
-      event: "What is your final wish for your invention?", 
-      options: { "1": "To be forgotten", "2": "For your press to inspire global literacy", "3": "To monopolize the book trade" }, 
-      correct: "2" 
-    }
-  ],
-  "Ada Lovelace": [
-    { 
-      event: "Encountering Charles Babbage's Analytical Engine, what excites you most?", 
-      options: { "1": "Its mechanical sounds", "2": "Its computational potential", "3": "Its aesthetic design" }, 
-      correct: "2" 
-    },
-    { 
-      event: "You begin writing notes on the engine. What is your focus?", 
-      options: { "1": "Basic arithmetic operations", "2": "The machine’s mechanics", "3": "Developing algorithms for complex tasks" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Your work results in a groundbreaking achievement. What is it?", 
-      options: { "1": "The first computer program", "2": "A novel type of engine", "3": "A new mathematical theorem" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Imagining a future for machines, what do you envision?", 
-      options: { "1": "Devices capable of creative tasks", "2": "Simple calculators", "3": "Mere industrial tools" }, 
-      correct: "1" 
-    },
-    { 
-      event: "Debating the significance of your notes, what do you proclaim?", 
-      options: { "1": "They are overhyped", "2": "They herald a new era in computing", "3": "They are irrelevant" }, 
-      correct: "2" 
-    },
-    { 
-      event: "Invited to present your ideas publicly, how do you proceed?", 
-      options: { "1": "Decline to speak", "2": "Give a brief technical talk", "3": "Deliver a visionary lecture on machine intelligence" }, 
-      correct: "3" 
-    },
-    { 
-      event: "Facing skepticism from peers, how do you handle criticism?", 
-      options: { "1": "Withdraw your work", "2": "Deny the criticism", "3": "Refine and expand your theories" }, 
-      correct: "3" 
-    },
-    { 
-      event: "As the engine’s potential becomes clear, what is your hope?", 
-      options: { "1": "That it remains a mere curiosity", "2": "That it revolutionizes computation", "3": "That it is used only for simple tasks" }, 
-      correct: "2" 
-    },
-    { 
-      event: "In your later years, how do you document your visionary ideas?", 
-      options: { "1": "In detailed, forward-thinking notebooks", "2": "Through secret correspondences", "3": "By delivering public lectures" }, 
-      correct: "1" 
-    },
-    { 
-      event: "What is your final wish for your legacy?", 
-      options: { "1": "To be forgotten", "2": "To be remembered as the first computer programmer", "3": "To have your work remain hidden" }, 
-      correct: "2" 
-    }
-  ]
-};
-
-// Helper function to display the current conversation step (event and options)
-function displayCurrentStep() {
-  const currentStep = currentFlow[conversationStepIndex];
-  // Display the event prefixed by the character's name.
-  addBotMessage(`${selectedCharacter}: ${currentStep.event}`);
-  
-  // Create a new div for the options, joining each option with <br> tags.
-  const chatWindow = document.getElementById("chat-window");
-  if (chatWindow) {
-    const optionsElem = document.createElement("div");
-    optionsElem.className = "bot-message";
-    const optionsText = Object.entries(currentStep.options)
-      .map(([key, value]) => `${key}. ${value}`)
-      .join("<br>");
-    optionsElem.innerHTML = optionsText;  // Use innerHTML so <br> tags are rendered.
-    chatWindow.appendChild(optionsElem);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
-}
-
-
-// Start the minigame conversation when the page loads
+// Start the minigame conversation immediately when the page loads
 window.onload = function () {
   startMinigameConversation();
+  // Attach event listener on the text input (#chat-input)
   const inputField = document.getElementById("chat-input");
-  if (inputField) {
-    inputField.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        const userInput = inputField.value.trim();
-        if (userInput !== "") {
-          addUserMessage(userInput);
-          inputField.value = "";
-          processConversationInput(userInput);
-        }
+  inputField.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      const userInput = inputField.value.trim();
+      if (userInput !== "") {
+        addUserMessage(userInput);
+        inputField.value = "";
+        processConversationInput(userInput);
       }
-    });
-  }
-}
+    }
+  });
+};
 
 // Append a bot message to the chat window
 function addBotMessage(text) {
   const chatWindow = document.getElementById("chat-window");
-  if (chatWindow) {
-    const messageElem = document.createElement("div");
-    messageElem.className = "bot-message";
-    messageElem.textContent = text;
-    chatWindow.appendChild(messageElem);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
+  const messageElem = document.createElement("div");
+  messageElem.className = "bot-message";
+  messageElem.textContent = text;
+  chatWindow.appendChild(messageElem);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 // Append a user message to the chat window
 function addUserMessage(text) {
   const chatWindow = document.getElementById("chat-window");
-  if (chatWindow) {
-    const messageElem = document.createElement("div");
-    messageElem.className = "user-message";
-    messageElem.textContent = text;
-    chatWindow.appendChild(messageElem);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
+  const messageElem = document.createElement("div");
+  messageElem.className = "user-message";
+  messageElem.textContent = text;
+  chatWindow.appendChild(messageElem);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 // Clear the chat window
 function clearChatWindow() {
-  const chatWindow = document.getElementById("chat-window");
-  if (chatWindow) {
-    chatWindow.innerHTML = "";
-  }
+  document.getElementById("chat-window").innerHTML = "";
 }
 
-// Start (or reset) the conversation
+// Begin the conversation by asking which persona to play with
 function startMinigameConversation() {
   clearChatWindow();
-  conversationStepIndex = null;
+  conversationStage = 0;
   selectedCharacter = "";
-  currentFlow = null;
-  addBotMessage("Welcome to Timeless Minigames!\nWho do you want to play with? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace)");
+  conversationData = {};
+  addBotMessage(
+    "Welcome to Timeless Minigames!\nWho do you want to play with? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, William Shakespeare, Johannes Gutenberg, Ada Lovelace)"
+  );
 }
 
-// Process user input for the conversation
+// Process user input based on current conversation stage
 function processConversationInput(input) {
-  if (input.toLowerCase() === "reset") {
-    startMinigameConversation();
-    return;
-  }
-  // If no character is selected yet, process character selection.
-  if (conversationStepIndex === null) {
-    const validNames = ["isaac newton", "albert einstein", "marie curie", "leonardo da vinci", "william shakespeare", "ludwig van beethoven", "johannes gutenberg", "ada lovelace"];
-    if (validNames.includes(input.toLowerCase())) {
-      // Properly capitalize the name.
-      selectedCharacter = input.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
-      currentFlow = conversationFlows[selectedCharacter];
-      conversationStepIndex = 0;
-      displayCurrentStep();
+  // Stage 0: Choose a character
+  if (conversationStage === 0) {
+    let found = ["isaac newton","albert einstein","marie curie","leonardo da vinci","william shakespeare","ludwig van beethoven","johannes gutenberg","ada lovelace"].find(
+      char => char === input.toLowerCase()
+    );
+    if (found) {
+      // Capitalize simply:
+      selectedCharacter = found.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+      addBotMessage(`You have chosen ${selectedCharacter}. Let the adventure begin!`);
+      conversationStage = 1; // Set stage to 1 (which means step id 0 is done)
+      // Immediately trigger the next step:
+      processConversationInput("");
     } else {
-      addBotMessage("I didn't recognize that name. Please type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace.");
+      addBotMessage(
+        "I didn't recognize that name. Please type one of: Isaac Newton, Albert Einstein, Marie Curie, William Shakespeare, Johannes Gutenberg, Ada Lovelace."
+      );
     }
   } else {
-    // Process the current conversation step.
-    let currentStep = currentFlow[conversationStepIndex];
-    if (!currentStep || currentStep.correct === "") {
-      addBotMessage("The conversation has ended. Type 'reset' to restart.");
+    // Get the conversation flow for the selected character
+    const flow = conversationFlows[selectedCharacter];
+    if (!flow) {
+      addBotMessage("Error: No conversation flow found for this character.");
       return;
     }
-    if (input === currentStep.correct) {
-      conversationStepIndex++;
-      if (conversationStepIndex < currentFlow.length) {
-        displayCurrentStep();
+    // Determine the current step by matching conversationStage-1 to step id
+    let currentStep = flow.find(step => step.id === conversationStage - 1);
+    if (!currentStep) {
+      addBotMessage("The adventure has concluded. Farewell!");
+      return;
+    }
+    // If the current step has no choices, conversation ends.
+    if (!currentStep.choices || Object.keys(currentStep.choices).length === 0) {
+      addBotMessage("The conversation has ended.");
+      return;
+    }
+    // Expect the user to type one of the valid choice keys (like "1", "2", etc.)
+    if (currentStep.choices.hasOwnProperty(input)) {
+      let nextId = currentStep.next[input];
+      let nextStep = flow.find(step => step.id === nextId);
+      if (nextStep) {
+        conversationStage = nextStep.id + 1;
+        addBotMessage(nextStep.prompt);
       } else {
-        addBotMessage("The adventure has concluded. Congratulations!");
+        addBotMessage("The adventure has concluded. Farewell!");
       }
     } else {
-      addBotMessage("Incorrect. Type 'reset' to reset chat.");
+      addBotMessage("Please choose a valid option (e.g., type 1, 2, or 3).");
     }
   }
 }
