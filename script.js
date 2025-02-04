@@ -671,7 +671,7 @@ function startMinigameConversation() {
   selectedCharacter = "";
   conversationData = {};
   addBotMessage(
-    "Welcome to Timeless Minigames!\nWho do you want to play with? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, William Shakespeare, Johannes Gutenberg, Ada Lovelace)"
+    "Welcome to Timeless Minigames!\nWho do you want to play with? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace)"
   );
 }
 
@@ -691,7 +691,7 @@ function processConversationInput(input) {
       processConversationInput("");
     } else {
       addBotMessage(
-        "I didn't recognize that name. Please type one of: Isaac Newton, Albert Einstein, Marie Curie, William Shakespeare, Johannes Gutenberg, Ada Lovelace."
+        "I didn't recognize that name. Please type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace."
       );
     }
   } else {
