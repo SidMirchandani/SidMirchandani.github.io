@@ -1119,10 +1119,29 @@ function processConversationInput(input) {
   }
   // If no character is selected yet, process character selection.
   if (conversationStepIndex === null) {
-    const validNames = ["isaac newton", "albert einstein", "marie curie", "leonardo da vinci", "william shakespeare", "ludwig van beethoven", "johannes gutenberg", "ada lovelace"];
+    const validNames = [
+      "isaac newton",
+      "albert einstein",
+      "marie curie",
+      "leonardo da vinci",
+      "william shakespeare",
+      "ludwig van beethoven",
+      "johannes gutenberg",
+      "ada lovelace"
+    ];
     if (validNames.includes(input.toLowerCase())) {
-      // Properly capitalize the name.
-      selectedCharacter = input.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+      // Map the lower-case input to the proper key used in conversationFlows.
+      const properNames = {
+        "isaac newton": "Isaac Newton",
+        "albert einstein": "Albert Einstein",
+        "marie curie": "Marie Curie",
+        "leonardo da vinci": "Leonardo da Vinci",
+        "william shakespeare": "William Shakespeare",
+        "ludwig van beethoven": "Ludwig van Beethoven",
+        "johannes gutenberg": "Johannes Gutenberg",
+        "ada lovelace": "Ada Lovelace"
+      };
+      selectedCharacter = properNames[input.toLowerCase()];
       currentFlow = conversationFlows[selectedCharacter];
       conversationStepIndex = 0;
       displayCurrentStep();
