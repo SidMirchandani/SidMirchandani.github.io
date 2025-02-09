@@ -1,1058 +1,1169 @@
-document.addEventListener("DOMContentLoaded", function () {
-  /* ===== Timeline Configuration ===== */
-  const timelineConfig = {
-    point1: {
-      imageUrl: "https://i.postimg.cc/BZ7k2XGP/image.png",
-      explanation: "The Holy Roman Empire was a sprawling, decentralized patchwork of states with complex feudal allegiances that had persisted for over a millennium. Internal inefficiencies and competing local interests had long plagued the empire, making unified governance difficult. By the late 18th century, external pressures and the winds of revolutionary change set the stage for transformative upheaval."
-    },
-    point2: {
-      imageUrl: "https://i.postimg.cc/9F4SbCW8/image.png",
-      explanation: "Napoleon’s ascent to power, following the French Revolution, introduced a new era of military and political innovation that challenged old-world traditions. His campaigns spread revolutionary ideals such as meritocracy, legal equality, and centralized state power across Europe. These forces began undermining the feudal order that had long defined the Holy Roman Empire."
-    },
-    point3: {
-      imageUrl: "https://i.postimg.cc/wBzG9NDZ/562786fb-fb31-4266-b772-2968153bdd66.webp",
-      explanation: "After the decisive victory at Austerlitz, Napoleon dictated terms in the Treaty of Pressburg, dramatically redrawing the map of Central Europe. Austria was forced to cede vast territories, weakening its traditional influence within the empire. This treaty marked a turning point, signaling the beginning of the end for the old imperial order."
-    },
-    point4: {
-      imageUrl: "https://i.postimg.cc/6qZP9f1s/08e2195b-8ae2-41a4-89f4-eb8338c62301.webp",
-      explanation: "In 1806, confronted by the reorganization of German territories under French influence, Emperor Francis II officially dissolved the Holy Roman Empire. The dissolution ended a millennium-old institution and its feudal governance, clearing the way for modern nation-states. This pivotal act underscored the irreversible shift from medieval allegiances to centralized state power."
-    },
-    point5: {
-      imageUrl: "https://i.postimg.cc/SQY37mQZ/11dbde3b-de0b-487d-aa78-32255a7f9d1c.webp",
-      explanation: "Immediately following the dissolution, Napoleon established the Confederation of the Rhine, a coalition of German states aligned with French strategic interests. This new political entity replaced the decentralized framework of the Holy Roman Empire with a more unified structure. It served as both a buffer against Austrian power and a vehicle for spreading Napoleonic reforms throughout Central Europe."
-    },
-    point6: {
-      imageUrl: "https://i.postimg.cc/9M6xNqXL/1d8471ef-6ccd-4477-b54f-84e6898163b2.webp",
-      explanation: "Napoleon introduced the Napoleonic Code to the German states within the Confederation, standardizing laws and creating a more uniform administrative framework. The code abolished many archaic feudal privileges and enshrined principles of equality and rational governance. These legal reforms laid the groundwork for modern civil law systems across Europe."
-    },
-    point7: {
-      imageUrl: "https://i.postimg.cc/3wCJw2Vv/2a3a74a2-e01d-4eac-9815-cc68bb1c4c8f.webp",
-      explanation: "Napoleon’s policies led to the secularization of vast church lands, transferring power from ecclesiastical authorities to secular rulers. This process significantly weakened the Catholic Church’s long-held influence in the region. Mediatisation integrated smaller, formerly independent principalities into larger states, further eroding the old feudal order."
-    },
-    point8: {
-      imageUrl: "https://i.postimg.cc/sXTjYsVf/db2fdc5b-f0cd-41d2-8d99-9d70358fc274.webp",
-      explanation: "Following Napoleon’s defeat, European powers convened at the Congress of Vienna to restore stability and redraw national boundaries. Despite efforts to reinstate conservative monarchies, the permanent dissolution of the Holy Roman Empire was accepted as the new status quo. The reshaping of Europe at Vienna solidified many Napoleonic reforms, even as it aimed to balance power among the major states."
-    },
-    point9: {
-      imageUrl: "https://i.postimg.cc/Rh8vYd6j/417b2315-991b-4b3f-bc46-e3786a3441bb.webp",
-      explanation: "In the wake of Napoleonic reforms, a growing sense of German identity began to emerge among the formerly fragmented states. The shift from feudal divisions to centralized administrative structures inspired liberal and nationalist movements that yearned for unity and self-determination. This ideological transformation laid the ideological groundwork for future efforts toward the unification of Germany."
-    },
-    point10: {
-      imageUrl: "https://i.postimg.cc/3x23LgKc/1786dac5-45fc-4271-9355-0d9828b75c9e.webp",
-      explanation: "The transformation initiated by Napoleon’s reorganization ultimately culminated in the unification of Germany in 1871 under Prussian leadership. The gradual evolution from a fragmented collection of states to a cohesive nation was deeply rooted in the political and legal changes triggered by the abolition of the Holy Roman Empire. This unification marked the birth of modern Central European politics and underscored Napoleon’s enduring impact on the continent."
-    }
-  };
+/***************************
+ * Global Variables & Utils
+ ***************************/
+const points = {
+  math: 0,
+  bio: 0,
+  language: 0
+};
 
-  /* ===== Timeline Navigation ===== */
-  const timelinePoints = document.querySelectorAll(".timeline-point");
-  const timelineGroups = document.querySelectorAll(".timeline-group");
-  const board = document.getElementById("puzzle-board");
-  const piecesContainer = document.getElementById("puzzle-pieces");
-  const popup = document.getElementById("puzzle-popup");
-  const popupTitle = document.getElementById("popup-title");
-  const popupInfo = document.getElementById("popup-info");
-  const closeBtn = popup.querySelector(".close-btn");
+function getPointsString(num) {
+  return `⭐ ${num}`;
+}
 
-  let currentPuzzleExplanation = ""; // Store the current puzzle's explanation
-
-  timelinePoints.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      // Hide all timeline groups
-      timelineGroups.forEach((group) => (group.style.display = "none"));
-      // Remove active state from all buttons
-      timelinePoints.forEach((b) => b.classList.remove("active"));
-      // Show the selected timeline group
-      const timelineId = btn.getAttribute("data-timeline");
-      document.getElementById(timelineId).style.display = "block";
-      btn.classList.add("active");
-
-      // Retrieve the configuration for the selected timeline
-      const config = timelineConfig[timelineId];
-
-      // Initialize the puzzle with the selected image
-      initializePuzzle(config.imageUrl, config.explanation);
-    });
-  });
-
-  /* ===== Puzzle Initialization ===== */
-  function initializePuzzle(imageUrl, explanationText) {
-    // Clear existing board and pieces
-    board.innerHTML = "";
-    piecesContainer.innerHTML = "";
-
-    // Store the explanation for later use
-    currentPuzzleExplanation = explanationText;
-
-    // Configuration variables
-    const rows = 4,
-          cols = 4;
-    const boardWidth = 250;
-    const boardHeight = 250;
-    const pieceWidth = boardWidth / cols;
-    const pieceHeight = boardHeight / rows;
-
-    // Set up the puzzle board (drop zones)
-    board.style.width = boardWidth + "px";
-    board.style.height = boardHeight + "px";
-    board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    board.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-
-    // Create drop zones for each cell
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const cell = document.createElement("div");
-        cell.classList.add("drop-zone");
-        cell.style.width = pieceWidth + "px";
-        cell.style.height = pieceHeight + "px";
-        cell.dataset.correctIndex = r * cols + c;
-
-        cell.addEventListener("dragover", function (e) {
-          e.preventDefault();
-        });
-
-        cell.addEventListener("drop", function (e) {
-          e.preventDefault();
-          const pieceId = e.dataTransfer.getData("text/plain");
-          const piece = document.getElementById(pieceId);
-          const correctIndex = cell.dataset.correctIndex;
-
-          if (piece.dataset.index === correctIndex) {
-            cell.appendChild(piece);
-            piece.classList.add("locked");
-            piece.setAttribute("draggable", "false");
-            checkPuzzleCompletion();
-          } else {
-            cell.style.borderColor = "red";
-            setTimeout(() => {
-              cell.style.borderColor = "#ccc";
-            }, 500);
-          }
-        });
-
-        board.appendChild(cell);
-      }
-    }
-
-    // Create puzzle pieces and store them in an array
-    let piecesArray = [];
-    for (let i = 0; i < rows * cols; i++) {
-      const piece = document.createElement("div");
-      piece.classList.add("puzzle-piece");
-      piece.id = "piece-" + i;
-      piece.dataset.index = i;
-      piece.style.width = pieceWidth + "px";
-      piece.style.height = pieceHeight + "px";
-      piece.style.backgroundImage = `url(${imageUrl})`;
-      piece.style.backgroundSize = `${boardWidth}px ${boardHeight}px`;
-
-      const row = Math.floor(i / cols);
-      const col = i % cols;
-      piece.style.backgroundPosition = `-${col * pieceWidth}px -${row * pieceHeight}px`;
-      piece.setAttribute("draggable", "true");
-
-      piece.addEventListener("dragstart", function (e) {
-        piece.classList.add("dragging");
-        e.dataTransfer.setData("text/plain", piece.id);
-      });
-
-      piece.addEventListener("dragend", function () {
-        piece.classList.remove("dragging");
-      });
-
-      piecesArray.push(piece);
-    }
-
-    // Shuffle the pieces randomly
-    piecesArray.sort(() => Math.random() - 0.5);
-
-    // Append shuffled pieces to the pieces container
-    piecesArray.forEach((piece) => {
-      piecesContainer.appendChild(piece);
-    });
+/***************************
+ * Bio Trainer Widget Data
+ ***************************/
+const bioMCQs = [
+  {
+    question: "What is commonly known as the powerhouse of the cell?",
+    options: ["Nucleus", "Mitochondria", "Ribosome", "Chloroplast"],
+    answer: "mitochondria"
+  },
+  {
+    question: "Which molecule carries genetic information?",
+    options: ["RNA", "DNA", "Protein", "Carbohydrate"],
+    answer: "dna"
+  },
+  {
+    question: "Which process converts sunlight into chemical energy in plants?",
+    options: ["Respiration", "Photosynthesis", "Fermentation", "Digestion"],
+    answer: "photosynthesis"
+  },
+  {
+    question: "What pigment gives plants their green color?",
+    options: ["Carotene", "Chlorophyll", "Melanin", "Hemoglobin"],
+    answer: "chlorophyll"
+  },
+  {
+    question: "Which organ produces insulin in the human body?",
+    options: ["Liver", "Pancreas", "Kidney", "Spleen"],
+    answer: "pancreas"
+  },
+  {
+    question: "What is the largest organ in the human body?",
+    options: ["Heart", "Liver", "Skin", "Lung"],
+    answer: "skin"
+  },
+  {
+    question: "Which type of blood cell helps fight infections?",
+    options: ["Red blood cells", "White blood cells", "Platelets", "Plasma"],
+    answer: "white blood cells"
+  },
+  {
+    question: "What process do cells use to divide in somatic tissues?",
+    options: ["Meiosis", "Mitosis", "Binary Fission", "Budding"],
+    answer: "mitosis"
+  },
+  {
+    question: "What is the basic unit of life?",
+    options: ["Atom", "Molecule", "Cell", "Organ"],
+    answer: "cell"
+  },
+  {
+    question: "Which structure in plant cells is responsible for photosynthesis?",
+    options: ["Mitochondria", "Chloroplast", "Nucleus", "Golgi apparatus"],
+    answer: "chloroplast"
   }
-
-  /* ===== Check if Puzzle is Completed ===== */
-  function checkPuzzleCompletion() {
-    const lockedPieces = document.querySelectorAll(".puzzle-piece.locked");
-    if (lockedPieces.length === 16) { // Adjust if grid size changes
-      setTimeout(() => {
-        popupInfo.innerText = currentPuzzleExplanation;
-        popup.classList.add("visible");
-      }, 500);
-    }
-  }
-
-  /* ===== Close the Puzzle Completion Popup ===== */
-  closeBtn.addEventListener("click", function () {
-    popup.classList.remove("visible");
-  });
-
-  // Initialize the first puzzle on page load
-  initializePuzzle(timelineConfig.point1.imageUrl, timelineConfig.point1.explanation);
-});
-
-// Game Variables
-let gold = 40;
-let army = 30;
-let morale = 1.0; // 1.0 is neutral morale.
-let turn = 0;
-let year = 1792;
-let monthIndex = 3;
-
-// Countries (each starts as neutral with a given starting army)
-let countries = [
-  { name: "Austria", strength: 50, status: "Neutral", army: 40 },
-  { name: "Prussia", strength: 40, status: "Neutral", army: 30 },
-  { name: "Britain", strength: 60, status: "Neutral", army: 50 },
-  { name: "Spain", strength: 45, status: "Neutral", army: 35 },
-  { name: "Russia", strength: 70, status: "Neutral", army: 60 },
-  { name: "Portugal", strength: 30, status: "Neutral", army: 20 },
-  { name: "Piedmont-Sardinia", strength: 35, status: "Neutral", army: 25 }
 ];
 
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const goldPerTurn = 10;
-const recruitCost = 10;
-const attackCost = 0;
-const enemyRecruitRate = 5;
-const enemyCountryConflictChance = 0.1; // 10% chance each turn for an enemy to initiate conflict against another enemy
+/***************************************
+ * Language Learning Assistant Data
+ ***************************************/
+const languageQuestions = {
+  spanish: [
+    { question: "Translate 'Hello, how are you?' into Spanish.", answer: "hola, ¿cómo estás?" },
+    { question: "Translate 'Good morning' into Spanish.", answer: "buenos días" },
+    { question: "Translate 'Thank you very much' into Spanish.", answer: "muchas gracias" },
+    { question: "Translate 'I would like a cup of coffee' into Spanish.", answer: "me gustaría una taza de café" },
+    { question: "Translate 'Where is the bathroom?' into Spanish.", answer: "¿dónde está el baño?" },
+    { question: "Translate 'I love you' into Spanish.", answer: "te quiero" },
+    { question: "Translate 'What time is it?' into Spanish.", answer: "¿qué hora es?" },
+    { question: "Translate 'See you later' into Spanish.", answer: "hasta luego" },
+    { question: "Translate 'How much does it cost?' into Spanish.", answer: "¿cuánto cuesta?" },
+    { question: "Translate 'Can you help me?' into Spanish.", answer: "¿puedes ayudarme?" }
+  ],
+  french: [
+    { question: "Translate 'Hello, how are you?' into French.", answer: "bonjour, comment ça va?" },
+    { question: "Translate 'Good morning' into French.", answer: "bonjour" },
+    { question: "Translate 'Thank you very much' into French.", answer: "merci beaucoup" },
+    { question: "Translate 'I would like a cup of tea' into French.", answer: "je voudrais une tasse de thé" },
+    { question: "Translate 'Where is the nearest restaurant?' into French.", answer: "où est le restaurant le plus proche?" },
+    { question: "Translate 'I love you' into French.", answer: "je t'aime" },
+    { question: "Translate 'What time is it?' into French.", answer: "quelle heure est-il?" },
+    { question: "Translate 'See you later' into French.", answer: "à plus tard" },
+    { question: "Translate 'How much does it cost?' into French.", answer: "combien ça coûte?" },
+    { question: "Translate 'Can you help me?' into French.", answer: "peux-tu m'aider?" }
+  ],
+  german: [
+    { question: "Translate 'Hello, how are you?' into German.", answer: "hallo, wie geht es dir?" },
+    { question: "Translate 'Good morning' into German.", answer: "guten Morgen" },
+    { question: "Translate 'Thank you very much' into German.", answer: "vielen Dank" },
+    { question: "Translate 'I would like a cup of coffee' into German.", answer: "ich möchte eine Tasse Kaffee" },
+    { question: "Translate 'Where is the nearest supermarket?' into German.", answer: "wo ist der nächste Supermarkt?" },
+    { question: "Translate 'I love you' into German.", answer: "ich liebe dich" },
+    { question: "Translate 'What time is it?' into German.", answer: "wie spät ist es?" },
+    { question: "Translate 'See you later' into German.", answer: "bis später" },
+    { question: "Translate 'How much does it cost?' into German.", answer: "wie viel kostet das?" },
+    { question: "Translate 'Can you help me?' into German.", answer: "kannst du mir helfen?" }
+  ]
+};
 
-// Per-turn action records (using country names as keys)
-let warDeclaredThisTurn = {};   // For "Declare War"
-let attackUsedThisTurn = {};      // For "Attack"
-let peaceOfferedThisTurn = {};    // For "Make Peace"
-
-// UI Update: updates stats on screen and checks game status
-function updateStats() {
-  document.getElementById('gold').innerText = gold;
-  document.getElementById('army').innerText = army;
-  document.getElementById('morale').innerText = morale.toFixed(2);
-  document.getElementById('turn').innerText = turn;
-  document.getElementById('date').innerText = `${months[monthIndex]} ${year}`;
-
-  let conqueredList = countries
-    .filter(c => c.status === "Conquered")
-    .map(c => `${c.name} (Army: ${c.army})`)
-    .join(", ") || "None";
-  let warList = countries
-    .filter(c => c.status === "At War")
-    .map(c => `${c.name} (Army: ${c.army})`)
-    .join(", ") || "None";
-  let remainingList = countries
-    .filter(c => c.status === "Neutral")
-    .map(c => `${c.name} (Army: ${c.army})`)
-    .join(", ") || "None";
-
-  document.getElementById('conquered-countries').innerText = conqueredList;
-  document.getElementById('countries-at-war').innerText = warList;
-  document.getElementById('remaining-countries').innerText = remainingList;
-
-  checkGameStatus();
-}
-
-// Check Win/Loss Conditions (do not reload; just log and disable actions)
-function checkGameStatus() {
-  if (army <= 0) {
-    logMessage("❌ Game Over! Your army has been destroyed.");
-    disableAllActions();
-  }
-  if (countries.every(c => c.status === "Conquered")) {
-    logMessage("🎉 Victory! You have conquered all nations!");
-    disableAllActions();
-  }
-}
-
-// Disable all actions when the game ends
-function disableAllActions() {
-  document.querySelectorAll("button").forEach(button => {
-    button.disabled = true;
-  });
-}
-
-// Clear the event log (so that only the current turn’s events are shown)
-function clearLog() {
-  document.getElementById("event-log").innerHTML = "";
-}
-
-// Log message: prepends new messages so the most recent appears at the top
-function logMessage(message) {
-  let logElement = document.getElementById("event-log");
-  logElement.innerHTML = `<p>${message}</p>` + logElement.innerHTML;
-}
-
-// Recruit Soldiers
-function recruitSoldiers() {
-  if (gold >= recruitCost) {
-    army += 5;
-    gold -= recruitCost;
-    logMessage("You recruited 5 soldiers! ⚔️ (-10 Gold)");
-  } else {
-    logMessage("Not enough gold to recruit! ❌");
-  }
-  updateStats();
-}
-
-// Show Declare War Menu & hide other submenus
-function showDeclareWarMenu() {
-  document.getElementById("attack-menu").style.visibility = "hidden";
-  document.getElementById("peace-menu").style.visibility = "hidden";
-
-  let declareWarMenu = document.getElementById("declare-war-menu");
-  declareWarMenu.innerHTML = "";
-  declareWarMenu.style.visibility = "visible";
-
-  let neutralCountries = countries.filter(c => c.status === "Neutral");
-  if (neutralCountries.length === 0) {
-    declareWarMenu.innerHTML = "<p>No available targets.</p>";
-  } else {
-    neutralCountries.forEach(country => {
-      let btn = document.createElement("button");
-      btn.innerText = `${country.name} (Army: ${country.army})`;
-      btn.onclick = () => declareWar(country.name);
-      declareWarMenu.appendChild(btn);
+/***************************************
+ * DOMContentLoaded - Widget Listeners
+ ***************************************/
+document.addEventListener("DOMContentLoaded", function () {
+  const widgetItems = document.querySelectorAll(".widget-item");
+  widgetItems.forEach((item) => {
+    item.addEventListener("click", function () {
+      const widgetType = this.getAttribute("data-widget");
+      loadWidget(widgetType);
+      if (window.innerWidth < 800) {
+        document.getElementById("widget-sidebar").classList.remove("visible");
+      }
     });
-  }
-}
-
-// Declare War on a country
-function declareWar(countryName) {
-  if (warDeclaredThisTurn[countryName]) {
-    logMessage(`You have already declared war on ${countryName} this turn.`);
-    return;
-  }
-  let country = countries.find(c => c.name === countryName);
-  if (!country) return;
-  country.status = "At War";
-  warDeclaredThisTurn[countryName] = true;
-  logMessage(`You have declared war on ${country.name} (Army: ${country.army})! ⚔️`);
-  updateStats();
-}
-
-// Show Attack Menu & hide other submenus
-function showAttackMenu() {
-  document.getElementById("declare-war-menu").style.visibility = "hidden";
-  document.getElementById("peace-menu").style.visibility = "hidden";
-
-  let attackMenu = document.getElementById("attack-menu");
-  attackMenu.innerHTML = "";
-  attackMenu.style.visibility = "visible";
-
-  let warCountries = countries.filter(c => c.status === "At War");
-  if (warCountries.length === 0) {
-    attackMenu.innerHTML = "<p>No available targets.</p>";
-  } else {
-    warCountries.forEach(country => {
-      let btn = document.createElement("button");
-      btn.innerText = `${country.name} (Army: ${country.army})`;
-      btn.onclick = () => attackCountry(country.name);
-      attackMenu.appendChild(btn);
-    });
-  }
-}
-
-// Attack a country – effective enemy power is computed as the sum of armies of all enemy nations at war.
-function attackCountry(countryName) {
-  if (attackUsedThisTurn[countryName]) {
-    logMessage(`You have already attacked ${countryName} this turn.`);
-    return;
-  }
-  if (warDeclaredThisTurn[countryName]) {
-    logMessage(`You cannot attack ${countryName} on the same turn you declared war on it.`);
-    return;
-  }
-  let country = countries.find(c => c.name === countryName);
-  if (!country) return;
-  if (gold < attackCost || army <= 0) {
-    logMessage("Not enough gold or troops to attack! ❌");
-    return;
-  }
-  gold -= attackCost;
-  
-  // Compute total enemy army from all countries at war.
-  let totalEnemyArmy = countries
-    .filter(c => c.status === "At War")
-    .reduce((sum, c) => sum + c.army, 0);
-
-  // Calculate effective power with diminishing returns and randomness.
-  let playerPower = (1 + morale * 0.001) * (Math.sqrt(army) * 10 + Math.random() * 30);
-  let enemyPower = (Math.sqrt(totalEnemyArmy) * 10 + Math.random() * 30);
-
-  if (playerPower > enemyPower) {
-    // Victory: enemy loses 10 soldiers.
-    country.army -= 10;
-    gold += 20;
-    morale = Math.min(morale + 0.1, 2.0);
-    logMessage(`Victory in battle! ${country.name} (Army now: ${country.army}) lost 10 soldiers. (+20 Gold, Morale increased) ⚔️`);
-    if (country.army <= 0) {
-      country.status = "Conquered";
-      gold += 40;
-      logMessage(`You have fully conquered ${country.name} (Army: 0)! (+400 Gold)`);
-    }
-  } else {
-    // Loss: you lose 10 soldiers and morale decreases.
-    army -= 10;
-    morale = Math.max(morale - 0.1, 0.5);
-    logMessage(`Attack on ${country.name} (Army: ${country.army}) failed! You lost 10 soldiers. (Morale decreased)`);
-  }
-  attackUsedThisTurn[countryName] = true;
-  updateStats();
-}
-
-// Show Make Peace Menu & hide other submenus
-function showPeaceMenu() {
-  document.getElementById("declare-war-menu").style.visibility = "hidden";
-  document.getElementById("attack-menu").style.visibility = "hidden";
-
-  let peaceMenu = document.getElementById("peace-menu");
-  peaceMenu.innerHTML = "";
-  peaceMenu.style.visibility = "visible";
-
-  let warCountries = countries.filter(c => c.status === "At War");
-  if (warCountries.length === 0) {
-    peaceMenu.innerHTML = "<p>No ongoing wars.</p>";
-  } else {
-    warCountries.forEach(country => {
-      let btn = document.createElement("button");
-      btn.innerText = `${country.name} (Army: ${country.army})`;
-      btn.onclick = () => makePeace(country.name);
-      peaceMenu.appendChild(btn);
-    });
-  }
-}
-
-// Attempt to make peace with a country (only one attempt per country per turn)
-function makePeace(countryName) {
-  if (peaceOfferedThisTurn[countryName]) {
-    logMessage(`You have already attempted peace with ${countryName} this turn.`);
-    return;
-  }
-  peaceOfferedThisTurn[countryName] = true;
-  let country = countries.find(c => c.name === countryName);
-  if (country && country.status === "At War") {
-    if (Math.random() < 1/3) {
-      logMessage(`${country.name} (Army: ${country.army}) declined your peace offer!`);
-    } else {
-      country.status = "Neutral";
-      logMessage(`Peace treaty signed with ${country.name} (Army: ${country.army}). ✌️`);
-    }
-  }
-  updateStats();
-}
-
-// AI Enemy Actions: simulate enemy recruiting, occasional war declarations on you, enemy attacks,
-// and also enemy countries attacking each other.
-function simulateEnemyActions() {
-  // Process each enemy country's actions against you
-  countries.forEach(country => {
-    if (country.status !== "Conquered") {
-      // Recruitment: add a base amount with a small chance for a bonus.
-      if (Math.random() < 0.05) {
-        country.army += 10;
-      } else {
-        country.army += enemyRecruitRate;
-      }
-      // A neutral country may declare war on you (1 in 15 chance)
-      if (country.status === "Neutral" && Math.random() < (1/15)) {
-        country.status = "At War";
-        logMessage(`${country.name} (Army: ${country.army}) has declared war on you! ⚔️`);
-      }
-      // If a country is at war, it may attack you.
-      if (country.status === "At War" && Math.random() < 0.5) {
-        // Compute total enemy army from all countries at war.
-        let totalEnemyArmy = countries
-          .filter(c => c.status === "At War")
-          .reduce((sum, c) => sum + c.army, 0);
-        let enemyPower = (Math.sqrt(totalEnemyArmy) * 10 + Math.random() * 30);
-        let playerPower = morale * (Math.sqrt(army) * 10 + Math.random() * 30);
-        if (playerPower > enemyPower) {
-          // When an enemy attacks and loses, you now only gain 5 soldiers.
-          country.army -= 10;
-          army += 5;
-          logMessage(`${country.name} attacked you but lost the battle! They lost 10 soldiers. (+5 Army) ⚔️`);
-          if (country.army <= 0) {
-            country.status = "Conquered";
-            gold += 400;
-            logMessage(`You have fully conquered ${country.name} (Army: 0)! (+400 Gold)`);
-          }
-        } else {
-          army -= 10;
-          morale = Math.max(morale - 0.1, 0.5);
-          logMessage(`${country.name} (Army: ${country.army}) attacked you and won the battle. You lost 10 soldiers. (Morale decreased)`);
-        }
-      }
-    }
   });
+});
 
-  // Simulate enemy countries attacking each other.
-  let enemyConflictThisTurn = {};
-  countries.forEach(attacker => {
-    if (attacker.status !== "Conquered" && !enemyConflictThisTurn[attacker.name] && Math.random() < enemyCountryConflictChance) {
-      let potentialTargets = countries.filter(target => target.name !== attacker.name && target.status !== "Conquered" && !enemyConflictThisTurn[target.name]);
-      if (potentialTargets.length > 0) {
-        let target = potentialTargets[Math.floor(Math.random() * potentialTargets.length)];
-        let attackerPower = Math.sqrt(attacker.army) * 10 + Math.random() * 30;
-        let defenderPower = Math.sqrt(target.army) * 10 + Math.random() * 30;
-        if (attackerPower > defenderPower) {
-          // Attacker wins the battle.
-          target.army -= 10;
-          logMessage(`${attacker.name} attacked ${target.name} and won! ${target.name} lost 10 soldiers.`);
-          // If the target is still alive, there is a 1 in 20 chance for a takeover.
-          if (target.army > 0 && Math.random() < 0.05) {
-            target.status = "Conquered";
-            attacker.army += 20;
-            logMessage(`${attacker.name} has taken over ${target.name}! (+20 Army)`);
-          } else if (target.army <= 0) {
-            target.status = "Conquered";
-            logMessage(`${target.name} has been conquered by ${attacker.name}!`);
-          }
-        } else {
-          // Attacker loses the battle.
-          attacker.army -= 10;
-          logMessage(`${attacker.name} attacked ${target.name} but lost! ${attacker.name} lost 10 soldiers.`);
-          if (attacker.army <= 0) {
-            attacker.status = "Conquered";
-            logMessage(`${attacker.name} has been conquered by ${target.name}!`);
-          }
-        }
-        enemyConflictThisTurn[attacker.name] = true;
-        enemyConflictThisTurn[target.name] = true;
-      }
-    }
-  });
+/***************************************
+ * Sidebar & Widget Loader Functions
+ ***************************************/
+function toggleWidgetSidebar() {
+  const sidebar = document.getElementById("widget-sidebar");
+  sidebar.classList.toggle("visible");
 }
 
-// End Turn: clear log (so that only current turn events show), simulate enemy actions, update turn info, reset per-turn records, and hide all submenus.
-function endTurn() {
-  clearLog();
-  simulateEnemyActions();
-
-  turn++;
-  gold += goldPerTurn;
-  monthIndex++;
-  if (monthIndex >= 12) {
-    monthIndex = 0;
-    year++;
+function loadWidget(widgetType) {
+  const widgetDisplay = document.getElementById("widget-display");
+  let content = "";
+  switch (widgetType) {
+    case "math":
+      content = mathWidget();
+      break;
+    case "bio":
+      content = bioWidget();
+      break;
+    case "braille":
+      content = brailleWidget();
+      break;
+    case "mental":
+      content = mentalWidget();
+      break;
+    case "forum":
+      content = forumWidget();
+      break;
+    case "jobs":
+      content = jobsWidget();
+      break;
+    case "quote":
+      content = quoteWidget();
+      break;
+    case "language":
+      content = languageWidget();
+      break;
+    case "environment":
+      content = environmentWidget ? environmentWidget() : "<p>Coming soon!</p>";
+      break;
+    case "volunteer":
+      content = volunteerWidget ? volunteerWidget() : "<p>Coming soon!</p>";
+      break;
+    case "library":
+      content = libraryWidget();
+      break;
+    case "freeprizes":
+      content = freePrizesWidget();
+      break;
+    case "learnonline":
+      content = learnOnlineWidget();
+      break;
+    default:
+      content = `<p>Widget not found.</p>`;
   }
-
-  logMessage(`Turn ${turn} ended. Income received. (+${goldPerTurn} Gold)`);
-
-  // Reset per-turn records
-  warDeclaredThisTurn = {};
-  attackUsedThisTurn = {};
-  peaceOfferedThisTurn = {};
-
-  // Hide all submenus
-  document.getElementById("declare-war-menu").style.visibility = "hidden";
-  document.getElementById("attack-menu").style.visibility = "hidden";
-  document.getElementById("peace-menu").style.visibility = "hidden";
-
-  updateStats();
+  widgetDisplay.innerHTML = content;
+  widgetDisplay.style.opacity = 0;
+  setTimeout(() => {
+    widgetDisplay.style.transition = "opacity 0.5s ease-in-out";
+    widgetDisplay.style.opacity = 1;
+  }, 50);
 }
 
-// Initialize UI: clear the log and update stats initially.
-clearLog();
-updateStats();
+/***************************************
+ * Free Prizes Widget
+ ***************************************/
+function openGutenbergPrize() {
+  const randomNum = Math.floor(Math.random() * 7500) + 1;
+  const url = `https://www.gutenberg.org/cache/epub/${randomNum}/pg${randomNum}-images.html`;
+  window.open(url, "_blank");
+}
 
-// Conversation flows for each event, each with 10 steps
+function freePrizesWidget() {
+  const prizes = [
+    {
+      title: "72% off NordVPN",
+      description: "+ 30 days free!",
+      link: "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=116893&url_id=902"
+    },
+    {
+      title: "50% off NordPass",
+      description: "+ 30 days free!",
+      link: "https://nordpass.com/special/?utm_medium=affiliate&utm_term&utm_content&utm_campaign=off488&utm_source=aff116893&aff_free"
+    },
+    {
+      title: ".xyz Domains",
+      description: "Use TAI25 for the first year free!",
+      link: "https://gen.xyz/"
+    },
+    {
+      title: "Project Gutenberg Book",
+      description: "Discover a random, free book!",
+      dynamic: true
+    }
+  ];
+
+  let prizesHtml = `<div class="prizes-container"><div class="prizes-grid">`;
+  prizes.forEach((prize) => {
+    const icon = prize.dynamic ? "📚" : "🎁";
+    const buttonOnClick = prize.dynamic
+      ? `openGutenbergPrize()`
+      : `window.open('${prize.link}', '_blank')`;
+    prizesHtml += `
+      <div class="prize-item">
+        <div class="prize-icon">${icon}</div>
+        <div class="prize-details">
+          <h4>${prize.title}</h4>
+          <p>${prize.description}</p>
+          <button onclick="${buttonOnClick}">Claim Prize</button>
+        </div>
+      </div>
+    `;
+  });
+  prizesHtml += `</div></div>`;
+
+  return `<h3>Free Prizes</h3>
+          <p>Check out these exclusive free prizes:</p>
+          ${prizesHtml}`;
+}
+
+/***************************************
+ * Math Trainer Widget
+ ***************************************/
+function mathWidget() {
+  if (!window.currentMathSubject) window.currentMathSubject = "arithmetic";
+  let subjectSelector = `<select id="math-subject" onchange="changeMathSubject()">
+    <option value="arithmetic" ${window.currentMathSubject === "arithmetic" ? "selected" : ""}>Arithmetic</option>
+    <option value="algebra" ${window.currentMathSubject === "algebra" ? "selected" : ""}>Algebra</option>
+  </select>`;
+  let question, answer;
+  if (window.currentMathSubject === "arithmetic") {
+    let maxNumber = points.math < 5 ? 10 : points.math < 10 ? 50 : 100;
+    const num1 = Math.floor(Math.random() * maxNumber) + 1;
+    const num2 = Math.floor(Math.random() * maxNumber) + 1;
+    const operator = Math.random() < 0.5 ? "+" : "*";
+    answer = operator === "+" ? num1 + num2 : num1 * num2;
+    question = `Solve: ${num1} ${operator} ${num2} = ?`;
+  } else if (window.currentMathSubject === "algebra") {
+    let a = Math.floor(Math.random() * 9) + 1;
+    let x = Math.floor(Math.random() * 10) + 1;
+    let b = Math.floor(Math.random() * 10);
+    let c = a * x + b;
+    answer = x;
+    question = `Solve for x: ${a}x + ${b} = ${c}`;
+  }
+  window.currentMathAnswer = answer;
+  return `<h3>Math Trainer</h3>
+          ${subjectSelector}
+          <p>${question}</p>
+          <input type="number" class="widget-input" id="math-input" placeholder="Your answer">
+          <button onclick="checkMathAnswer()">Submit Answer</button>
+          <p id="math-feedback"></p>
+          <p>Your Points: ${getPointsString(points.math)}</p>`;
+}
+
+function changeMathSubject() {
+  window.currentMathSubject = document.getElementById("math-subject").value;
+  loadWidget("math");
+}
+
+function checkMathAnswer() {
+  const input = document.getElementById("math-input").value;
+  const feedback = document.getElementById("math-feedback");
+  if (parseFloat(input) === window.currentMathAnswer) {
+    feedback.textContent = "Correct!";
+    points.math++;
+  } else {
+    feedback.textContent = "Incorrect. Try again!";
+  }
+  setTimeout(() => {
+    loadWidget("math");
+  }, 1500);
+}
+
+/***************************************
+ * Learn Online Widget
+ ***************************************/
+function learnOnlineWidget() {
+  const courses = [
+    {
+      title: "ReadJAMS",
+      description: "An online library for JAMS.",
+      buttonText: "Join ReadJAMS!",
+      buttonUrl: "https://readjams.vercel.app",
+      imageUrl: "https://i.ibb.co/61pC5Px/Read-JAMS.png"
+    },
+    {
+      title: "MathJAMS",
+      description: "An online math trainer for JAMS.",
+      buttonText: "Join MathJAMS!",
+      buttonUrl: "https://mathjams.vercel.app",
+      imageUrl: "https://i.postimg.cc/2jv9GmfM/Read-JAMS-1.png"
+    },
+    {
+      title: "CodeJAMS",
+      description: "An online code trainer for JAMS.",
+      buttonText: "Join CodeJAMS!",
+      buttonUrl: "https://codejams.vercel.app/",
+      imageUrl: "https://i.postimg.cc/cCV9cxx1/Code-JAMS.png"
+    },
+    {
+      title: "MathDash",
+      description: "An online math trainer for all!",
+      buttonText: "Join MathDash!",
+      buttonUrl: "https://playmathdash.vercel.app",
+      imageUrl: "https://i.postimg.cc/B6H7jhyX/MATH.png"
+    }
+  ];
+
+  let coursesHtml = `<div class="learnonline-container"><div class="learnonline-grid">`;
+  courses.forEach(course => {
+    let buttonClass = "learnonline-button";
+    if (course.title === "MathDash") {
+      buttonClass += " mathdash-button";
+    }
+    coursesHtml += `
+      <div class="learnonline-item">
+        <div class="learnonline-image-wrapper">
+          <img src="${course.imageUrl}" alt="${course.title}" class="learnonline-image">
+        </div>
+        <div class="learnonline-details">
+          <p>${course.description}</p>
+          <button onclick="window.open('${course.buttonUrl}', '_blank')" class="${buttonClass}">${course.buttonText}</button>
+        </div>
+      </div>
+    `;
+  });
+  coursesHtml += `</div></div>`;
+  return `<h3>Learn Online!</h3>
+          <p>Explore our online communities and sessions:</p>
+          ${coursesHtml}`;
+}
+
+/***************************************
+ * Bio Trainer Widget (MCQ)
+ ***************************************/
+function bioWidget() {
+  const q = bioMCQs[Math.floor(Math.random() * bioMCQs.length)];
+  window.currentBioAnswer = q.answer.toLowerCase();
+  let optionsHtml = q.options
+    .map(
+      (option) =>
+        `<label><input type="radio" name="bio-option" value="${option.toLowerCase()}"> ${option}</label><br>`
+    )
+    .join("");
+  return `<h3>Bio Trainer</h3>
+          <p>${q.question}</p>
+          ${optionsHtml}
+          <button onclick="checkBioMCQAnswer()">Submit Answer</button>
+          <p id="bio-feedback"></p>
+          <p>Your Points: ${getPointsString(points.bio || 0)}</p>`;
+}
+
+function checkBioMCQAnswer() {
+  const radios = document.getElementsByName("bio-option");
+  let selected;
+  for (let radio of radios) {
+    if (radio.checked) {
+      selected = radio.value;
+      break;
+    }
+  }
+  const feedback = document.getElementById("bio-feedback");
+  if (selected === window.currentBioAnswer) {
+    feedback.textContent = "Correct!";
+    points.bio = (points.bio || 0) + 1;
+  } else {
+    feedback.textContent = "Incorrect. Try again!";
+  }
+  setTimeout(() => {
+    loadWidget("bio");
+  }, 1500);
+}
+
+/***************************************
+ * English to Braille Translator Widget
+ ***************************************/
+const brailleMap = {
+  a: "⠁", b: "⠃", c: "⠉", d: "⠙", e: "⠑", f: "⠋", g: "⠛",
+  h: "⠓", i: "⠊", j: "⠚", k: "⠅", l: "⠇", m: "⠍", n: "⠝",
+  o: "⠕", p: "⠏", q: "⠟", r: "⠗", s: "⠎", t: "⠞", u: "⠥",
+  v: "⠧", w: "⠺", x: "⠭", y: "⠽", z: "⠵", " ": " "
+};
+
+function brailleWidget() {
+  return `<h3>English to Braille Translator</h3>
+          <p>Enter text below to translate into Braille.</p>
+          <textarea id="braille-input" class="widget-input" placeholder="Enter text here..."></textarea>
+          <button onclick="translateBraille()">Translate</button>
+          <p id="braille-output"></p>`;
+}
+
+function translateBraille() {
+  const text = document.getElementById("braille-input").value.toLowerCase();
+  let translated = "";
+  for (let char of text) {
+    translated += brailleMap[char] || char;
+  }
+  document.getElementById("braille-output").textContent = translated;
+}
+
+/***************************************
+ * Library Widget
+ ***************************************/
+function libraryWidget() {
+  const libraryPDFs = [
+    {
+      title: "Romeo & Juliet",
+      url: "https://www.gutenberg.org/cache/epub/1513/pg1513-images.html"
+    },
+    {
+      title: "The Complete Works of William Shakespeare",
+      url: "https://www.gutenberg.org/cache/epub/100/pg100-images.html"
+    },
+    {
+      title: "Hamlet",
+      url: "https://www.gutenberg.org/cache/epub/27761/pg27761-images.html"
+    },
+    {
+      title: "Macbeth",
+      url: "https://www.gutenberg.org/cache/epub/1533/pg1533-images.html"
+    },
+    {
+      title: "A Midsommer Nights Dream",
+      url: "https://www.gutenberg.org/cache/epub/1514/pg1514-images.html"
+    },
+    {
+      title: "The Tempest",
+      url: "https://www.gutenberg.org/cache/epub/23042/pg23042-images.html"
+    },
+    {
+      title: "The Taming of the Shrew",
+      url: "https://www.gutenberg.org/cache/epub/1508/pg1508-images.html"
+    },
+    {
+      title: "Othello, the Moor of Venice",
+      url: "https://www.gutenberg.org/cache/epub/1531/pg1531-images.html"
+    },
+    {
+      title: "The Merchant of Venice",
+      url: "https://www.gutenberg.org/cache/epub/1515/pg1515-images.html"
+    }
+  ];
+
+  let linksHtml = `<div class="library-container"><div class="pdf-grid">`;
+  libraryPDFs.forEach((pdf) => {
+    linksHtml += `
+      <div class="pdf-item">
+        <div class="pdf-icon">📄</div>
+        <div class="pdf-title">
+          <a href="${pdf.url}" target="_blank">${pdf.title}</a>
+        </div>
+      </div>`;
+  });
+  linksHtml += `</div></div>`;
+
+  return `<h3>Library</h3>
+          <p>Select a PDF to read:</p>
+          ${linksHtml}`;
+}
+
+/***************************************
+ * Mental Health Advisor Widget
+ ***************************************/
+const mentalHealthTips = [
+  "Take deep breaths and relax.",
+  "Try to get at least 7-8 hours of sleep.",
+  "Remember to take breaks during work.",
+  "Talk to someone you trust about your feelings."
+];
+
+function mentalWidget() {
+  const tip = mentalHealthTips[Math.floor(Math.random() * mentalHealthTips.length)];
+  return `<h3>Mental Health Advisor</h3>
+          <p>Tip: ${tip}</p>
+          <button onclick="loadWidget('mental')">Get Another Tip</button>`;
+}
+
+/***************************************
+ * Community Forum Widget
+ ***************************************/
+let forumPosts = [];
+
+function forumWidget() {
+  let postsHtml = forumPosts.map((post) => `<p>• ${post}</p>`).join("");
+  return `<h3>Community Forum</h3>
+          <p>Share your thoughts:</p>
+          <textarea id="forum-input" class="widget-input" placeholder="Type your post..."></textarea>
+          <button onclick="submitForumPost()">Post</button>
+          <div id="forum-posts">${postsHtml || "<p>No posts yet.</p>"}</div>`;
+}
+
+function submitForumPost() {
+  const text = document.getElementById("forum-input").value.trim();
+  if (text) {
+    forumPosts.push(text);
+    loadWidget("forum");
+  }
+}
+
+/***************************************
+ * Job Board Widget
+ ***************************************/
+const jobListings = [
+  "Software Engineer at TechCorp",
+  "Graphic Designer at Creative Studio",
+  "Data Analyst at DataWorks"
+];
+
+function jobsWidget() {
+  let jobsHtml = jobListings
+    .map(
+      (job) =>
+        `<li>${job} <button onclick="alert('Applied for: ${job}')">Apply</button></li>`
+    )
+    .join("");
+  return `<h3>Job Board</h3>
+          <ul>${jobsHtml}</ul>`;
+}
+
+/***************************************
+ * Random Quote Generator Widget
+ ***************************************/
+const quotes = [
+  "The only limit to our realization of tomorrow is our doubts of today. – Franklin D. Roosevelt",
+  "Life is 10% what happens to us and 90% how we react to it. – Charles R. Swindoll",
+  "The future belongs to those who believe in the beauty of their dreams. – Eleanor Roosevelt",
+  "Do not wait to strike till the iron is hot; but make it hot by striking. – William Butler Yeats"
+];
+
+function quoteWidget() {
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+  return `<h3>Random Quote Generator</h3>
+          <p>${quote}</p>
+          <button onclick="loadWidget('quote')">New Quote</button>`;
+}
+
+/***************************************
+ * Language Learning Assistant Widget
+ ***************************************/
+function languageWidget() {
+  if (!window.currentLanguage) window.currentLanguage = "spanish";
+  let langOptions = "";
+  for (let lang in languageQuestions) {
+    langOptions += `<option value="${lang}" ${window.currentLanguage === lang ? "selected" : ""}>${lang.charAt(0).toUpperCase() + lang.slice(1)}</option>`;
+  }
+  let languageSelector = `<select id="language-select" onchange="changeLanguage()">${langOptions}</select>`;
+  const questions = languageQuestions[window.currentLanguage];
+  const q = questions[Math.floor(Math.random() * questions.length)];
+  window.currentLanguageAnswer = q.answer.toLowerCase();
+  return `<h3>Language Learning Assistant</h3>
+          ${languageSelector}
+          <p>${q.question}</p>
+          <input type="text" class="widget-input" id="language-input" placeholder="Your answer">
+          <button onclick="checkLanguageAnswer()">Submit Answer</button>
+          <p id="language-feedback"></p>
+          <p>Your Points: ${getPointsString(points.language)}</p>`;
+}
+
+function changeLanguage() {
+  window.currentLanguage = document.getElementById("language-select").value;
+  loadWidget("language");
+}
+
+function checkLanguageAnswer() {
+  const input = document.getElementById("language-input").value.toLowerCase().trim();
+  const feedback = document.getElementById("language-feedback");
+  if (input === window.currentLanguageAnswer) {
+    feedback.textContent = "Correct!";
+    points.language++;
+  } else {
+    feedback.textContent = "Incorrect. Try again!";
+  }
+  setTimeout(() => {
+    loadWidget("language");
+  }, 1500);
+}
+
+/***************************************
+ * Choose-Your-Own-Adventure Minigame Conversation Engine
+ ***************************************/
+
+// Global variables for the minigame conversation
+let conversationStepIndex = null; // null indicates waiting for character selection
+let selectedCharacter = "";
+let currentFlow = null;
+
+// Conversation flows for all 8 historical figures (10 events each, correct answer pattern: 2 → 3 → 1 → 1 → 2 → 3 → 3 → 2 → 1 → 2)
 const conversationFlows = {
-  "Treaty of Pressburg": [
-    {
-      id: 0,
-      event: "In the aftermath of Austerlitz, what was Napoleon's key demand from Austria in the Treaty of Pressburg?",
-      options: { "1": "A large war indemnity", "2": "Territorial concessions", "3": "A military alliance" },
-      correct: "2",
-      prompt: "Correct! Austria was forced to cede significant territories."
+  "Isaac Newton": [
+    { 
+      event: "1665: You see an apple fall from a tree. What do you do?", 
+      options: { "1": "Ignore it and continue reading.", "2": "Ponder why it fell straight down.", "3": "Eat it because you're hungry." }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      event: "Which region did Austria notably lose as a result of the treaty?",
-      options: { "1": "Northern Italy", "2": "Bohemia", "3": "The Rhineland" },
-      correct: "1",
-      prompt: "Right! Northern Italy became a key acquisition for Napoleon."
+    { 
+      event: "Observing the moon’s orbit, you wonder what keeps it in motion. What is your insight?", 
+      options: { "1": "It's pushed by solar winds.", "2": "It is in constant free-fall while moving sideways.", "3": "Magic holds it in place." }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      event: "How did the treaty affect the future of the Holy Roman Empire?",
-      options: { "1": "It strengthened the empire", "2": "It hastened its dissolution", "3": "It had no impact" },
-      correct: "2",
-      prompt: "Exactly! The treaty was one of the events that precipitated its end."
+    { 
+      event: "To mathematically describe motion, what do you develop?", 
+      options: { "1": "Calculus", "2": "Algebra", "3": "Geometry" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      event: "Which of these was a long-term consequence of the treaty?",
-      options: { "1": "The resurgence of feudalism", "2": "The rise of modern nation-states", "3": "The isolation of Central Europe" },
-      correct: "2",
-      prompt: "Correct! Modern nation-states emerged in its wake."
+    { 
+      event: "Studying optics, you experiment with light. What do you discover?", 
+      options: { "1": "White light is composed of various colors.", "2": "Light is purely a wave.", "3": "Light travels in spirals." }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      event: "Napoleon's terms were intended to weaken which power?",
-      options: { "1": "Britain", "2": "Austria", "3": "Russia" },
-      correct: "2",
-      prompt: "Right! Austria's influence was significantly reduced."
+    { 
+      event: "You write 'Principia Mathematica.' What phenomena does it explain?", 
+      options: { "1": "Chemical reactions.", "2": "Gravity and motion.", "3": "The behavior of gases." }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      event: "What economic measure was imposed on Austria by the treaty?",
-      options: { "1": "Heavy war indemnities", "2": "Trade embargoes", "3": "No economic measures" },
-      correct: "1",
-      prompt: "Indeed! Austria had to pay substantial indemnities."
+    { 
+      event: "Leibniz publishes work on calculus. How do you react?", 
+      options: { "1": "Praise his efforts.", "2": "Ignore his work.", "3": "Accuse him of plagiarism." }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      event: "Which military outcome directly led to the treaty?",
-      options: { "1": "A naval victory", "2": "The Battle of Austerlitz", "3": "A prolonged siege" },
-      correct: "2",
-      prompt: "Absolutely! Austerlitz was the decisive battle."
+    { 
+      event: "Appointed as Warden of the Royal Mint, what is your priority?", 
+      options: { "1": "Increase coin production.", "2": "Improve coinage security.", "3": "Implement measures against counterfeiting." }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      event: "How did Napoleon view the Treaty of Pressburg?",
-      options: { "1": "A temporary solution", "2": "A stepping stone for further expansion", "3": "A final peace accord" },
-      correct: "2",
-      prompt: "Correct! He saw it as a platform for more conquests."
+    { 
+      event: "Enhancing observational instruments, which design do you refine?", 
+      options: { "1": "The Galilean telescope.", "2": "A reflecting telescope.", "3": "An electron microscope." }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      event: "What did the treaty’s terms signal for the old imperial order?",
-      options: { "1": "Its revival", "2": "Its complete eradication", "3": "A gradual transformation" },
-      correct: "3",
-      prompt: "Right! It marked a gradual shift away from the old order."
+    { 
+      event: "While studying planetary motion, whose work inspires you the most?", 
+      options: { "1": "Kepler", "2": "Aristotle", "3": "Descartes" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      event: "Overall, what was the treaty’s most lasting impact?",
-      options: { "1": "Strengthening traditional monarchies", "2": "Undermining the old imperial structure", "3": "Establishing a balanced European power system" },
-      correct: "2",
-      prompt: "Excellent! It played a key role in undermining the old regime."
+    { 
+      event: "In your later years, how do you secure your legacy?", 
+      options: { "1": "Retire quietly.", "2": "Defend your theories against critics.", "3": "Write philosophical treatises." }, 
+      correct: "2" 
     }
   ],
-  "Confederation of Rhine": [
-    {
-      id: 0,
-      event: "What was Napoleon’s primary aim in creating the Confederation of the Rhine?",
-      options: { "1": "To restore the Holy Roman Empire", "2": "To consolidate French influence in German states", "3": "To promote republican ideals" },
-      correct: "2",
-      prompt: "Correct! It was designed to extend French control over German territories."
+  "Albert Einstein": [
+    { 
+      event: "Working at a patent office, you conceive a revolutionary idea. What is it?", 
+      options: { "1": "Black holes", "2": "Special Relativity", "3": "DNA structure" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      event: "How was the Confederation of the Rhine structured?",
-      options: { "1": "A loose alliance of independent states", "2": "A centralized federation under French oversight", "3": "A confederation of equal partners" },
-      correct: "2",
-      prompt: "Right! It was a centralized structure that reduced state independence."
+    { 
+      event: "You propose that light has particle properties. What do you call these particles?", 
+      options: { "1": "Quarks", "2": "Electrons", "3": "Photons" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      event: "What happened to the sovereignty of member states?",
-      options: { "1": "They gained full autonomy", "2": "Their sovereignty was curtailed", "3": "It remained unchanged" },
-      correct: "2",
-      prompt: "Exactly! Their independence was significantly reduced."
+    { 
+      event: "You derive an equation linking energy and mass. Which equation is it?", 
+      options: { "1": "E=mc²", "2": "F=ma", "3": "PV=nRT" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      event: "Which political force did the Confederation help suppress?",
-      options: { "1": "Nationalism", "2": "Liberalism", "3": "Feudalism" },
-      correct: "1",
-      prompt: "Correct! It helped to dampen rising nationalist sentiments."
+    { 
+      event: "Upon receiving a Nobel Prize, what discovery is it awarded for?", 
+      options: { "1": "The Photoelectric Effect", "2": "General Relativity", "3": "Nuclear fusion" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      event: "What strategic benefit did the Confederation offer Napoleon?",
-      options: { "1": "A buffer zone against Prussia", "2": "Stronger ties with Austria", "3": "An alliance with Britain" },
-      correct: "1",
-      prompt: "Right! It created a buffer zone that enhanced French security."
+    { 
+      event: "Facing rising political tensions, where do you relocate?", 
+      options: { "1": "England", "2": "The United States", "3": "Russia" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      event: "The Confederation symbolized a break from which old order?",
-      options: { "1": "The feudal traditions of the HRE", "2": "Modern democratic institutions", "3": "Colonial rule" },
-      correct: "1",
-      prompt: "Exactly! It marked the end of centuries of feudalism."
+    { 
+      event: "Amid warnings about nuclear weapons, how do you respond?", 
+      options: { "1": "Remain silent.", "2": "Warn the U.S. President.", "3": "Protest publicly." }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      event: "How were member states expected to contribute militarily?",
-      options: { "1": "By maintaining independent armies", "2": "By integrating into a unified force", "3": "They were exempted from military service" },
-      correct: "2",
-      prompt: "Correct! They had to provide troops for a unified military structure."
+    { 
+      event: "Offered the presidency of Israel, what do you do?", 
+      options: { "1": "Accept the role.", "2": "Decline to focus on science.", "3": "Relocate to Switzerland instead." }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      event: "What long-term impact did the Confederation have on German politics?",
-      options: { "1": "It directly led to German unification", "2": "It strengthened the old imperial order", "3": "It isolated France from European affairs" },
-      correct: "1",
-      prompt: "Right! It set the stage for later unification movements."
+    { 
+      event: "In your later years, you pursue a grand unifying theory. What is its focus?", 
+      options: { "1": "Quantum Gravity", "2": "Unified Field Theory", "3": "Time Travel" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      event: "Which strategy best describes Napoleon’s approach with the Confederation?",
-      options: { "1": "Divide and rule", "2": "Full integration", "3": "Complete autonomy for states" },
-      correct: "1",
-      prompt: "Absolutely! 'Divide and rule' was central to his policy."
+    { 
+      event: "Advocating for peace, what stance do you take on nuclear weapons?", 
+      options: { "1": "Pacifism", "2": "Pre-emptive war", "3": "Call for complete disarmament" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      event: "How is the Confederation of the Rhine viewed historically?",
-      options: { "1": "As a fleeting experiment", "2": "As a cornerstone for future unity", "3": "As an insignificant episode" },
-      correct: "2",
-      prompt: "Excellent! It is recognized as a key precursor to modern unity."
+    { 
+      event: "At the end of your life, what is your final wish?", 
+      options: { "1": "To be buried in space.", "2": "To be cremated anonymously.", "3": "To be cloned for further research." }, 
+      correct: "2" 
     }
   ],
-  "Napoleonic Reforms": [
-    {
-      id: 0,
-      event: "What was the main aim of the Napoleonic Reforms in the former HRE territories?",
-      options: { "1": "To reinstate feudal privileges", "2": "To modernize and rationalize administration", "3": "To promote religious uniformity" },
-      correct: "2",
-      prompt: "Correct! The reforms sought to modernize state structures."
+  "Marie Curie": [
+    { 
+      event: "Upon discovering a new element, what do you name it?", 
+      options: { "1": "Curium", "2": "Polonium", "3": "Radium" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      event: "Which legal framework was introduced as a part of these reforms?",
-      options: { "1": "The Napoleonic Code", "2": "The Code of Justinian", "3": "The Code of Chivalry" },
-      correct: "1",
-      prompt: "Right! The Napoleonic Code redefined the legal landscape."
+    { 
+      event: "You coin a term for the phenomenon in your research. What is it?", 
+      options: { "1": "Electromagnetism", "2": "Quantum Mechanics", "3": "Radioactivity" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      event: "How did these reforms affect social mobility?",
-      options: { "1": "They reinforced aristocratic privileges", "2": "They promoted meritocracy", "3": "They eliminated social distinctions" },
-      correct: "2",
-      prompt: "Exactly! Merit became more important than birthright."
+    { 
+      event: "You win a Nobel Prize. In which field is it awarded?", 
+      options: { "1": "Physics", "2": "Medicine", "3": "Astronomy" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      event: "Which administrative change was most central to the reforms?",
-      options: { "1": "Decentralizing power", "2": "Creating a centralized bureaucracy", "3": "Returning power to local lords" },
-      correct: "2",
-      prompt: "Correct! A centralized bureaucracy was key to the reforms."
+    { 
+      event: "Developing new medical applications, what breakthrough do you achieve?", 
+      options: { "1": "Cancer treatment", "2": "Early disease detection", "3": "Enhancing metabolism" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      event: "What economic measure was standardized under the reforms?",
-      options: { "1": "Local barter systems", "2": "Uniform tax collection", "3": "Feudal levies" },
-      correct: "2",
-      prompt: "Right! Uniform tax systems helped stabilize the economy."
+    { 
+      event: "Your research leads to technological advances. Which one emerges?", 
+      options: { "1": "Advanced microscopes", "2": "X-ray machines", "3": "MRI scanners" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      event: "How did education change as a result of these reforms?",
-      options: { "1": "It was limited to the aristocracy", "2": "State-sponsored education was promoted", "3": "Education was largely ignored" },
-      correct: "2",
-      prompt: "Exactly! The reforms encouraged broader access to education."
+    { 
+      event: "During World War I, how do you contribute to medical care?", 
+      options: { "1": "Join the battlefield as a nurse", "2": "Develop portable X-ray units", "3": "Emigrate to the United States" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      event: "What social effect did the reforms have on career advancement?",
-      options: { "1": "They diminished social mobility", "2": "They fostered merit-based advancement", "3": "They created a rigid caste system" },
-      correct: "2",
-      prompt: "Correct! Advancement was increasingly based on merit."
+    { 
+      event: "When offered a prestigious but non-scientific award, what do you do?", 
+      options: { "1": "Embrace it for the honor", "2": "Politely decline it", "3": "Retreat into privacy" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      event: "How did the reforms impact local governance?",
-      options: { "1": "By standardizing administrative practices", "2": "By abolishing local councils", "3": "By returning power to the nobility" },
-      correct: "1",
-      prompt: "Right! Standardization was a central goal."
+    { 
+      event: "Your pioneering work paves the way for future advances. What does it inspire?", 
+      options: { "1": "The development of nuclear weapons", "2": "Nuclear medicine", "3": "Modern biotechnology" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      event: "What long-term institutional change resulted from the reforms?",
-      options: { "1": "The creation of modern state institutions", "2": "The restoration of feudal rights", "3": "Economic isolation" },
-      correct: "1",
-      prompt: "Absolutely! Modern state institutions emerged from these reforms."
+    { 
+      event: "Your daughter follows in your footsteps. What milestone does she achieve?", 
+      options: { "1": "Winning a Nobel Prize", "2": "Becoming a renowned poet", "3": "Pursuing a political career" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      event: "Overall, how are the Napoleonic Reforms viewed in European history?",
-      options: { "1": "As minor tweaks", "2": "As groundbreaking changes", "3": "As regressive measures" },
-      correct: "2",
-      prompt: "Excellent! They are seen as pivotal in modernizing Europe."
+    { 
+      event: "What is your final legacy?", 
+      options: { "1": "Discovering antibiotics", "2": "Pioneering research in radioactivity", "3": "The invention of solar panels" }, 
+      correct: "2" 
     }
   ],
-  "Congress of Vienna": [
-    {
-      id: 0,
-      event: "What was the primary goal of the Congress of Vienna after Napoleon’s defeat?",
-      options: { "1": "To punish France harshly", "2": "To restore a balance of power in Europe", "3": "To promote revolutionary ideals" },
-      correct: "2",
-      prompt: "Correct! Restoring balance was the key objective."
+  "Leonardo da Vinci": [
+    { 
+      event: "Commissioned for a portrait, what style do you choose?", 
+      options: { "1": "A rigid, traditional style", "2": "A lifelike, innovative realism", "3": "An abstract, surreal approach" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      event: "Which major power was a dominant force at the Congress?",
-      options: { "1": "France", "2": "Russia", "3": "Spain" },
-      correct: "2",
-      prompt: "Right! Russia played a leading role in the negotiations."
+    { 
+      event: "Observing nature, how do you capture its essence?", 
+      options: { "1": "Rely solely on classical formulas", "2": "Imitate older masters", "3": "Sketch directly from observation" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      event: "How did the Congress view the defunct Holy Roman Empire?",
-      options: { "1": "They sought to revive it", "2": "They accepted its dissolution", "3": "They ignored its legacy" },
-      correct: "2",
-      prompt: "Exactly! Its end was accepted as a new beginning."
+    { 
+      event: "Designing a flying machine, what inspires your design?", 
+      options: { "1": "Study of bird flight", "2": "Ancient myths", "3": "Pure invention without basis" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      event: "What principle guided the redrawing of borders at the Congress?",
-      options: { "1": "Legitimacy", "2": "National self-determination", "3": "The balance of power" },
-      correct: "3",
-      prompt: "Correct! Ensuring a balance of power was paramount."
+    { 
+      event: "To improve your art, how do you study human anatomy?", 
+      options: { "1": "Dissect cadavers discreetly", "2": "Rely solely on texts", "3": "Use animal dissections" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      event: "Which treaty emerged from the Congress's decisions?",
-      options: { "1": "Treaty of Paris", "2": "Treaty of Vienna", "3": "No formal treaty was signed" },
-      correct: "2",
-      prompt: "Right! The Treaty of Vienna formalized many decisions."
+    { 
+      event: "Working on The Last Supper, what innovative technique do you employ?", 
+      options: { "1": "Traditional fresco techniques", "2": "New perspective methods", "3": "Impasto and texture experiments" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      event: "How did the Congress approach Napoleon’s revolutionary changes?",
-      options: { "1": "They rejected all of them", "2": "They selectively adopted some", "3": "They embraced them fully" },
-      correct: "2",
-      prompt: "Exactly! They integrated certain reforms while restoring conservative order."
+    { 
+      event: "A patron requests an engineering design. What do you propose?", 
+      options: { "1": "A basic pulley system", "2": "A simple waterwheel", "3": "A complex system of gears and hydraulics" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      event: "What long-term effect did the Congress have on Europe?",
-      options: { "1": "A century of relative peace", "2": "Constant warfare", "3": "The immediate collapse of monarchies" },
-      correct: "1",
-      prompt: "Correct! The Concert of Europe helped maintain peace for decades."
+    { 
+      event: "Facing setbacks with your inventions, how do you respond?", 
+      options: { "1": "Abandon your ideas", "2": "Seek help immediately", "3": "Persist and refine your sketches" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      event: "Which mood best characterized the deliberations at the Congress?",
-      options: { "1": "Revolutionary enthusiasm", "2": "Conservative restoration", "3": "Indifference" },
-      correct: "2",
-      prompt: "Right! A conservative, restorative spirit prevailed."
+    { 
+      event: "Invited to the royal court, what project do you pitch?", 
+      options: { "1": "Minor decorative art", "2": "An ambitious, multi-disciplinary project", "3": "A short-lived experiment" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      event: "How were territorial disputes resolved at the Congress?",
-      options: { "1": "Through unilateral decisions", "2": "By mediating compromises", "3": "They were left unresolved" },
-      correct: "2",
-      prompt: "Absolutely! Compromise was the key to resolving disputes."
+    { 
+      event: "In your later years, how do you document your ideas?", 
+      options: { "1": "Keep detailed notebooks", "2": "Rely on memory", "3": "Verbal storytelling only" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      event: "Overall, what legacy is the Congress of Vienna remembered for?",
-      options: { "1": "Laying the foundations of modern diplomacy", "2": "Being a short-lived agreement", "3": "Having no lasting impact" },
-      correct: "1",
-      prompt: "Excellent! Its legacy endures in modern European diplomacy."
+    { 
+      event: "Your legacy is celebrated. What is your final wish?", 
+      options: { "1": "To be forgotten", "2": "To inspire future generations", "3": "To remain a mysterious figure" }, 
+      correct: "2" 
     }
   ],
-  "German Unification": [
-    {
-      id: 0,
-      event: "Which event linked Napoleon’s influence directly to the later unification of Germany?",
-      options: { "1": "The dissolution of the HRE", "2": "The establishment of the Confederation of Rhine", "3": "The Congress of Vienna" },
-      correct: "2",
-      prompt: "Correct! The Confederation of Rhine set the stage for unification."
+  "William Shakespeare": [
+    { 
+      event: "Commissioned by the royal court, what genre do you choose for your play?", 
+      options: { "1": "A historical epic", "2": "A witty comedy rich with wordplay", "3": "A mythological tragedy" }, 
+      correct: "2" 
     },
-    {
-      id: 1,
-      event: "How did Napoleon’s policies inadvertently foster German nationalism?",
-      options: { "1": "By uniting disparate states", "2": "By suppressing German culture", "3": "By encouraging regional isolation" },
-      correct: "1",
-      prompt: "Right! His reforms brought the German states closer together."
+    { 
+      event: "During rehearsals, actors propose changes. How do you respond?", 
+      options: { "1": "Ignore their suggestions", "2": "Dictate your own version", "3": "Embrace creative collaboration" }, 
+      correct: "3" 
     },
-    {
-      id: 2,
-      event: "What role did the Napoleonic Code play in the process of unification?",
-      options: { "1": "It was largely irrelevant", "2": "It provided a common legal framework", "3": "It hindered political progress" },
-      correct: "2",
-      prompt: "Exactly! A shared legal code helped bind the states together."
+    { 
+      event: "Facing criticism of your writing, how do you refine your work?", 
+      options: { "1": "Revise your language and structure", "2": "Overhaul your style completely", "3": "Stop writing altogether" }, 
+      correct: "1" 
     },
-    {
-      id: 3,
-      event: "Which state emerged as the leader in the movement towards unification?",
-      options: { "1": "Austria", "2": "Prussia", "3": "Bavaria" },
-      correct: "2",
-      prompt: "Correct! Prussia led the unification efforts."
+    { 
+      event: "When The Globe Theatre burns down, what is your response?", 
+      options: { "1": "Organize a rebuild with your company", "2": "Abandon theatre entirely", "3": "Write a play about the fire" }, 
+      correct: "1" 
     },
-    {
-      id: 4,
-      event: "How did military reforms influenced by Napoleon affect German unification?",
-      options: { "1": "They weakened local forces", "2": "They modernized the armies", "3": "They were largely ignored" },
-      correct: "2",
-      prompt: "Right! Modernized armies played a crucial role."
+    { 
+      event: "Receiving praise from influential patrons, how do you show gratitude?", 
+      options: { "1": "Demand higher fees", "2": "Dedicate a play to them", "3": "Hold lavish celebrations" }, 
+      correct: "2" 
     },
-    {
-      id: 5,
-      event: "Which conflict catalyzed the final steps toward unification?",
-      options: { "1": "The Austro-Prussian War", "2": "The Franco-Prussian War", "3": "World War I" },
-      correct: "1",
-      prompt: "Exactly! The Austro-Prussian War was a key catalyst."
+    { 
+      event: "A rival challenges your methods. What do you do?", 
+      options: { "1": "Ignore the challenge", "2": "Criticize them publicly", "3": "Craft a play subtly critiquing their style" }, 
+      correct: "3" 
     },
-    {
-      id: 6,
-      event: "What cultural effect did Napoleon’s influence have on the German states?",
-      options: { "1": "Suppression of the German language", "2": "A revival of German literature and philosophy", "3": "An adoption of French customs" },
-      correct: "2",
-      prompt: "Correct! A cultural revival helped spark national pride."
+    { 
+      event: "Invited to perform at the royal court, what do you do?", 
+      options: { "1": "Decline the invitation", "2": "Send a proxy", "3": "Attend and present your work personally" }, 
+      correct: "3" 
     },
-    {
-      id: 7,
-      event: "How did administrative changes introduced by Napoleon impact later unification?",
-      options: { "1": "They complicated governance", "2": "They laid the foundation for modern administration", "3": "They were completely rejected" },
-      correct: "2",
-      prompt: "Right! Modern administrative practices emerged from his reforms."
+    { 
+      event: "New experimental styles emerge in theatre. How do you react?", 
+      options: { "1": "Stick strictly to tradition", "2": "Blend innovative ideas with classic forms", "3": "Completely reinvent your approach" }, 
+      correct: "2" 
     },
-    {
-      id: 8,
-      event: "In economic terms, what legacy did Napoleon leave that aided unification?",
-      options: { "1": "Fragmented trade policies", "2": "Harmonized economic practices", "3": "Severe economic isolation" },
-      correct: "2",
-      prompt: "Absolutely! Economic harmonization fostered closer ties among the states."
+    { 
+      event: "In later years, how do you want your plays remembered?", 
+      options: { "1": "As masterpieces of language and drama", "2": "As outdated relics", "3": "As mere entertainment" }, 
+      correct: "1" 
     },
-    {
-      id: 9,
-      event: "Overall, what is considered Napoleon’s most enduring contribution to German Unification?",
-      options: { "1": "A common legal and administrative framework", "2": "His prowess as a military conqueror", "3": "His support for traditional monarchies" },
-      correct: "1",
-      prompt: "Excellent! His reforms provided the essential foundation for a unified Germany."
+    { 
+      event: "Your legacy endures. What is your final wish?", 
+      options: { "1": "To be forgotten quickly", "2": "To inspire future generations of playwrights", "3": "To retire in obscurity" }, 
+      correct: "2" 
+    }
+  ],
+  "Ludwig van Beethoven": [
+    { 
+      event: "In your early years, what fuels your passion for music?", 
+      options: { "1": "Wealth", "2": "A deep, intrinsic passion", "3": "Peer pressure" }, 
+      correct: "2" 
+    },
+    { 
+      event: "Facing progressive hearing loss, what is your determined response?", 
+      options: { "1": "Stop composing altogether", "2": "Switch solely to conducting", "3": "Persevere and innovate in composition" }, 
+      correct: "3" 
+    },
+    { 
+      event: "Composing a groundbreaking symphony, what drives your creativity?", 
+      options: { "1": "Expressing profound human emotion", "2": "Imitating past composers", "3": "Pursuing popular trends" }, 
+      correct: "1" 
+    },
+    { 
+      event: "During personal hardships, what keeps you composing?", 
+      options: { "1": "An unyielding inner drive", "2": "Financial necessity", "3": "A quest for fame" }, 
+      correct: "1" 
+    },
+    { 
+      event: "Experimenting with musical forms, what do you create?", 
+      options: { "1": "A simple melody", "2": "A complex, multi-movement symphony", "3": "A brief operatic piece" }, 
+      correct: "2" 
+    },
+    { 
+      event: "Critics challenge your innovative style. How do you respond?", 
+      options: { "1": "Conform to expectations", "2": "Withdraw from public life", "3": "Stand firm and evolve your music" }, 
+      correct: "3" 
+    },
+    { 
+      event: "Invited to premiere your latest work, how do you prepare?", 
+      options: { "1": "Delegate all responsibilities", "2": "Let someone else conduct", "3": "Oversee every detail personally despite your deafness" }, 
+      correct: "3" 
+    },
+    { 
+      event: "Reflecting on your legacy, what matters most to you?", 
+      options: { "1": "Personal wealth and fame", "2": "The emotional impact of your music", "3": "A fleeting popular hit" }, 
+      correct: "2" 
+    },
+    { 
+      event: "In later years, how do you express your inner emotions?", 
+      options: { "1": "Compose deeply personal piano sonatas", "2": "Give impassioned public speeches", "3": "Compose cheerful, lighthearted tunes" }, 
+      correct: "1" 
+    },
+    { 
+      event: "At the end of your life, what is your hope for your music?", 
+      options: { "1": "To be forgotten", "2": "To inspire future generations", "3": "To be seen as mere entertainment" }, 
+      correct: "2" 
+    }
+  ],
+  "Johannes Gutenberg": [
+    { 
+      event: "Inspired to revolutionize printing, what is your initial idea?", 
+      options: { "1": "Hand-copy texts manually", "2": "Use movable type", "3": "Engrave images by hand" }, 
+      correct: "2" 
+    },
+    { 
+      event: "Determined to spread knowledge, what is your next step?", 
+      options: { "1": "Print only religious texts", "2": "Start a small press", "3": "Develop a full-scale printing press" }, 
+      correct: "3" 
+    },
+    { 
+      event: "Facing skepticism from investors, how do you proceed?", 
+      options: { "1": "Persist and demonstrate your invention", "2": "Abandon your idea", "3": "Stick to traditional methods" }, 
+      correct: "1" 
+    },
+    { 
+      event: "To improve efficiency, what material do you choose for your typefaces?", 
+      options: { "1": "Metal alloy", "2": "Wood", "3": "Clay" }, 
+      correct: "1" 
+    },
+    { 
+      event: "Needing funding, what is your strategy?", 
+      options: { "1": "Sell your invention outright", "2": "Seek patronage from wealthy citizens", "3": "Crowdsource funds from the masses" }, 
+      correct: "2" 
+    },
+    { 
+      event: "Your press begins producing books. What do you print first?", 
+      options: { "1": "Modern novels", "2": "Scientific journals", "3": "The Gutenberg Bible" }, 
+      correct: "3" 
+    },
+    { 
+      event: "Encountering technical challenges, how do you respond?", 
+      options: { "1": "Wait for a natural solution", "2": "Abandon the project", "3": "Innovate and refine your design" }, 
+      correct: "3" 
+    },
+    { 
+      event: "To further disseminate knowledge, what do you establish?", 
+      options: { "1": "A secret printing society", "2": "A network of printers across Europe", "3": "A government-run press" }, 
+      correct: "2" 
+    },
+    { 
+      event: "Your invention revolutionizes communication. How do you feel?", 
+      options: { "1": "Proud and hopeful", "2": "Indifferent", "3": "Overwhelmed with doubt" }, 
+      correct: "1" 
+    },
+    { 
+      event: "What is your final wish for your invention?", 
+      options: { "1": "To be forgotten", "2": "For your press to inspire global literacy", "3": "To monopolize the book trade" }, 
+      correct: "2" 
+    }
+  ],
+  "Ada Lovelace": [
+    { 
+      event: "Encountering Charles Babbage's Analytical Engine, what excites you most?", 
+      options: { "1": "Its mechanical sounds", "2": "Its computational potential", "3": "Its aesthetic design" }, 
+      correct: "2" 
+    },
+    { 
+      event: "You begin writing notes on the engine. What is your focus?", 
+      options: { "1": "Basic arithmetic operations", "2": "The machine’s mechanics", "3": "Developing algorithms for complex tasks" }, 
+      correct: "3" 
+    },
+    { 
+      event: "Your work results in a groundbreaking achievement. What is it?", 
+      options: { "1": "The first computer program", "2": "A novel type of engine", "3": "A new mathematical theorem" }, 
+      correct: "1" 
+    },
+    { 
+      event: "Imagining a future for machines, what do you envision?", 
+      options: { "1": "Devices capable of creative tasks", "2": "Simple calculators", "3": "Mere industrial tools" }, 
+      correct: "1" 
+    },
+    { 
+      event: "Debating the significance of your notes, what do you proclaim?", 
+      options: { "1": "They are overhyped", "2": "They herald a new era in computing", "3": "They are irrelevant" }, 
+      correct: "2" 
+    },
+    { 
+      event: "Invited to present your ideas publicly, how do you proceed?", 
+      options: { "1": "Decline to speak", "2": "Give a brief technical talk", "3": "Deliver a visionary lecture on machine intelligence" }, 
+      correct: "3" 
+    },
+    { 
+      event: "Facing skepticism from peers, how do you handle criticism?", 
+      options: { "1": "Withdraw your work", "2": "Deny the criticism", "3": "Refine and expand your theories" }, 
+      correct: "3" 
+    },
+    { 
+      event: "As the engine’s potential becomes clear, what is your hope?", 
+      options: { "1": "That it remains a mere curiosity", "2": "That it revolutionizes computation", "3": "That it is used only for simple tasks" }, 
+      correct: "2" 
+    },
+    { 
+      event: "In your later years, how do you document your visionary ideas?", 
+      options: { "1": "In detailed, forward-thinking notebooks", "2": "Through secret correspondences", "3": "By delivering public lectures" }, 
+      correct: "1" 
+    },
+    { 
+      event: "What is your final wish for your legacy?", 
+      options: { "1": "To be forgotten", "2": "To be remembered as the first computer programmer", "3": "To have your work remain hidden" }, 
+      correct: "2" 
     }
   ]
 };
 
-// Global variables to track conversation state
-let selectedEvent = "";
-let conversationStage = 0;
-
-// Utility: Append a bot message to the chat window with a typing transition
-function addBotMessage(text, callback) {
-  const chatWindow = document.getElementById("chat-window");
-  const messageElem = document.createElement("div");
-  messageElem.className = "bot-message";
-  chatWindow.appendChild(messageElem);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+// Helper function to display the current conversation step (event and options)
+function displayCurrentStep() {
+  const currentStep = currentFlow[conversationStepIndex];
+  // Display the event prefixed by the character's name.
+  addBotMessage(`${selectedCharacter}: ${currentStep.event}`);
   
-  let index = 0;
-  function typeChar() {
-    if (index < text.length) {
-      messageElem.textContent += text.charAt(index);
-      index++;
-      setTimeout(typeChar, 50); // Adjust the speed (milliseconds per character) as desired
-    } else {
-      if (callback) callback();
-    }
+  // Create a new div for the options, joining each option with <br> tags.
+  const chatWindow = document.getElementById("chat-window");
+  if (chatWindow) {
+    const optionsElem = document.createElement("div");
+    optionsElem.className = "bot-message";
+    const optionsText = Object.entries(currentStep.options)
+      .map(([key, value]) => `${key}. ${value}`)
+      .join("<br>");
+    optionsElem.innerHTML = optionsText;  // Use innerHTML so <br> tags are rendered.
+    chatWindow.appendChild(optionsElem);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
   }
-  typeChar();
 }
 
-// Utility: Append a user message to the chat window (immediate display)
+
+// Start the minigame conversation when the page loads
+window.onload = function () {
+  startMinigameConversation();
+  const inputField = document.getElementById("chat-input");
+  if (inputField) {
+    inputField.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const userInput = inputField.value.trim();
+        if (userInput !== "") {
+          addUserMessage(userInput);
+          inputField.value = "";
+          processConversationInput(userInput);
+        }
+      }
+    });
+  }
+}
+
+// Append a bot message to the chat window
+function addBotMessage(text) {
+  const chatWindow = document.getElementById("chat-window");
+  if (chatWindow) {
+    const messageElem = document.createElement("div");
+    messageElem.className = "bot-message";
+    messageElem.textContent = text;
+    chatWindow.appendChild(messageElem);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+}
+
+// Append a user message to the chat window
 function addUserMessage(text) {
   const chatWindow = document.getElementById("chat-window");
-  const messageElem = document.createElement("div");
-  messageElem.className = "user-message";
-  messageElem.textContent = text;
-  chatWindow.appendChild(messageElem);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  if (chatWindow) {
+    const messageElem = document.createElement("div");
+    messageElem.className = "user-message";
+    messageElem.textContent = text;
+    chatWindow.appendChild(messageElem);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
 }
 
-// Utility: Clear the chat window
+// Clear the chat window
 function clearChatWindow() {
-  document.getElementById("chat-window").innerHTML = "";
+  const chatWindow = document.getElementById("chat-window");
+  if (chatWindow) {
+    chatWindow.innerHTML = "";
+  }
 }
 
-// Start the adventure: prompt the user to choose an event
-function startNapoleonAdventure() {
+// Start (or reset) the conversation
+function startMinigameConversation() {
   clearChatWindow();
-  selectedEvent = "";
-  conversationStage = 0;
-  addBotMessage("Welcome to Napoleon's HRE Adventure!");
-  addBotMessage('Choose an event to explore by typing the corresponding number:');
-  addBotMessage("1: Treaty of Pressburg\n2: Confederation of Rhine\n3: Napoleonic Reforms\n4: Congress of Vienna\n5: German Unification");
-  addBotMessage('Do you want to reset the conversation? Just type "Reset".');
+  conversationStepIndex = null;
+  selectedCharacter = "";
+  currentFlow = null;
+  addBotMessage("Welcome to Timeless Minigames!\nWho do you want to play with? (Type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace)");
 }
 
-// Present the current step for the selected event
-function presentCurrentStep() {
-  if (selectedEvent === "") return; // No event selected yet
-  const flow = conversationFlows[selectedEvent];
-  if (conversationStage < flow.length) {
-    const currentStep = flow[conversationStage];
-    let message = `Step ${conversationStage + 1}: ${currentStep.event}\n`;
-    for (const [key, option] of Object.entries(currentStep.options)) {
-      message += `${key}: ${option}\n`;
-    }
-    addBotMessage(message);
-  } else {
-    addBotMessage("The adventure for this event has concluded. Thank you for participating!");
-  }
-}
-
-// Process user input from the chat
-function processNapoleonInput(input) {
-  // If the user types "reset", restart the conversation
-  if (input.trim().toLowerCase() === "reset") {
-    addBotMessage("Resetting conversation...");
-    setTimeout(() => {
-      startNapoleonAdventure();
-    }, 1000);
+// Process user input for the conversation
+function processConversationInput(input) {
+  if (input.toLowerCase() === "reset") {
+    startMinigameConversation();
     return;
   }
-  
-  // If no event is selected, interpret the input as the event choice
-  if (selectedEvent === "") {
-    const eventMap = {
-      "1": "Treaty of Pressburg",
-      "2": "Confederation of Rhine",
-      "3": "Napoleonic Reforms",
-      "4": "Congress of Vienna",
-      "5": "German Unification"
-    };
-    if (eventMap.hasOwnProperty(input)) {
-      selectedEvent = eventMap[input];
-      addBotMessage(`You have selected: ${selectedEvent}. Let's begin!`);
-      setTimeout(() => {
-        presentCurrentStep();
-      }, 1000);
+  // If no character is selected yet, process character selection.
+  if (conversationStepIndex === null) {
+    const validNames = [
+      "isaac newton",
+      "albert einstein",
+      "marie curie",
+      "leonardo da vinci",
+      "william shakespeare",
+      "ludwig van beethoven",
+      "johannes gutenberg",
+      "ada lovelace"
+    ];
+    if (validNames.includes(input.toLowerCase())) {
+      // Map the lower-case input to the proper key used in conversationFlows.
+      const properNames = {
+        "isaac newton": "Isaac Newton",
+        "albert einstein": "Albert Einstein",
+        "marie curie": "Marie Curie",
+        "leonardo da vinci": "Leonardo da Vinci",
+        "william shakespeare": "William Shakespeare",
+        "ludwig van beethoven": "Ludwig van Beethoven",
+        "johannes gutenberg": "Johannes Gutenberg",
+        "ada lovelace": "Ada Lovelace"
+      };
+      selectedCharacter = properNames[input.toLowerCase()];
+      currentFlow = conversationFlows[selectedCharacter];
+      conversationStepIndex = 0;
+      displayCurrentStep();
     } else {
-      addBotMessage("Please choose a valid option: 1, 2, 3, 4, or 5.");
+      addBotMessage("I didn't recognize that name. Please type one of: Isaac Newton, Albert Einstein, Marie Curie, Leonardo da Vinci, William Shakespeare, Ludwig van Beethoven, Johannes Gutenberg, Ada Lovelace.");
     }
-    return;
-  }
-  
-  // Process the input for the current step of the chosen event
-  const flow = conversationFlows[selectedEvent];
-  if (conversationStage < flow.length) {
-    const currentStep = flow[conversationStage];
-    if (!currentStep.options.hasOwnProperty(input)) {
-      addBotMessage("Please choose a valid option (e.g., type 1, 2, or 3).");
+  } else {
+    // Process the current conversation step.
+    let currentStep = currentFlow[conversationStepIndex];
+    if (!currentStep || currentStep.correct === "") {
+      addBotMessage("The conversation has ended. Type 'reset' to restart.");
       return;
     }
     if (input === currentStep.correct) {
-      addBotMessage(currentStep.prompt);
-      conversationStage++;
-      setTimeout(() => {
-        presentCurrentStep();
-      }, 1000);
+      conversationStepIndex++;
+      if (conversationStepIndex < currentFlow.length) {
+        displayCurrentStep();
+      } else {
+        addBotMessage("The adventure has concluded. Congratulations!");
+      }
     } else {
-      addBotMessage("Incorrect answer. Please try again.");
-      setTimeout(() => {
-        presentCurrentStep();
-      }, 1000);
+      addBotMessage("Incorrect. Type 'reset' to reset chat.");
     }
-  } else {
-    addBotMessage("The adventure has concluded. Thank you for participating!");
   }
 }
-
-// Initialize the conversation on window load and set up the input listener
-window.onload = function () {
-  startNapoleonAdventure();
-  const inputField = document.getElementById("chat-input");
-  inputField.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      const userInput = inputField.value.trim();
-      if (userInput !== "") {
-        addUserMessage(userInput);
-        inputField.value = "";
-        processNapoleonInput(userInput);
-      }
-    }
-  });
-};
