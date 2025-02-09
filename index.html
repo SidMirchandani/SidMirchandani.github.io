@@ -1,54 +1,35 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google Fonts and Meta Data -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TimelessAI</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Napoleon Team D</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <!-- Favicon -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
-      rel="stylesheet"
-    />
+          rel="icon"
+          href="https://i.postimg.cc/nzWz8pNR/Napoleon-D-Short.png"
+          type="image/x-icon"
+          />
     <!-- External CSS -->
     <link rel="stylesheet" href="styles.css" />
-    <!-- Socket.io (if needed) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.3/socket.io.js"></script>
-    <link
-      rel="icon"
-      href="https://i.postimg.cc/tTjS3dRB/Code-JAMS-1.png"
-      type="image/x-icon"
-    />
+    <!-- Firebase SDKs (v8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   </head>
   <body>
     <!-- Header Section -->
     <section id="home">
       <header>
         <img
-          src="https://i.postimg.cc/tTjS3dRB/Code-JAMS-1.png"
-          alt="Header Image"
-        />
+             src="https://i.postimg.cc/nzWz8pNR/Napoleon-D-Short.png"
+             alt="Logo"
+             />
       </header>
-      <subheader>
-        <div>
-          <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=116893&url_id=902">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjryC__w5W7qqVkw8wmLh914my0tHoUNaeA&s"
-              height="30px"
-              alt="NordVPN"
-            />
-          </a>
-          <a href="https://go.nordpass.io/aff_c?offer_id=488&aff_id=116893&url_id=9356">
-            <img
-              src="https://bestreviews.net/wp-content/uploads/2024/06/nordpass-logo.svg"
-              height="30px"
-              alt="NordPass"
-            />
-          </a>
-        </div>
-      </subheader>
     </section>
 
     <!-- Navigation Bar -->
@@ -57,74 +38,194 @@
         <ul>
           <li>
             <img
-              src="https://i.postimg.cc/SQPh8sYH/Timeless.png"
-              alt="Logo"
-              style="float: right;"
-              height="50px"
-            />
+                 src="https://i.postimg.cc/cC8J0PSs/Napoleon-D-Long.png"
+                 alt="Long Logo"
+                 style="float: right;"
+                 height="50px"
+                 />
           </li>
         </ul>
       </div>
     </nav>
 
-    <!-- (Widget Sidebar remains unchanged) -->
-    <button class="toggle-widget-sidebar" onclick="toggleWidgetSidebar()">
-      ☰ Widgets
-    </button>
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Timeline Section -->
+      <section id="timeline" class="section">
+        <h3>Interactive Puzzle</h3>
+        <!-- Timeline Navigation Buttons -->
+        <div class="timeline-nav">
+          <button class="timeline-point active" data-timeline="point1">
+            Holy Roman Empire
+          </button>
+          <button class="timeline-point" data-timeline="point2">
+            Napoleon’s Rise
+          </button>
+          <button class="timeline-point" data-timeline="point3">
+            Treaty of Pressburg
+          </button>
+          <button class="timeline-point" data-timeline="point4">
+            Empire Dissolution
+          </button>
+          <button class="timeline-point" data-timeline="point5">
+            Confederation of Rhine
+          </button>
+          <button class="timeline-point" data-timeline="point6">
+            Napoleonic Reforms
+          </button>
+          <button class="timeline-point" data-timeline="point7">
+            Secularization & Mediatisation
+          </button>
+          <button class="timeline-point" data-timeline="point8">
+            Congress of Vienna
+          </button>
+          <button class="timeline-point" data-timeline="point9">
+            German Nationalism
+          </button>
+          <button class="timeline-point" data-timeline="point10">
+            German Unification
+          </button>
+        </div>
 
-    <!-- Main Container: Minigame (story mode) Region and Widget Display Area -->
-    <div class="main-container" id="main-container">
-      <!-- Minigame Region -->
-      <div class="chat-region" id="chat-region">
+        <!-- Puzzle Container (common to all timelines) -->
+        <div class="puzzle-container" id="puzzle-container">
+          <!-- Puzzle Board (Drop Zones) -->
+          <div id="puzzle-board"></div>
+          <!-- Shuffled Puzzle Pieces -->
+          <div id="puzzle-pieces"></div>
+        </div>
+
+        <!-- Timeline Groups: Headings that change with timeline selection -->
+        <div id="timeline-content">
+          <div class="timeline-group" id="point1">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Holy Roman Empire
+            </h4>
+          </div>
+          <div class="timeline-group" id="point2" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Napoleon’s Rise
+            </h4>
+          </div>
+          <div class="timeline-group" id="point3" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Treaty of Pressburg
+            </h4>
+          </div>
+          <div class="timeline-group" id="point4" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Empire Dissolution
+            </h4>
+          </div>
+          <div class="timeline-group" id="point5" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Confederation of Rhine
+            </h4>
+          </div>
+          <div class="timeline-group" id="point6" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Napoleonic Reforms
+            </h4>
+          </div>
+          <div class="timeline-group" id="point7" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Secularization & Mediatisation
+            </h4>
+          </div>
+          <div class="timeline-group" id="point8" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              Congress of Vienna
+            </h4>
+          </div>
+          <div class="timeline-group" id="point9" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              German Nationalism
+            </h4>
+          </div>
+          <div class="timeline-group" id="point10" style="display: none;">
+            <h4 style="text-align: center; margin-bottom: 20px;">
+              German Unification
+            </h4>
+          </div>
+        </div>
+      </section>
+      <!-- Puzzle Completion Popup -->
+      <div id="puzzle-popup" class="popup">
+        <div class="popup-content">
+          <span class="close-btn">&times;</span>
+          <h2 id="popup-title">Puzzle Completed!</h2>
+          <p id="popup-info"></p>
+        </div>
+      </div>
+ 
+      <section class="section">
         <div class="chat-container">
           <div class="chatbot active" id="chatbot">
-            <h2>Minigame Conversation</h2>
+            <h3>Minigame Conversation</h3>
             <div class="chat-window" id="chat-window"></div>
             <!-- Single text input (no send button) -->
             <div class="horizontal" id="minigame-input">
               <input
-                type="text"
-                placeholder="Type your message and press Enter..."
-                id="chat-input"
-              />
+                     type="text"
+                     placeholder="Type your message and press Enter..."
+                     id="chat-input"
+                     />
             </div>
           </div>
         </div>
-      </div>
-      <!-- Widget Display Area (unchanged) -->
-      <div class="widget-display" id="widget-display">
-        <p>Select a widget from the sidebar to load its content here.</p>
-      </div>
-    </div>
+      </section>
 
-    <!-- Widget Sidebar (unchanged) -->
-    <div class="widget-sidebar" id="widget-sidebar">
-      <div class="widget-sidebar-header">
-        <h2>Widgets</h2>
-        <button class="minimize-widget-sidebar" onclick="toggleWidgetSidebar()">
-          👋
-        </button>
-      </div>
-      <ul class="widget-list">
-        <li class="widget-item" data-widget="freeprizes">Free Prizes</li>
-        <li class="widget-item" data-widget="learnonline">Learn Online!</li>
-        <li class="widget-item" data-widget="library">Library</li>
-        <li class="widget-item" data-widget="math">Math Trainer</li>
-        <li class="widget-item" data-widget="bio">Bio Trainer</li>
-        <li class="widget-item" data-widget="braille">
-          English to Braille Translator
-        </li>
-        <li class="widget-item" data-widget="mental">Mental Health Advisor</li>
-        <li class="widget-item" data-widget="quote">
-          Random Quote Generator
-        </li>
-        <li class="widget-item" data-widget="language">
-          Language Learning Assistant
-        </li>
-      </ul>
-    </div>
+      <section class="section">
+        <div id="game-container">
+          <h3>Napoleonic War Simulator</h3>
 
-    <!-- External JS -->
+          <div class="stats">
+            <p>💰 <span id="gold">200</span></p>
+            <p>⚔️ <span id="army">30</span></p>
+            <p>🔥 Morale: <span id="morale">1.00</span></p>
+            <p>📅 <span id="date">April 1792</span></p>
+            <p>📜 Turn: <span id="turn">0</span></p>
+            <p>🏴‍☠️ Conquered: <span id="conquered-countries">None</span></p>
+            <p>⚔️ At War: <span id="countries-at-war">None</span></p>
+            <p>🌍 Remaining: <span id="remaining-countries">Austria, Prussia, Britain, Spain, Russia, Portugal, Piedmont-Sardinia</span></p>
+          </div>
+
+
+
+          <div class="actions">
+            <button onclick="recruitSoldiers()">Recruit Soldiers</button>
+
+            <!-- Declare War Button and Submenu -->
+            <button onclick="showDeclareWarMenu()">Declare War</button>
+
+            <!-- Attack Button and Submenu -->
+            <button onclick="showAttackMenu()">Attack</button>
+
+            <!-- Make Peace Button and Submenu -->
+            <button onclick="showPeaceMenu()">Make Peace</button>
+
+            <button onclick="endTurn()">End Turn</button>
+            <div id="declare-war-menu" style="visibility: hidden;"></div>
+            <div id="attack-menu" style="visibility: hidden;"></div>
+            <div id="peace-menu" style="visibility: hidden;"></div>
+          </div>
+
+
+
+
+          <div id="event-log"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== Footer Section ===== -->
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Siddharth Mirchandani. Made with ❤️ by Team D. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- External JavaScript -->
     <script src="script.js"></script>
   </body>
 </html>
