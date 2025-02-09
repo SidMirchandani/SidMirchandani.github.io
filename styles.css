@@ -1,16 +1,93 @@
-/* Global Styles */
+/* Reset default styles */
 * {
-  font-family: "Outfit", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-body {
-  background-color: #f9f9f9;
-  color: #333;
+  font-family: 'Alegreya', sans-serif;
 }
 
-/* NAVIGATION, HEADER & SUBHEADER (with margins) */
+/* Body & Layout */
+body {
+  font-family: 'Alegreya', sans-serif;
+  line-height: 1.6;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Container for center alignment */
+.container {
+  width: 90%;
+  margin: 0 auto;
+  flex-direction: column;
+}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Header Section */
+header {
+  padding-bottom: 3vh;
+  background: white;
+  color: rgba(0, 40, 20, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content from the top */
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding-top: 25vh; /* Increase padding-top to push content further down */
+  line-height: 1;
+  transition: background 0.3s ease-in-out;
+  height: 700px;
+  box-shadow: rgba(210, 176, 0, 0.2) 0px 7px 29px 0px;
+}
+
+subheader {
+  background: white;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Align content from the top */
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  transition: background 0.3s ease-in-out;
+  margin: auto;
+  box-shadow: rgba(210, 176, 0, 0.2) 0px 7px 29px 0px;
+}
+
+subheader div{
+  justify-content: center; /* Align content from the top */
+  align-items: center;
+}
+
+subheader img{
+  transition: transform 0.3s;
+  margin-bottom: 20px;
+}
+
+subheader img:hover{
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+header img{
+  width: 50vh;
+  border-radius: 2vh;
+  box-shadow: rgba(210,176,0,0.4) 0px 50px 100px;
+  margin-top: 10vh;
+
+}
+
+/* Navigation Bar Styling */
 nav {
   position: fixed;
   top: 0;
@@ -20,7 +97,9 @@ nav {
   z-index: 1000;
   padding: 20px 0;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: background-color 0.3s ease;
 }
+
 nav ul {
   list-style: none;
   display: flex;
@@ -28,13 +107,15 @@ nav ul {
   align-items: center;
   padding: 0;
 }
-nav ul li img {
+
+nav ul li img{
   margin-left: 1vh;
   margin-right: 1vh;
 }
+
 nav ul li a {
   text-decoration: none;
-  color: #5e17eb;
+  color: #635300;
   font-size: 1rem;
   transition: all 0.3s ease;
   padding: 2px 5px;
@@ -42,82 +123,278 @@ nav ul li a {
   margin-right: 1vh;
   font-weight: 1000;
 }
+
 nav ul li a:hover {
-  background-color: #5e17eb;
+  background-color: #635300;
   color: white;
-  transform: translateY(-3px);
-}
-header {
-  padding-bottom: 3vh;
-  background: white;
-  color: rgba(0, 40, 20, 1);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-  padding-top: 25vh;
-  line-height: 1;
-  transition: background 0.3s ease-in-out;
-}
-subheader {
-  background: white;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-top: 10px;
-  padding-bottom: 20px;
-  transition: background 0.3s ease-in-out;
-  margin: auto;
-  gap: 10px;
-  box-shadow: rgba(100, 150, 200, 0.2) 0px 7px 29px 0px;
-}
-subheader div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-subheader img {
-  transition: transform 0.3s;
-  margin: 0 10px 20px;
-}
-subheader img:hover {
-  transform: scale(1.1);
-}
-header img {
-  width: 50vh;
-  border-radius: 2vh;
-  box-shadow: rgba(94, 23, 235, 0.4) 0px 50px 100px;
-  margin-top: 10vh;
+  transform: translateY(-3px); /* Subtle hover effect */
 }
 
-/* Main Container: Adds extra margins below the header/subheader */
-.main-container {
-  margin-top: 30px;
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-bottom: 30px;
-  transition: all 0.3s ease;
+/* Main Sections */
+main {
+  padding-top: 80px; /* Adjusted space to account for navbar */
+}
+
+/* Section Styling */
+
+
+.section p {
+  font-size: 15px;
+  color: rgb(80,100,100);
+  line-height: 1.8;
+  font-weight: 300;
+  margin: 0 auto; /* Centers the paragraph under the heading */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* ========= Main Content ========= */
+main {
+  padding-top: 100px; /* To account for fixed nav */
+}
+.section {
+  background: #fff;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 5px;
+  width: 95%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  animation: fadeIn 1.5s ease-out forwards;
+  margin-bottom: 40px;
+}
+.section h3 {
+  color: #635300;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* ========= Timeline Navigation ========= */
+.timeline-nav {
   display: flex;
-  gap: 10px 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.timeline-point {
+  padding: 10px 15px;
+  background-color: #635300;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 10px;
+}
+.timeline-point:hover,
+.timeline-point.active {
+  background-color: #403000;
+}
+.timeline-group {
+  display: block;
+}
+.timeline-group[style*="display: none"] {
+  display: none;
+}
+
+/* ========= Puzzle Section Styles ========= */
+.puzzle-container {
+  text-align: center;
+}
+
+#puzzle-board {
+  margin: 0 auto;
+  display: grid;
+  gap: 2px;
+  grid-template-columns: repeat(4, 60px); /* Even smaller grid cells */
+  grid-template-rows: repeat(4, 60px); /* Even smaller grid cells */
+}
+
+.drop-zone {
+  border: 1px dashed #ccc;
+  box-sizing: border-box;
+  width: 10px; /* Match the grid cell size */
+  height: 10px; /* Match the grid cell size */
+}
+
+#puzzle-pieces {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px; /* Reduced gap between pieces */
+}
+
+.puzzle-piece {
+  background-repeat: no-repeat;
+  cursor: grab;
+  border: 1px solid #ddd;
+  transition: box-shadow 0.2s ease, border-radius 0.2s ease;
+  border-radius: 10px;
+}
+
+.puzzle-piece:hover {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3); /* Reduced shadow on hover */
+  border-radius: 10px;
+}
+
+.puzzle-piece.dragging {
+  opacity: 0.7;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5); /* Reduced shadow while dragging */
+  border-radius: 10px;
+}
+
+.puzzle-piece.locked {
+  cursor: default;
+  border-radius: 0px;
+}
+/* ========= Popup Modal ========= */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
+  z-index: 2000;
+}
+.popup.visible {
+  visibility: visible;
+  opacity: 1;
+}
+.popup-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 80%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  font-color: black;
+}
+.popup-content h2 {
+  margin-bottom: 10px;
+  color: black;
+}
+.popup-content p {
+  font-size: 0.9rem;
+  color: #555;
+}
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+/* ========= Footer ========= */
+footer {
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 40px;
+}
+footer p {
+  font-size: 0.8rem;
+  font-weight: 300;
+}
+
+/* ========= Animations ========= */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+h4{
+  font-color: black;
+}
+
+.stats p {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.actions button {
+  color: #635300;
+  font-size: 11px;
+  font-weight: bold;
+  margin: 5px;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  border: none;
+  background: none;
+}
+
+.actions button:hover {
+  color: #403000;
+}
+
+#event-log {
+  margin-top: 20px;
+  font-size: 11px;
+  font-style: italic;
+  color: white;
+}
+
+.stats{
+  color: black;
+  display: flex;
+  gap: 0px 20px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+h1{
+  color: black;
+}
+
+#game-log{
+  color: black;
+  text-align: center;
+}
+
+#event-log p {
+  color: black; /* Change text color to black */
+  background: #f3f3f3; /* Add a white background to make it readable */
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  margin: 5px 0;
+  font-size: 11px;
+}
+
+#game-container {
+  text-align: center;
 }
 
 .user-message {
   display: inline-block;
-  background-color: rgba(94, 23, 235, 0.1);
-  color: #5e17eb;
+  background-color: rgba(300, 200, 23, 0.1);
+  color: #635300;
   border-radius: 20px 20px 20px 10px;
   padding: 8px 12px;
   margin: 5px 0;
   max-width: 70%;
-  font-size: 12px;
+  font-size: 11px;
 }
 .bot-message {
-  font-size: 12px;
+  font-size: 11px;
+  color: black;
+  white-space: pre-line;
 }
 
 /* Toggle Button for Widget Sidebar */
@@ -125,7 +402,7 @@ header img {
   position: fixed;
   top: 100px;
   right: 20px;
-  background-color: #5e17eb;
+  background-color: #635300;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -135,115 +412,6 @@ header img {
   font-size: 16px;
   font-weight: bold;
   transition: background-color 0.3s ease;
-}
-.toggle-widget-sidebar:hover {
-  background-color: #4b13c7;
-}
-
-/* Layout: Chat Region and Widget Display Area */
-.chat-region {
-  flex: 2;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
-}
-.widget-display {
-  flex: 1;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: rgba(149, 157, 165, 0.25) 0 0 24px;
-  min-height: 300px;
-}
-
-/* Spacing for widget display elements */
-.widget-display h3,
-.widget-display p,
-.widget-display input,
-.widget-display textarea,
-.widget-display button,
-.widget-display select {
-  margin-bottom: 15px;
-}
-
-/* Library Widget Styles */
-.library-container {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  max-height: 200px;
-  overflow-y: auto;
-  padding-right: 10px;
-}
-.pdf-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0px;
-}
-.pdf-item {
-  background-color: #fafafa;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease;
-  margin: 10px;
-}
-.pdf-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px);
-}
-.pdf-icon {
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-.pdf-title a {
-  color: #5e17eb;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-.pdf-title a:hover {
-  color: #4b13c7;
-  text-decoration: underline;
-}
-
-/* Additional styling for the Braille output and points stars */
-#braille-output {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 1.75em;
-  color: goldenrod;
-  font-weight: bold;
-}
-.points-stars {
-  color: gold;
-  font-size: 1.5em;
-  vertical-align: middle;
-}
-
-/* Style for the Math dropdown */
-#math-subject {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-/* Mobile adjustments */
-@media (max-width: 800px) {
-  .main-container {
-    flex-direction: column;
-  }
-  .chat-region, .widget-display {
-    width: 100%;
-  }
-  .widget-display {
-    margin-top: 20px;
-  }
 }
 
 /* Chat Interface Styles */
@@ -262,7 +430,7 @@ header img {
 .chatbot h2 {
   margin: 0 0 10px;
   text-align: center;
-  color: #5e17eb;
+  color: #635300;
 }
 .chat-window {
   height: 200px;
@@ -284,7 +452,7 @@ header img {
   outline: none;
 }
 .horizontal button {
-  background-color: #5e17eb;
+  background-color: #635300;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -292,284 +460,7 @@ header img {
   cursor: pointer;
 }
 
-/* Widget Sidebar */
-.widget-sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 250px;
-  height: 100%;
-  background-color: white;
-  padding: 20px;
-  overflow-y: auto;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(100%);
-  transition: transform 0.3s ease-in-out;
-  z-index: 1200;
-}
-.widget-sidebar.visible {
-  transform: translateX(0);
-}
-.widget-sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.widget-sidebar h2 {
-  margin: 0;
-  color: #5e17eb;
-}
-.minimize-widget-sidebar {
-  background: transparent;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #5e17eb;
-}
-.widget-list {
-  list-style: none;
-  padding: 0;
-}
-.widget-list li {
-  background-color: #fafafa;
-  margin-bottom: 10px;
-  padding: 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 16px;
-  text-align: center;
-}
-.widget-list li:hover {
-  background-color: #f0f0f0;
+.options {
+  font-weight: bold;
 }
 
-/* Styling for widget display inputs and buttons */
-.widget-display textarea,
-.widget-display input.widget-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.widget-display button {
-  background-color: #5e17eb;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 14px;
-  margin-top: 10px;
-}
-.widget-display button:hover {
-  background-color: #4b13c7;
-}
-
-/* Free Prizes Widget Styles */
-.prizes-container {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  max-height: 200px;
-  overflow-y: auto;
-  padding-right: 10px;
-}
-.prizes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0px;
-}
-.prize-item {
-  background-color: #fafafa;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease;
-  margin: 10px;
-}
-.prize-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px);
-}
-.prize-icon {
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-.prize-details h4 {
-  color: #5e17eb;
-  margin-bottom: 5px;
-  font-size: 1.1em;
-}
-.prize-details p {
-  font-size: 14px;
-  color: #333;
-  margin: 0;
-}
-
-/* Learn Online Widget Styles */
-.learnonline-container {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  max-height: 200px;
-  overflow-y: auto;
-  padding-right: 10px;
-}
-.learnonline-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0px;
-}
-.learnonline-item {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  margin: 10px;
-}
-.learnonline-item:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  transform: translateY(-3px);
-}
-.learnonline-image-wrapper {
-  margin-bottom: 10px;
-}
-.learnonline-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-}
-.learnonline-details h4 {
-  color: #5e17eb;
-  margin-bottom: 5px;
-  font-size: 1.1em;
-}
-.learnonline-details p {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 10px;
-}
-.learnonline-button {
-  display: inline-block;
-  padding: 8px 12px;
-  background-color: #5e17eb;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.learnonline-button:hover {
-  background-color: #4b13c7;
-}
-.learnonline-button.mathdash-button {
-  background-color: #10b3ef;
-}
-.learnonline-button.mathdash-button:hover {
-  background-color: #0ea7dc;
-}
-
-/* Persona Selector Container */
-.chat-persona-selector {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  width: 100%;
-  margin-bottom: 10px;
-  position: relative;
-}
-.persona-item {
-  margin: 0 10px;
-  padding: 5px 10px;
-  background-color: #eee;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  flex-shrink: 0;
-}
-.persona-item.selected {
-  background-color: #5e17eb;
-  color: white;
-}
-
-/* New Styles for Minigame Region */
-.minigame-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.minigame-button {
-  padding: 8px 15px;
-  background-color: #10b3ef;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.minigame-button:hover {
-  background-color: #0ea7dc;
-}
-.minigame-desc {
-  margin: 0 0 10px 5px;
-  font-size: 0.9rem;
-  color: #555;
-}
-.back-button {
-  padding: 5px 10px;
-  background-color: #ddd;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 15px;
-}
-.back-button:hover {
-  background-color: #ccc;
-}
-
-/* Styles for Minigame Input & Button Container */
-#button-container {
-  text-align: center;
-  margin-top: 10px;
-}
-#minigame-input-container {
-  display: none;
-  margin-top: 10px;
-}
-#minigame-input-container input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 80%;
-}
-#minigame-input-container button {
-  padding: 10px 15px;
-  background-color: #198754;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-left: 10px;
-}
-
-/* Mobile adjustments */
-@media (max-width: 800px) {
-  .main-container {
-    flex-direction: column;
-  }
-  .minigame-region,
-  .widget-display {
-    width: 100%;
-  }
-  .widget-display {
-    margin-top: 20px;
-  }
-}
